@@ -28,7 +28,7 @@ gsave
 grestore
 
 45 485 60 485 60 555 70 555 ptrn
-70 560 (*main::main::) glob
+70 560 (*main::main::) nsglob
 
 45 475 60 475 100 495 115 495 ptrn
 115 500 (*main::foo) glob
@@ -36,12 +36,12 @@ grestore
 160 487.5 small_sv
 
 45 465 70 465 ptrn
-70 470 (*main::foo::) glob
+70 470 (*main::foo::) nsglob
 90 425 115 425 ptrn
 115 430 (foo)  [(bar::)] stash
 
 160 415  180 415  180 390  60 390  40 425  5 425  5 410  ptrn
-0 410 (*foo::bar::) glob
+0 410 (*foo::bar::) nsglob
 20 365 45 365 ptrn
 45 370 (foo::bar) [(baz)] stash
 90 355 115 355 ptrn

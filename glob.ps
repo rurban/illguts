@@ -1,5 +1,6 @@
 %require "common.ps"
 %require "mws.ps"
+%require "rect.ps"
 
 /glob {
    10 dict begin
@@ -34,5 +35,22 @@
       } forall
 
    grestore
+   end
+} def
+
+
+/nsglob {
+   % name space glob (all fields but NV is grayed)
+   10 dict begin
+      /name exch def
+      /y exch def
+      /x exch def
+      gsave
+         newpath
+         0.8 setgray
+	 x y 10 sub M 25 -30 rrect fill
+         x y 50 sub M 25 -10 rrect fill
+      grestore
+      x y name glob
    end
 } def

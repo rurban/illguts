@@ -6,13 +6,13 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 
-<h1 align=center>PerlGuts Illustrated<br><small>Version 0.05</small></h1>
+<h1 align=center>PerlGuts Illustrated<br><small>Version 0.06</small></h1>
 
 <p>This document is meant to supplement the <i>perlguts(1)</i> manual
-page that comes with Perl.  It includes commented illustrations of all
+page that comes with Perl.  It contains commented illustrations of all
 (eventually?) major internal Perl data structures.  Having this
 document handy hopefully makes reading the Perl source code easier.
-It might also help you interpret the <i>Devel::Peek</i> variable
+It might also help you interpret the <i>Devel::Peek</i>
 dumps.  I'll try to expand it as I learn more.
 
 <p>The first things to look at are the data structures that represent
@@ -28,7 +28,7 @@ further guaranteed to be big enough to hold a <code>void*</code>.
 object oriented.  Perl relies on using C's structural equivalence to
 help emulate something like C++ inheritance of types.  The various
 data types that Perl implement are illustrated in this class hierarchy
-diagram.  The arrows indicate inheritance.
+diagram.  The arrows indicate inheritance (IS-A relationships).
 
 <p><center><img src="svtypes.gif"></center>
 
@@ -65,19 +65,19 @@ according to this information.
 
 
 <p>In addition to the simple type names already mentioned, the
-following names are found in the figure: An <i>SvPVIV</i> value can
+following names are found in the hierarchy figure: An <i>SvPVIV</i> value can
 hold a string and an integer value.  An <i>SvPVNV</i> value can hold a
 string, an integer and a double value.  The <i>SvPVMG</i> is used when
 magic is attached or the value is blessed.  The <i>SvPVBM</i> adds
 information for fast searching (Boyer-Moore) on the string value.  The
-<i>SvPVLV</i> represents a L-value object.
+<i>SvPVLV</i> represents a LValue object.
 <i>CV</i> is a code value, which represents a perl
 function/subroutine/closure or contains a pointer to an XSUB.
 <i>GV</i> is a glob value and <i>IO</i> contains pointers to open
-files and directories and other state information about files.  The
+files and directories and various state information about these.  The
 <i>SvPVFM</i> is used to hold information on forms.
 
-<p>A Perl data object can change type as the value changes.  The SV is
+<p>A Perl data object can change type as the value is modified.  The SV is
 said to be upgraded in this case.  Type changes only go down the
 hierarchy.  (See the sv_upgrade() function in sv.c.)
 
@@ -115,13 +115,13 @@ incremented when a new pointer is made to point to it and decremented
 when the pointer is destroyed or assigned a different value.  When the
 reference count reaches zero the object is freed.
 
-<p>The third field contains some FLAGS and a TYPE sub-field.
+<p>The third word contains a FLAGS field and a TYPE field.
 
-<p>The type field contains a code that represents one of the types
+The TYPE field contains a small number that represents one of the types
 shown in the type hierarchy figure above. 
 
-<p>The SV contains 24 flag bits. The flags bits contain information on how
-the fields of the object should be interpreted, and
+The FLAGS field has room for 24 flag bits, which encode how various
+fields of the object should be interpreted, and
 other state information.  Some flags are just used as optimizations
 in order to avoid having to dereference several levels of pointers
 just to find that the information is not there.
@@ -314,7 +314,7 @@ addition to the <i>SV</i> struct of SvNULL, an <i>xpv</i> struct is
 allocated and it contains 3 fields.  PVX is the pointer to an
 allocated char array.  CUR is an integer giving the current length of
 the string.  LEN is an integer giving the length of the allocated
-string.  The char/byte at (PVX + CUR) should always be '\0' in order
+string.  The byte at (PVX + CUR) should always be '\0' in order
 to make sure that the string is NUL-terminated if passed to C library
 routines.  This requires that LEN is always at least 1 larger than CUR.
 
@@ -323,7 +323,7 @@ routines.  This requires that LEN is always at least 1 larger than CUR.
 <p>The POK flag indicates that the string pointed to by PVX contains
 an valid string value.  If the POK flag is off and the ROK flag is
 turned on, then the PVX field is used as a pointer to an SV (see SvRV
-below) and CUR/LEN is unused.  A SvPV with both POK and ROK flags
+below) and CUR/LEN is unused.  An SvPV with both the POK and ROK flags
 turned off represents <i>undef</i>.  The PVX pointer can also be NULL
 when POK is off and no string storage has been allocated.
 
@@ -345,7 +345,7 @@ corresponding flag is called NOK.
 
 <a name="ook"><h2>SvOOK</h2></a>
 
-As a special hack in order to improve the speed of removing characters
+As a special hack, in order to improve the speed of removing characters
 from the beginning of a string, the OOK flag is used.  When this flag
 is on, then the IVX value is not interpreted as an integer value, but
 is instead used as an <i>offset</i> into the string.  The PVX, CUR,
@@ -378,7 +378,8 @@ value.
 
 <p>Subclasses of SvPV can also be treated as SvRV objects when the ROK
 flag is turned on for them.  The PVX will then be used as the RV field
-of the SvRV.  Of course ROK and POK is mutually exclusive.
+of the SvRV.  Of course ROK and POK is mutually exclusive and the
+CUR/LEN fields have no meaning when ROK is on.
 
 <p><center><img src="svpvrv.gif"></center>
 
@@ -391,8 +392,10 @@ MAGIC pointer is non-NULL, then one or more of the MAGICAL flags will
 be set.
 
 <p>STASH (<b>s</b>ymbol <b>t</b>able h<b>ash</b>) is a pointer to a HV
-that represents some namespace/class, which means that the NAME field
-of the HV must be non-NULL (see description of HV ans stashes below).
+that represents some namespace/class.
+(That the HV represents some namespace means that the NAME field
+of the HV must be non-NULL. See description of HVs and stashes below).
+
 The STASH field is set when the value is blessed into a package
 (becomes an object).  The OBJECT flag will be set when STASH is.
 <small><i>(IMHO, this field should really have been named "CLASS".
@@ -468,10 +471,10 @@ the corresponding substring is forgotten and freed;
 
 <p><center><img src="svpvbm.gif"></center>
 
-<p>The extra SvPVMG information and the character distance table is
+<p>The extra SvPVBM information and the character distance table is
 only valid when the <b>VALID</b> flag is on.  A magic structure with
 the sole purpose of turning off the VALID flag on assignment, is always
-attached to a <i>valid</i> SvPVMG.
+attached to a <i>valid</i> SvPVBM.
 
 <p>The <b>TAIL</b> flag is used to indicate that the search for the SvPVMG
 should be <i>tail anchored</i>, i.e. a match should only be considered
@@ -482,12 +485,13 @@ at the end of the string (or before newline at the end of the string).
 
 The <i>SvPVLV</i> is like <i>SvPVMG</i> above, but has four additional
 fields; TARGOFF, TARGLEN, TARG, TYPE.  The typical use is for Perl
-builtins that can be used in the L-value context (substr, vec,...).
-They will return a SvPVLV value, which when assigned to affect the
-<i>target</i> object which we keep a pointer to in the TARG field.
+builtins that can be used in the LValue context (substr, vec,...).
+They will return an SvPVLV value, which when assigned to use magic to
+affect the <i>target</i> object, which they keep a pointer to in the TARG
+field.
 
-<p>The TYPE is a character variable.  It encodes the kind if L-value
-this is.  Interpretation of the other L-value fields depend on the TYPE.
+<p>The TYPE is a character variable.  It encodes the kind if LValue
+this is.  Interpretation of the other LValue fields depend on the TYPE.
 The SvPVLVs are (almost) always magical.  The magic type will match
 the TYPE field of the SvPVLV.  The types are:
 
@@ -520,11 +524,11 @@ elements) and the foreach array iterator variable.
 
 <dt> <b>'/'</b>
 
-<dd> Used by <i>pp_pushre</i>.  I don't understand this yet.
+<dd> Used by <i>pp_pushre</i>.  <i>(I don't understand this yet.)</i>
 
 </dl></blockquote>
 
-<p>The figure below shows a SvPVLV as returned from the
+<p>The figure below shows an SvPVLV as returned from the
 <code>substr()</code> builtin.  The first substr parameter (the
 string to be affected) is assigned to the TARG field.  The substr
 offset value goes in the TARGOFF field and the substr length parameter
@@ -542,9 +546,10 @@ update the TARG accordingly.
 
 <p>An array is in many ways represented similar to strings.  An AV
 contains all the fields of SvPVMG and adds the following tree fields:
-ALLOC is a pointer to the allocated array.  ARYLEN is a pointer to an
-SV (which is returned when <code>$#array</code> is requested). FLAGS
-contains some extra flag bits that are specific of the array subtype.
+ALLOC is a pointer to the allocated array.  ARYLEN is a pointer to a
+magic SV (which is returned when <code>$#array</code> is requested)
+and is only created on demand. FLAGS contains some extra flag bits
+that are specific of the array subtype.
 
 <p>The first three fields of xpvav have been renamed even though they
 serve nearly the same function as the corresponding SvPV fields.  PVX
@@ -562,71 +567,92 @@ hack described above.  The shift operation can be implemented
 efficiently by just adjusting the ARRAY pointer (and FILL/MAX).
 Similarly, the pop just involves decrementing the FILL count.
 
-<p>The are only 3 array flags used: (I'll try to describe them when I
-understand the issue)
+<p>The are only 3 array flags defined:
 
 <blockquote><dl>
 
   <dt> 0) <b>REAL</b>
+
+  <dd> It basically means that all
+       SVs contained in this array is owned and must have their
+       reference counters decremented when the reference is removed
+       from the array.  All normal arrays are REAL.  For the
+       <code>stack</code> the REAL flag is turned off.
+       For <code>@_</code> the REAL flag is initially turned off.
+
   <dt> 1) <b>REIFY</b>
+
+  <dd> The array is <i>not</i> REAL but should be made REAL if modified.
+       The <code>@_</code> array will have the REIFY flag turned on.
+
   <dt> 2) <b>REUSED</b>
+
+  <dd> This flag does not seem to be used for anything currently.
 
 </dl></blockquote>
 
 <a name="hv"><h2>HV</h2></a>
 
 <p>Hashes are the most complex of the Perl data types.  In addition to
-what we have seen above, HVs use <i>HE</i> structs to represent a
+what we have seen above, HVs use <i>HE</i> structs to represent
 key/value pairs and <i>HEK</i> structs to represent keys.
 
 <p>The HV type itself contains all the fields of SvPVMG and then adds
 four new fields:
 
-<ul>
-<li>The first two fields are used to implement a single iterator over the
+<dl>
+<dt><b>RITER, EITER</b>:
+
+<dd>The first two fields are used to implement a single iterator over the
 elements in the hash.
 RITER which is an integer index into the array referenced by ARRAY and
 EITER which is a pointer to an HE.  In order find the next hash
 element one would first look at EITER->next and if it turns out to be
 NULL, RITER is incremented until ARRAY[RITER] is non-NULL.  The
-iterator starts out with RITER = -1 and EITER = NULL.
+iterator starts out with RITER = -1 and EITER = NULL.<p>
 
-<li>The last two fields are only used when the hash represents a name
+<dt><b>RMROOT/NAME</b>:
+
+<dd>The last two fields are only used when the hash represents a name
 space (<i>stash</i>).  PMROOT points to a node in the Perl syntax
-tree.  It is used to implement the reset() for REs.  NAME is a
-NUL-terminated string which denotes the name of the name space (or
-<i>package</i>).  This is one of the few places where Perl does not
-allow strings with embedded NULs.
-</ul>
+tree.  It is used to implement the reset() builtin for REs.  NAME is a
+NUL-terminated string which denotes the fully qualified name of the
+name space (aka <i>package</i>).  This is one of the few places where
+Perl does not allow strings with embedded NULs.<p>
 
-<p>As for AVs the first few fields of the xpvhv have been renamed in
-the same way.  MAX is the number of elements in ARRAY minus one. (The
+</dl>
+
+<p>The first few fields of the xpvhv have been renamed in the same way
+as for AVs.  MAX is the number of elements in ARRAY minus one. (The
 size of the ARRAY is required to be a power of 2, since the code that
 deals with hashes just mask off the last few bits of the HASH value to
-locate the correct HE column for a key: <code>ARRAY[HASH & MAX]</code>).  Also note
-that ARRAY can be NULL when the hash is empty (but the MAX value will
-still be at least 7, which is the minimum value assigned by Perl.)
+locate the correct HE column for a key: <code>ARRAY[HASH &
+MAX]</code>).  Also note that ARRAY can be NULL when the hash is empty
+(but the MAX value will still be at least 7, which is the minimum
+value assigned by Perl.)
 
-The FILL is the number of elements in ARRAY which is not NULL.  The
+The FILL is the number of elements in ARRAY which are not NULL.  The
 IVX field has been renamed KEYS and is the number of hash elements in
 the HASH.  The NVX field is unused.
 
-<p>The HEs are simple structs containing 3 pointers.  A pointer to the
+<p>The <b>HE</b>s are simple structs containing 3 pointers.  A pointer to the
 next HE, a pointer to the key and a pointer to the value of the given hash
 element.
 
-<p>The HEKs are special variable sized structures that store the hash
-keys.  They contain 3 fields.  The <i>hash</i> value of the string,
-the <i>len</i>gth of the string, and the <i>len</i>+1 bytes for the
-key string itself.  (As a special case, a <i>len</i> value of
-<code>HEf_SVKEY</code> (-2) indicate that a pointer to an SV is stored
-in the HEK instead of a string.  This hack is used for some magical hashes.)
+<p>The <b>HEK</b>s are special variable sized structures that store the hash
+keys.  They contain 3 fields.  The computed <i>hash</i> value of the string,
+the <i>len</i>gth of the string, and <i>len</i>+1 bytes for the
+key string itself (including trailing NUL).
+
+As a special case, a <i>len</i> value of <code>HEf_SVKEY</code> (-2)
+indicate that a pointer to an SV is stored in the HEK instead of a
+string.  This hack is used for some magical hashes.
 
 <p><center><img src="hv.gif"></center>
 
 <p>In a perfect hash both KEYS and FILL are the same value.  This
-means than all HEs can be located directly in the ARRAY (and all the
-he->next pointers are NULL).
+means than all HEs can be located directly from the pointer in the
+ARRAY (and all the he->next pointers are NULL).
 
 <p>The following two hash specific flags are found among the common
 SvNULL flags:
@@ -670,8 +696,8 @@ SvNULL flags:
 but has five additional fields; GP, NAME, NAMELEN, GvSTASH, FLAGS.
 
 <p>The GP is a pointer to structure that holds pointers to data of
-various kinds.  Perl use a pointer (instead of including the GP fields
-in the xpvgv) in order to implement the proper glob aliasing
+various kinds.  Perl use a pointer, instead of including the GP fields
+in the xpvgv, in order to implement the proper glob aliasing 
 behavior (i.e. different GVs can share the same GP).
 
 <p>The NAME/NAMELEN denotes the unqualified name of this symbol and
@@ -700,7 +726,7 @@ and a pointer to this GV as value.  See description of stashes below.
 </dl></blockquote>
 
 <p>A magic of type '*' is always attached to the GV (not shown in the
-figure).  The magic GET method is used to stringify the globs (fully
+figure).  The magic GET method is used to stringify the globs (as the fully
 qualified name prefixed with '*').  The magic SET method is used to alias
 an GLOB based on the name of another glob.
 
@@ -739,20 +765,20 @@ entry.
 method caches are performed, then the <tt>subgeneration</tt> variable
 is incremented.)
 
-<p>LASTEXPR is an integer I don't understand the meaning of yet.
+<p>LASTEXPR is an integer I don't understand the purpose of yet.
 
 <p>FILEGV is a pointer to a GV where the SV of the GP is the name of
 the file where this symbol was first created.  The NAME of this GV is
 the filename prefixed with "_&lt;" and GvSTASH is
 <code>defstash</code> (see description of stashes below).
 
-LINE is the corresponding line number in the file.
+<p>LINE is the corresponding line number in the file.
 
 <h3>Stashes</h3>
 
 GVs and stashes work together to implement the name spaces of Perl.
 Stashes are named HVs with all the element values being pointers to
-GVs.  The root of the namespace is pointed to by the variable
+GVs.  The root of the namespace is pointed to by the global variable
 <code>defstash</code>.
 
 <p>In the figure below we have simplified the representation of
@@ -770,31 +796,32 @@ and <code>$foo::bar::baz</code> are represented by Perl.
 
 <p>All resolution of qualified names starts with the stash pointed to
 by the <code>defstash</code> variable.  Nested name spaces are
-implemented by a stash entry with a key ending in "::".  The entry for
-"main::" ensures that <code>defstash</code> is also known as "main"
-package (and has the side-effect that the "main::main::main" package
-is <code>defstash</code> too.)
+implemented by a stash entry with a key ending in "<code>::</code>".
+The entry for "<code>main::</code>" ensures that <code>defstash</code> is also
+known as "<code>main</code>" package (and has the side-effect that the
+"<code>main::main::main</code>" package is <code>defstash</code> too.)
 
 Unqualified names are resolved starting at <code>curstash</code> or
 <code>curcop-&gt;cop_stash</code> which are influenced by the
 <code>package</code> declaration in Perl.
 
-<p>As you can see from this figure, there are lot of pointers to
-dereference in order to get look up deeply nested names.  Each stash
+<p>As you can see from this figure, there are lots of pointers to
+dereference in order to look up deeply nested names.  Each stash
 is at least 4 levels deep and each glob is 3 levels, giving at least
 24 pointer dereferences to access the data in the
 <code>$foo::bar::baz</code> variable from <code>defstash</code>.
 
 <p>The <code>defstash</code> stash is also a place where globs
 representing source files are entered.  These entries are prefixed
-with "_&lt;".  The FILEGV field of the GP points to the same glob as the
-corresponding "_&lt;" entry in <code>defstash</code> does.
+with "<code>_&lt;</code>".  The FILEGV field of the GP points to the
+same glob as the corresponding "<code>_&lt;</code>" entry in
+<code>defstash</code> does.
 
 
 <a name="cv"><h2>CV</h2></a>
 
-<The <i>CV</i> ("code value") is like <i>SvPVMG</i> above, but has
-twelve additional fields; CvSTASH, START, ROOT, XSUB, GV, FILEGV,
+The <i>CV</i> ("code value") is like <i>SvPVMG</i> above, but has
+thirteen additional fields; CvSTASH, START, ROOT, XSUB, XSUBANY, GV, FILEGV,
 DEPTH, PADLIST, OUTSIDE, MUTEXP, OWNER, FLAGS.  (The fields MUTEXP and
 OWNER are only present for Perls that support threading).
 
@@ -805,10 +832,16 @@ of CVs makes sense.</i>
 
 <a name="svpmfm"><h2>SvPVFM</h2></a>
 
+The <i>SvPVFM</i> is like <i>CV</i> above, but adds a single field
+called LINES.
+
 <p><center><img src="svpvfm.gif"></center>
 
 
 <a name="io"><h2>IO</h2></a>
+
+The <i>IO</i> is like <i>SvPVMG</i> above, but has quite a few
+additional fields.
 
 <p><center><img src="io.gif"></center>
 
@@ -824,15 +857,15 @@ href="op.html">syntax trees and OP codes</a>.</i>
 <h2>Stacks</h2>
 
 During compilation and runtime Perl use several stacks to manage
-itself and the program running.  The first three implements scopes and
-variables and values which are restored (or actions to be performed)
-when the scope is left.
+itself and the program running.  The first three described here
+implements scopes, including variables and values which are restored (or
+actions to be performed) when the scope is left.
 
 <p>The <code>scopestack</code> pushes the <code>savestack_ix</code>
 when <code>ENTER</code> is executed.  On <code>LEAVE</code> the top
 <code>savestack_ix</code> entry is popped and all things saved on the
 <code>savestack</code> since this is restored.  This means that a
-ENTER/LEAVE pairs represents dynamic nestable scopes.
+<code>ENTER/LEAVE</code> pairs represents dynamic nestable scopes.
 
 <p>The <code>savestack</code> contains records of things saved in
 order to be restored when the scopes are left.  Each record consist of
@@ -850,17 +883,17 @@ When <code>SAVETMPS</code> is executed, then the old
 then <code>tmps_floor</code> is set equal to <code>tmps_ix</code>.
 When <code>FREETMPS</code> is executed, then all SVs pointed to by the
 pointers between <code>tmps_floor</code> and <code>tmps_ix</code> will
-have their REFCNT decremented.  How many this will be depend
-on how many scopes has been left.  (Note that the
-<code>tmps_floor</code> and <code>tmps_ix</code> values is the index
-of the last SV* pushed. They start out as -1 when the stack is empty.)
+have their REFCNT decremented.  How many this will be depend on how
+many scopes has been left.  Note that the <code>tmps_floor</code> and
+<code>tmps_ix</code> values is the index of the last SV* pushed. They
+both start out as -1 when the stack is empty.
 
 <p><center><img src="scope.gif"></center>
 
-<p>The next fours stacks manage subroutine calls (and evals and
-loops).
+<p>The next fours stacks manage subroutine calls, evals, and
+loops.
 
-<p>The first one is simply denoted is <em>the stack</em> and is really
+<p>The first one is simply denoted as <em>the stack</em> and is really
 an AV.  The variable <code>curstack</code> points to this AV.  To
 speed up access Perl also maintain direct pointers to the start
 (<code>stack_base</code>) and the end (<code>stack_max</code>) of the
@@ -875,7 +908,7 @@ subroutine return values are placed.
 stack to be passed as @_ to Perl subroutines.  When a subroutine is to
 be called, then first the start of the arguments are marked by pushing
 the <code>stack_sp</code> offset onto <code>markstack</code>, then the
-arguments themselves are calculated and pushed on the stack.  Then a
+arguments themselves are calculated and pushed on the stack.  Then the
 <code>@_</code> array is set up with pointers the SV* on the stack
 between the <code>MARK</code> and <code>stack_sp</code> and the
 subroutine starts running.  For XSUB routines, the creation of
@@ -894,7 +927,7 @@ describe the current context.  Each time a subroutine, an eval or a
 loop is entered, then a new PERL_CONTEXT record is pushed on the
 <code>cxstack</code>.  When subroutine/eval/loop finished then the
 record top record is poped and the corresponding values restored.  The
-PERL_CONTEXT record is descibed below.
+PERL_CONTEXT record will eventually be descibed below.
 
 <p><center><img src="stack.gif"></center>
 
@@ -925,7 +958,7 @@ NOTYET
 
 <i>&copy; 1998 Gisle Aas</i><br>
 <a href="mailto:aas@sn.no">&lt;aas@sn.no&gt;</a><br>
-$Date: 1998/02/24 20:30:27 $
+$Date: 1998/07/03 10:37:29 $
 </small>
 </div>
 

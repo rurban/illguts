@@ -1,5 +1,5 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 10 110 310
+%%BoundingBox: -5 -5 110 310
 %%Creator: Gisle Aas (Copyright 1998)
 
 %require "common.ps"
@@ -16,13 +16,13 @@
 40  302 M (cv) rshow
 105 302 M (xpvcv) rshow
 
-55 300 8 19 newbox
-55 300 19 box
+55 300 8 20 newbox
+55 300 20 box
 
 /Helvetica 11 SF
 60 303 15 sub M
 
-[(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (CvSTASH) (START) (ROOT) (XSUB) (GV) (FILEGV) (DEPTH) (PADLIST) (OUTSIDE) (MUTEXP) (OWNER) (FLAGS)] {
+[(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (CvSTASH) (START) (ROOT) (XSUB) (XSUBANY) (GV) (FILEGV) (DEPTH) (PADLIST) (OUTSIDE) (MUTEXP) (OWNER) (FLAGS)] {
     gsave
     currentpoint 30 mws pop
     grestore
