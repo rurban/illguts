@@ -2,9 +2,9 @@
 %%BoundingBox: -5 220 110 305
 %%Creator: Gisle Aas (Copyright 1998)
 
-%include "common.ps"
-%include "sv.ps"
-%include "box.ps"
+%require "common.ps"
+%require "sv.ps"
+%require "box.ps"
 
 0 300 sv
 
@@ -16,7 +16,7 @@ grestore
 
 55 300 60 sub 1 box
 
-/Helvetica findfont 11 scalefont setfont
+/Helvetica 11 SF
 60 303 15 sub M
 
 0.7 setgray
@@ -24,7 +24,7 @@ grestore
     gsave
     show
     grestore
-    0 -15 rmoveto
+    0 -15 RM
 } forall
 0 setgray
 

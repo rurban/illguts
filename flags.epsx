@@ -1,10 +1,10 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 72 245 168
+%%BoundingBox: -5 47 245 168
 %%Creator: Gisle Aas (Copyright 1998)
 
-%include "common.ps"
-%include "mws.ps"
-%include "rect.ps"
+%require "common.ps"
+%require "mws.ps"
+%require "rect.ps"
 
 
 /flags {
@@ -19,8 +19,8 @@
       90 rotate
 
       0 0 M
-      /Helvetica findfont 8 scalefont setfont
-      0.5 setlinewidth
+      /Helvetica 8 SF
+      0.5 LW
       /no 0 def
       fl {
          gsave
@@ -30,29 +30,30 @@
             3 2 rmoveto currentpoint 34 mws pop
          grestore
          gsave            
-            42 w 2 div rmoveto currentpoint translate -90 rotate
-            /Helvetica findfont 5 scalefont setfont
+            42 w 2 div RM currentpoint translate -90 rotate
+            /Helvetica 5 SF
             no 2 string cvs cshow
          grestore
          0 w rmoveto
          /no no 1 add def
       } forall
 
-      1 setlinewidth
-      0 0 40 fl length w mul rect stroke
+      1 LW
+      0 0 40 fl length w mul rect S
       grestore
 
    end
 } def
 
 gsave
-  0.8 1 1 setrgbcolor
+  % some backgrounds
+  paleblue
   % emphasis of the XOK flags
   120 100 160 140 rect fill
   50  100  80 140 rect fill
 
   % MAGIC flags
-  1 1 0.8 setrgbcolor
+  yellow
   160 100 190 140 rect fill
 grestore
 
@@ -85,9 +86,19 @@ grestore
 
 0.5 setlinewidth
 /Helvetica findfont 8 scalefont setfont
-1.0 0 0 setrgbcolor
+red
 
 % Combined flags
+
+[55 65 75 125 135 145 155] {
+   dup 147 M 153 L
+} forall
+55 153 M 155 153 L
+105 153 M 105 158 L
+S
+gsave 0 setgray 105 159 M (OK) cshow grestore
+
+
 145 100 M 145 90 L 155 90 L 155 100 L  150 90 M 150 85 L stroke
 gsave 0 setgray 150 77 M (NIOK) cshow grestore
 
@@ -98,8 +109,15 @@ gsave 0 setgray 105 77 M (THINKFIRST) cshow grestore
 gsave 0 setgray 165 77 M (MAGICAL) show grestore
 
 % PRIVSHIFT
-80 152 M 80 158 L
-80 155 M 160 155 L stroke
-160 155 M 155 157 L 155 153 L closepath fill
+80 57 M 80 63 L
+80 60 M 160 60 L S
+160 60 M 155 58 L 155 62 L CP F
 
-gsave 0 setgray 120 157 M (PRIVSHIFT) cshow grestore
+gsave
+  paleblue
+  50  66  80 69 rect F
+  130 66 160 69 rect F
+grestore
+
+gsave 0 setgray 120 52 M (PRIVSHIFT) cshow grestore
+

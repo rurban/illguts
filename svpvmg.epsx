@@ -1,28 +1,27 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 145 265 310
+%%BoundingBox: -5 145 285 337
 %%Creator: Gisle Aas (Copyright 1998)
 
-%include "common.ps"
-%include "sv.ps"
-%include "box.ps"
-%include "rect.ps"
-%include "ptr.ps"
-%include "mws.ps"
-%include "magic.ps"
+%require "common.ps"
+%require "sv.ps"
+%require "box.ps"
+%require "rect.ps"
+%require "ptr.ps"
+%require "mws.ps"
+%require "magic.ps"
+%require "chararray.ps"
 
 0 300 sv
 
-/Courier findfont 8 scalefont setfont
+/Courier 8 SF
 40  302 M (sv) rshow
 105 302 M (xpvmg) rshow
 160 182 M (hv) rshow
-170 287 M (magic) rshow
-240 287 M (magic) rshow
 
 55 300 6 7 newbox
 55 300 7 box
 
-/Helvetica findfont 11 scalefont setfont
+/Helvetica 11 SF
 60 303 15 sub M
 
 [(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH)] {
@@ -35,27 +34,50 @@
 %%include "str.ps"
 97.5 292.5 120 ptr1  % PVX arrow
 
-% magic arrow
-97.5 217.5
-110 217.5
-110 277.5
-120 277.5 ptrn
-
-%162.5 277.5 190 ptr1
-%232.5 277.5 260 ptr1
-
-% magic 1 & 2
-120 285 magic
-190 285 magic
-
-
-
 % stash arrow
 97.5 202.5
 110  202.5
 110  175
 120  175 ptrn
 
+% stash HV
 120  180 sv
+
+% MAGIC ptr arrow
+97.5 217.5
+110 217.5
+110 277.5
+120 277.5 ptrn
+
+% magic
+120 285 magic
+162.5 277.5 180 277.5 180 327 190 327 ptrn  % moremagic
+
+% virtual
+162.5 262.5 190 262.5 ptrn
+190 270 [()() (&magic_len)(&magic_set)(&magic_get)] mgvtbl
+
+% obj
+162.5 232.5 180 232.5 180 202 190 202 ptrn
+gsave
+   190 205 translate 0.7 dup scale
+   0 0 sv2
+grestore
+
+%ptr
+162.5 217.5 ptrn
+
+
+% two additional magic structures, scaled down
+gsave
+  190 330 translate
+  0.5 dup scale
+  0 0 magic
+  80 0 magic
+  42.5 -7.5 80 -7.5 ptrn  % moremagic 1
+  122.5 -7.5 ptrn         % moremagic 2 (=NULL)
+grestore
+
+
 
 

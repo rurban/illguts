@@ -1,33 +1,41 @@
-% Draw an SV at [0,0] [40,30] with arrow pointing at [55,25]
+%require "common.ps"
+%require "rect.ps"
+%require "ptr.ps"
 
 /sv {
-    gsave
+   2 dict begin
+      /y exch def
+      /x exch def
+      x y sv2
+     %35 25 55 ptr1
+      x 35 add y 5 sub x 55 add ptr1
+   end
+} def
 
-    30 sub translate
+/sv2 {                            % <x> <y> sv -
+   gsave
+      30 sub translate
 
-    0.5 setgray
-    0.1 setlinewidth
-    0 30 12 div 30 {
-       dup 10 M 6 L stroke
-    } for
+      % flags
+      0.5 setgray
+      0.1 LW
+      0 30 12 div 30 {
+         dup 10 M 6 L S
+      } for
 
-    0.8 0.8 1.0 setrgbcolor
-    0 20 M 0 30 L 40 30 L 40 20 L closepath fill
-    1.0 0.8 0.8 setrgbcolor
-    30 0 M 30 10 L 40 10 L 40 0 L closepath fill
-    0 setgray
-    0.8 setlinewidth
-    0 0 M 0 30 L 40 30 L 40 0 L closepath stroke
-    0.7 setlinewidth
-    0 10 M 40 10 L stroke
-    0 20 M 40 20 L stroke
-    30 0 M 30 10 L stroke
+      paleblue  0 20 40 30 rect fill  % ANY background
+      palered  30  0 40 10 rect fill  % TYPE background
 
-    % arrow
-    1 setlinewidth
-    35 25 1.5 0 360 arc fill
-    35 25 M 50 25 L stroke
-    50 23 M 55 25 L 50 27 L closepath fill
+      % box
+      0 setgray
+      0.8 LW
+      0 0 40 30 rect S
 
-    grestore
+      % separators
+      0.7 LW
+      0 10 M 40 10 L S
+      0 20 M 40 20 L S
+      30 0 M 30 10 L S
+
+     grestore
 } def

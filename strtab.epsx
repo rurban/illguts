@@ -2,12 +2,12 @@
 %%BoundingBox: 56 74 196 217
 %%Creator: Gisle Aas (Copyright 1998)
 
-%include "common.ps"
-%include "box.ps"
-%include "rect.ps"
-%include "mws.ps"
-%include "ptr.ps"
-%include "sv.ps"
+%require "common.ps"
+%require "box.ps"
+%require "rect.ps"
+%require "mws.ps"
+%require "ptr.ps"
+%require "sv.ps"
 
 /myhe {
    1 dict begin
@@ -15,10 +15,10 @@
      M
      strtab { currentpoint 3 3 newbox } if
      gsave currentpoint 3 box grestore
-     /Courier findfont 8 scalefont setfont
+     /Courier 8 SF
      gsave 50 2 rmoveto (he) rshow grestore
      5 -13 rmoveto
-     /Helvetica findfont 11 scalefont setfont
+     /Helvetica 11 SF
      [(next) (hek) (val)]
      strtab { dup 2 (refcnt) put } if
      {
@@ -62,10 +62,10 @@
      } for
      grestore
 
-     /Helvetica findfont 8 scalefont setfont
+     /Helvetica 8 SF
      (hash) x 2 add y 25 sub 16 mws pop
      x 30 add y 25 sub M (len) cshow
-     /Courier findfont 6 scalefont setfont
+     /Courier 6 SF
      x 40 add cw 2 div add y 24 sub M
      str {
        gsave 1 string dup 3 2 roll 0 exch put cshow grestore
@@ -74,7 +74,7 @@
      (\\0) cshow
 
      % anotate boxes
-     /Courier findfont 10 scalefont setfont
+     /Courier 10 SF
      x2 y 13 sub M (hek) rshow
 
    end
@@ -93,12 +93,12 @@
 142.5 277.5 200 277.5 200 240 180 240 180 216 ptrn
 142.5 137.5 180 137.5 180 202 ptrn
 
-/Helvetica findfont 10 scalefont setfont
+/Helvetica 10 SF
 154 187 M (2) show
 
 gsave
-1 0 0 setrgbcolor
-/Courier-Bold findfont 10 scalefont setfont
+red
+/Courier-Bold 10 SF
 100 115 translate
 90 rotate
 22.5         6 M (%hash2) cshow

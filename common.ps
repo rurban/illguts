@@ -1,5 +1,20 @@
-/M /moveto load def
-/L /lineto load def
+% Some handy aliases
+/M  /moveto       load def
+/L  /lineto       load def
+/RM /rmoveto      load def
+/RL /rlineto      load def
+/F  /fill         load def
+/S  /stroke       load def
+/CP /closepath    load def
+/LW /setlinewidth load def
+/SG /setgray      load def
 
+/SF    { exch findfont exch scalefont setfont         } def
 /cshow { dup stringwidth pop 2 div neg 0 rmoveto show } def
 /rshow { dup stringwidth pop       neg 0 rmoveto show } def
+
+% Some colors used
+/yellow   { 1 1 0.8 setrgbcolor } def
+/red      { 0.7 0 0 setrgbcolor } def
+/palered  { 1.0 0.8 0.8 setrgbcolor } def
+/paleblue { 0.8 0.8 1.0 setrgbcolor } def

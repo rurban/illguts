@@ -1,4 +1,9 @@
-/box {
+%require "common.ps"
+%require "rect.ps"
+
+% Routines to draw the struct boxes
+
+/box {                     % <x> <y> <no> box -
    10 dict begin
       /no exch def
       /y  exch def
@@ -9,15 +14,14 @@
 
       y2 15 add 15 y {
 	dup x exch M
-        x2 exch L stroke
+        x2 exch L S
       } for
 
-      x y M x2 y L x2 y2 L x y2 L closepath
-      stroke
+      x y M x2 y L x2 y2 L x y2 L CP S
    end
 } def
 
-/newbox {   % yellow mark those which are new
+/newbox {                  % <x> <y> <start> <end> newbox -
    4 dict begin
      /to exch def
      /from exch def
@@ -25,10 +29,10 @@
      /x exch def
 
      gsave
-       1 1 0.8 setrgbcolor  % yellow
+       yellow
        x y from 1 sub 15 mul sub 
        x 50 add y to 15 mul sub rect
-       fill
+       F
      grestore
    end
 } def

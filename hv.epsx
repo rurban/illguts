@@ -2,40 +2,41 @@
 %%BoundingBox: -5 97 307 310
 %%Creator: Gisle Aas (Copyright 1998)
 
-%include "common.ps"
-%include "sv.ps"
-%include "box.ps"
-%include "rect.ps"
-%include "mws.ps"
-%include "ptr.ps"
-%include "he.ps"
-%include "chararray.ps"
+%require "common.ps"
+%require "sv.ps"
+%require "box.ps"
+%require "rect.ps"
+%require "mws.ps"
+%require "ptr.ps"
+%require "he.ps"
+%require "chararray.ps"
+%require "break.ps"
 
 0 300 sv
 
-/Courier findfont 8 scalefont setfont
+/Courier 8 SF
 40  302 M (hv) rshow
 105 302 M (xpvhv) rshow
 
 gsave
    0.8 setgray
-   55 225 105 240 rect fill
+   55 225 105 240 rect F
 grestore
 55 300 8 11 newbox
 55 300 11 box
 
-/Helvetica findfont 11 scalefont setfont
+/Helvetica 11 SF
 60 303 15 sub M
 
 [(ARRAY)(FILL)(MAX)(KEYS)(NVX)(MAGIC)(STASH)(RITER)(EITER)(PMROOT)(NAME)] {
     gsave
     currentpoint 30 mws pop
     grestore
-    0 -15 rmoveto
+    0 -15 RM
 } forall
 
 % Some pointer arrows
-97.5 292.5 130 ptr1 % ARRAY
+97.5 292.5 130 ptr1  % ARRAY
 %97.5 217.5 130 ptr1 % MAGIC
 %97.5 202.5 130 ptr1 % STASH
 gsave 0.3 setgray [4 3] 2 setdash
@@ -49,42 +50,28 @@ gsave
    0 0 [(F)(o)(o)(:)(:)(B)(a)(r)(\\0)] chararray
 grestore
 
-% SV* box
+% HE*[] box
 gsave
    0.8 setgray
-   130 285 140 300 rect fill
-   150 285 220 300 rect fill
-   230 285 250 300 rect fill
+   130 285 140 300 rect F
+   150 285 220 300 rect F
+   230 285 250 300 rect F
 grestore
 
 0.5 setlinewidth
 140 10 240 {
-   dup 285 M 300 L stroke
+   dup dup 285 M 300 L S
+   5 sub 292.5 ptrn % NULL pointer marks
 } for
-1 setlinewidth
-130 285 250 300 rect stroke
+245 292.5 ptrn % last NULL pointer
 
-/Courier findfont 8 scalefont setfont
+1 LW
+130 285 250 300 rect S
+
+/Courier 8 SF
 250 302 M (HE*[]) rshow
 
-gsave
-35 0 translate
-%break in the midle of char*
-gsave
-153 283 M 143 290 163 295 153 302 curveto
-158 302 L 168 295 148 290 158 283 curveto
-closepath
-1 setgray
-fill
-grestore
-gsave
-0.5 setgray
-[2 1] 0 setdash
-153 283 M 143 290 163 295 153 302 curveto
-158 302 M 168 295 148 290 158 283 curveto
-stroke
-grestore
-grestore
+183 300 break
 
 % Pointer to first HE column
 145 292.5 145 250 ptrn
@@ -110,13 +97,25 @@ gsave
 grestore
 
 
+% Illustrate FILL/MAX
 gsave
 
+% white background for the red arrow
 1 setgray
-130 261 240 264 rect fill
+130 276 230 279 rect fill  %FILL
+130 261 240 264 rect fill  %MAX
 
-0.7 0 0 setrgbcolor
+red
 0.5 setlinewidth
+
+% FILL stuff
+140 275 M 140 280 L
+140 277.5 M 150 277.5 L
+150 275 M 150 280 L
+
+220 275 M 220 280 L
+220 277.5 M 230 277.5 L
+230 275 M 230 280 L
 
 % MAX length
 130 265 M 130 260 L

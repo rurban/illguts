@@ -4,8 +4,8 @@
 
 0.5 dup scale
 
-%include "common.ps"
-%include "arrow.ps"
+%require "common.ps"
+%require "arrow.ps"
 
 /S {                                   % x y str
   dup stringwidth pop 2 div            % x y str dx
@@ -37,8 +37,11 @@
 
 %---------------------------------
 
-/Helvetica findfont 18 scalefont setfont
+/Helvetica 18 SF
 300 600 (SvNULL) S
+
+% extra arrow from SvRV to SvPV
+gsave 0.5 setgray 226 558 272 558 1.5 7 9 arrow fill grestore
 
 200 550 (SvRV) S   300 600 200 550 A
 300 550 (SvPV) S   300 600 300 550 A

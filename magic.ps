@@ -1,16 +1,26 @@
-/magic {
+%require "common.ps"
+%require "rect.ps"
+%require "box.ps"
+%require "mws.ps"
+%require "ptr.ps"
+
+
+/magic {                                       % <x> <y> magic -
    4 dict begin
      /y exch def /x exch def
      /x2 x 50 add 7.5 sub def
 
      gsave
-        1.0 0.8 0.8 setrgbcolor
-        x 25 add y 45 sub x 37.5 add y 30 sub rect fill
+        palered
+        x 25 add y 45 sub x 37.5 add y 30 sub rect F
      grestore
 
-     /Helvtica findfont 10 scalefont setfont
-     x 25   add dup y 30 sub M y 45 sub L stroke
-     x 37.5 add dup y 30 sub M y 45 sub L stroke
+     /Courier 8 SF
+     x 50 add y 2 add M (magic) rshow
+
+     /Helvtica 10 SF
+     x 25   add dup y 30 sub M y 45 sub L S
+     x 37.5 add dup y 30 sub M y 45 sub L S
      (private) x 2.5 add y 42 sub 20 mws pop
      (type) x 26.25 add y 42 sub 10 mws pop
      (flags) x 38.75 add y 42 sub 10 mws pop
@@ -21,48 +31,44 @@
         gsave
         currentpoint 30 mws pop
         grestore
-        0 -15 rmoveto
+        0 -15 RM
      } forall
 
-     
-
-     x2 y  7.5 sub x 70 add ptr1
-     x2 y 22.5 sub x 60 add ptr1
-     x2 y 52.5 sub x 60 add ptr1
-     x2 y 67.5 sub x 60 add ptr1
+     %x2 y  7.5 sub x 70 add ptr1
+     %x2 y 22.5 sub x 60 add ptr1
+     %x2 y 52.5 sub x 60 add ptr1
+     %x2 y 67.5 sub x 60 add ptr1
 
    end
 } def
 
-/smagic {
+/smagic {                                    % <x> <y> <type> smagic -
    5 dict begin
      /type exch def
      /y exch def /x exch def
      /x2 x 50 add 7.5 sub def
 
      gsave
-        1.0 0.8 0.8 setrgbcolor
-        x 25 add y 45 sub x 37.5 add y 30 sub rect fill
+        palered
+        x 25 add y 45 sub x 37.5 add y 30 sub rect F
      grestore
 
-     x 25   add dup y 30 sub M y 45 sub L stroke
-     x 37.5 add dup y 30 sub M y 45 sub L stroke
+     x 25   add dup y 30 sub M y 45 sub L S
+     x 37.5 add dup y 30 sub M y 45 sub L S
      %(private) x 2.5 add y 42 sub 20 mws pop
-     /Courier-Bold findfont 10 scalefont setfont
+     /Courier-Bold 10 SF
      type x 26.25 add y 41 sub 10 mws pop
      %(flags) x 38.75 add y 42 sub 10 mws pop
 
-     /Helvtica findfont 10 scalefont setfont
+     /Helvtica 10 SF
      x y 6 box
      x 5 add y 12 sub M
      [() (virtual) () () () ()] {
         gsave
         currentpoint 30 mws pop
         grestore
-        0 -15 rmoveto
+        0 -15 RM
      } forall
-
-     
 
      %x2 y  7.5 sub x 70 add ptr1
      x2 y 22.5 sub x 65 add ptr1
@@ -73,9 +79,7 @@
 } def
 
 
-% <x> <y> [() () () (&magic_set) ()] mgvtbl
-
-/mgvtbl {
+/mgvtbl {                        % <x> <y> [() () () (&magic_set) ()] mgvtbl
    10 dict begin
      /funcs exch def
      /y exch def
@@ -85,25 +89,25 @@
      /y2 y 15 sub def
 
      gsave
-     /Courier findfont 8 scalefont setfont
+     /Courier 8 SF
      x2 y 2 add M (mgvtbl) rshow
 
-     1 setlinewidth
-     x y x2 y2 rect stroke
-     0.5 setlinewidth
+     1 LW
+     x y x2 y2 rect S
+     0.5 LW
      x y2 M
-     /Helvetica findfont 5 scalefont setfont
+     /Helvetica 5 SF
      [(GET) (SET) (LEN) (CLEAR) (FREE)]  {
         gsave w 2 div 9 rmoveto cshow grestore
-        gsave w 0 rmoveto 0 15 rlineto stroke grestore
-        w 0 rmoveto
+        gsave w 0 RM 0 15 RL S grestore
+        w 0 RM
      } forall
 
      /y  y2 5 add def
      /x2 x2 w 2 div sub def
      /y2 y2 10 sub def
 
-     /Courier-Bold findfont 8 scalefont setfont
+     /Courier-Bold 8 SF
      funcs {
         dup length 0 eq { %ifelse
            % no func

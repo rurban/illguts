@@ -1,0 +1,23 @@
+%require "box.ps"
+
+/gp {                                  % <x> <y> gp -
+    4 dict begin
+        /y exch def  /x exch def
+	x y 12 box
+
+        /Courier 8 SF
+        x 50 add y 2 add M (gp) rshow
+    
+
+        /Helvetica 11 SF
+        x 5 add y 12 sub M
+
+        [(SV) (REFCNT) (IO) (FORM) (AV) (HV) (EGV) (CV) (CVGEN) (LASTEXPR) (LINE) (FILEGV)] {
+    gsave
+    currentpoint 30 mws pop
+    grestore
+    0 -15 rmoveto
+} forall
+
+    end
+} def

@@ -1,8 +1,15 @@
-/rect {
+
+/rect {               % <x1> <y1> <x2> <y2> rect -
    4 dict begin
       /y2 exch def /x2 exch def
       /y1 exch def /x1 exch def
-      newpath x1 y1 M x2 y1 L x2 y2 L x1 y2 L closepath
+      newpath x1 y1 moveto x2 y1 lineto x2 y2 lineto x1 y2 lineto closepath
    end
 } def
 
+/rrect {             % <dx> <dy> rrect -
+   2 dict begin
+      /dy exch def  /dx exch def
+      dx 0 rlineto 0 dy rlineto dx neg 0 rlineto closepath
+   end
+} def

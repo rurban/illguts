@@ -1,4 +1,6 @@
-
+%require "common.ps"
+%require "rect.ps"
+%require "break.ps"
 
 % arrow from PVX
 newpath 97.5 292.5 2 0 360 arc fill
@@ -8,49 +10,36 @@ newpath 97.5 292.5 2 0 360 arc fill
 % char* box
 gsave
    0.8 setgray
-   190 285 220 300 rect fill
+   190 285 220 300 rect F
 grestore
 
 0.5 setlinewidth
 130 10 210 {
-   dup 300 M 285 L stroke
+   dup 300 M 285 L S
 } for
 1 setlinewidth
-120 285 220 300 rect stroke
+120 285 220 300 rect S
 
-/Courier findfont 8 scalefont setfont
+/Courier 8 SF
 220 302 M (char[]) rshow
 
 125 290 M
 [(a) (b) (c) (?) (x) (y) (z) (\\0)] {
    gsave
-     dup stringwidth pop 2 div neg 0 rmoveto show
+     dup stringwidth pop 2 div neg 0 RM show
    grestore
-   10 0 rmoveto
+   10 0 RM
 } forall
 
 
 
 %break in the midle of char*
-gsave
-153 283 M 143 290 163 295 153 302 curveto
-158 302 L 168 295 148 290 158 283 curveto
-closepath
-1 setgray
-fill
-grestore
+153 300 break
+
+% Some lines indicating the value of CUR/LEN
 
 gsave
-0.5 setgray
-[2 1] 0 setdash
-153 283 M 143 290 163 295 153 302 curveto
-158 302 M 168 295 148 290 158 283 curveto
-stroke
-grestore
-
-
-gsave
-0.7 0 0 setrgbcolor
+red
 
 % CUR length
 0.5 setlinewidth

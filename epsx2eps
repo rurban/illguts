@@ -1,8 +1,10 @@
 #!/usr/bin/perl
 
+my %seen;
+
 while (<>) {
-   if (/^%\s*include\s+\"([^\"]+)\"/) {
-       include($1);
+   if (/^%\s*(include|require)\s+\"([^\"]+)\"/) {
+       include($2, ($1 eq "require"));
        next;
    }
    print;
@@ -10,17 +12,23 @@ while (<>) {
 
 sub include
 {
-   my $file = shift;
+   my($file, $require, $level) = @_;
+   $level ||= 0;
+
+   return if $seen{$file}++ && $require;
+
    local(*FILE);
    unless (open(FILE, $file)) {
        print "% Can't include $file: $!\n";
        print STDERR "$file: $!\n";
        return;
    }
+   print STDERR "  " x $level;
+   print STDERR "include $file\n";
    local($_);
    while (<FILE>) {
-       if (/^%\s*include\s+\"([^\"]+)\"/) {
-	   include($1);
+       if (/^%\s*(include|require)\s+\"([^\"]+)\"/) {
+	   include($2, ($1 eq "require"), $level+1);
 	   next;
        }
        print;

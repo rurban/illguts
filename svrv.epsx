@@ -2,15 +2,15 @@
 %%BoundingBox: -5 262 180 310
 %%Creator: Gisle Aas (Copyright 1998)
 
-%include "common.ps"
-%include "sv.ps"
-%include "box.ps"
-%include "rect.ps"
-%include "ptr.ps"
+%require "common.ps"
+%require "sv.ps"
+%require "box.ps"
+%require "rect.ps"
+%require "ptr.ps"
 
 0 300 sv
 
-/Courier findfont 8 scalefont setfont
+/Courier 8 SF
 40  302 M (sv) rshow
 105 302 M (xrv) rshow
 160 299.5 M (sv) rshow
@@ -18,7 +18,7 @@
 55 300 1 1 newbox
 55 300 1 box
 
-/Helvetica findfont 11 scalefont setfont
+/Helvetica 11 SF
 60 303 15 sub M (RV) show
 
 % arrow

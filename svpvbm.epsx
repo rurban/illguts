@@ -2,28 +2,29 @@
 %%BoundingBox: -5 130 280 325
 %%Creator: Gisle Aas (Copyright 1998)
 
-%include "common.ps"
-%include "sv.ps"
-%include "box.ps"
-%include "rect.ps"
-%include "ptr.ps"
-%include "mws.ps"
-%include "magic.ps"
+%require "common.ps"
+%require "sv.ps"
+%require "box.ps"
+%require "rect.ps"
+%require "ptr.ps"
+%require "mws.ps"
+%require "magic.ps"
+%require "break.ps"
 
 0 300 sv
 
-/Courier findfont 8 scalefont setfont
+/Courier 8 SF
 40  302 M (sv) rshow
 105 302 M (xpvbm) rshow
 170 227 M (magic) rshow
 
-/Courier-Bold findfont 6 scalefont setfont
+/Courier-Bold 6 SF
 15 264 M (POK,VALID) cshow
 
 55 300 8 10 newbox
 55 300 10 box
 
-/Helvetica findfont 11 scalefont setfont
+/Helvetica 11 SF
 60 303 15 sub M
 
 [(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (BmUSEFUL) (BmPREVIOUS) (BmRARE)] {
@@ -49,40 +50,22 @@ grestore
 1 setlinewidth
 120 285 250 300 rect stroke
 
-/Courier findfont 8 scalefont setfont
+/Courier 8 SF
 250 302 M (char[]) rshow
 
 125 290 M
 [(a) (b) (c) (d) (\\0) (\\4) (\\4) (\\4) (\\4) (\\4) (\\4) (\\4)] {
    gsave
-     dup stringwidth pop 2 div neg 0 rmoveto show
+     dup stringwidth pop 2 div neg 0 RM show
    grestore
-   10 0 rmoveto
+   10 0 RM
 } forall
 
 
-gsave
-50 0 translate
-%break in the midle of char*
-gsave
-153 283 M 143 290 163 295 153 302 curveto
-158 302 L 168 295 148 290 158 283 curveto
-closepath
-1 setgray
-fill
-grestore
+203 300 break
 
 gsave
-0.5 setgray
-[2 1] 0 setdash
-153 283 M 143 290 163 295 153 302 curveto
-158 302 M 168 295 148 290 158 283 curveto
-stroke
-grestore
-grestore
-
-gsave
-0.7 0 0 setrgbcolor
+red
 
 % CUR length
 0.5 setlinewidth

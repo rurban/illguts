@@ -1,0 +1,24 @@
+/break {                  % <x> <y> break -
+   gsave
+      translate -153 -300 translate
+
+      % white background
+      gsave
+         153 283 moveto 143 290 163 295 153 302 curveto
+         158 302 lineto 168 295 148 290 158 283 curveto
+         closepath
+         1 setgray
+         fill
+      grestore
+
+      % dashed lines on each side
+      gsave
+         1 setlinewidth
+         0.5 setgray
+         [2 1] 0 setdash
+         153 283 moveto 143 290 163 295 153 302 curveto
+         158 302 moveto 168 295 148 290 158 283 curveto
+         stroke
+      grestore
+   grestore
+} def

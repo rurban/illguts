@@ -1,4 +1,7 @@
-/mws          % (str) x y maxwidth
+% show a string at given location, but squeeze it if it's to wide.
+% note that mws leaves the width on the stack
+
+/mws          % <str> <x> <y> <maxwidth> mws <width>
 {
     1 dict begin
     gsave
@@ -22,3 +25,27 @@
   end
 } def
 
+% same, but centered around x
+
+/mwcs         % <str> <x> <y> <maxwidth> mwcs -
+{
+    1 dict begin
+    gsave
+    /sw 4 index stringwidth pop def
+    dup sw le { %if
+      dup sw div
+      dup 1 3 div lt {
+	dup 3 mul
+      } {
+        1
+      } ifelse
+      matrix scale currentfont exch makefont setfont
+      /sw exch def
+    } { %else
+      pop
+    } ifelse
+    % The stack is now: (string) x y
+    moveto sw 2 div neg 0 rmoveto show
+    grestore
+  end
+} def

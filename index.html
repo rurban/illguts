@@ -6,7 +6,7 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 
-<h1 align=center>PerlGuts Illustrated<br><small>Version 0.02</small></h1>
+<h1 align=center>PerlGuts Illustrated<br><small>Version 0.03</small></h1>
 
 <p>This document is meant to supplement the <i>perlguts(1)</i> manual
 page that comes with Perl.  It includes commented illustrations of all
@@ -32,7 +32,7 @@ diagram.  The arrows indicate inheritance.
 
 <p><center><img src="types.gif"></center>
 
-<p>As you can see, Perl uses multiple inheritance with C <i>SvNULL</i>
+<p>As you can see, Perl uses multiple inheritance with C <i>SvNULL</i> (also named just <i>SV</i>)
 acting as some kind of virtual base class.  All the Perl types are
 identified by small numbers, and the internal Perl code often gets away
 with testing the ISA-relationship between types with the <= operator.
@@ -121,7 +121,7 @@ reference count reaches zero the object is freed.
 shown in the type hierarchy figure above. 
 
 <p>The SV contains 24 flag bits. The flags bits contain information on how
-the fields of the type value objects should be interpreted, and
+the fields of the object should be interpreted, and
 other state information.  Some flags are just used as optimizations
 in order to avoid having to dereference several levels of pointers
 just to find that the information is not there.
@@ -288,10 +288,11 @@ just to find that the information is not there.
 
 <p>The <code>struct sv</code> is common for all subtypes of SvNULL in
 Perl.  In the Perl source code this structure is typedefed to
-<i>SV</i>, <i>AV</i>, <i>HV</i> and others.  Routines that can take
-any type as parameter will have <code>SV*</code> as parameter.
-Routines that only work with arrays or hashes have <code>AV*</code> or
-<code>HV*</code> respectively in their parameter list.
+<i>SV</i>, <i>AV</i>, <i>HV</i>, <i>CV</i>, <i>GV</i> and <i>IO</i>.
+Routines that can take any type as parameter will have
+<code>SV*</code> as parameter.  Routines that only work with arrays or
+hashes have <code>AV*</code> or <code>HV*</code> respectively in their
+parameter list.
 
 <h2>SvPV</h2>
 
@@ -306,9 +307,12 @@ routines.  This requires that LEN is always at least 1 larger than CUR.
 
 <p><center><img src="svpv.gif"></center>
 
-<p>The POK flag indicates that the string pointed to by PVX contains an
-valid value.  A SvPV with the POK flag turned off represents
-<i>undef</i>.  The PVX pointer can also be NULL when POK is off.
+<p>The POK flag indicates that the string pointed to by PVX contains
+an valid string value.  If the POK flag is off and the ROK flag is
+turned on, then the PVX field is used as a pointer to an SV (see SvRV
+below) and CUR/LEN is unused.  A SvPV with both POK and ROK flags
+turned off represents <i>undef</i>.  The PVX pointer can also be NULL
+when POK is off and no string storage has been allocated.
 
 <h2>SvPVIV and SvPVNV</h2>
 
@@ -364,6 +368,8 @@ value.
 flag is turned on for them.  The PVX will then be used as the RV field
 of the SvRV.
 
+<p><center><img src="svpvrv.gif"></center>
+
 <h2>SvPVMG</h2>
 
 <p>The <i>SvPVMG</i> is like <i>SvPVNV</i> above, but has two
@@ -372,15 +378,56 @@ structures that contains callback functions and other data.  If the
 MAGIC pointer is non-NULL, then one or more of the MAGICAL flags will
 be set.
 
-
-<p>STASH (<b>s</b>ymbol <b>t</b>able h<b>ash</b>) his a pointer to a
-HV that represents some namespace/class.  This field is set when the
-value is blessed into a package (becomes an object).  The OBJECT flag
-will be set when STASH is.
+<p>STASH (<b>s</b>ymbol <b>t</b>able h<b>ash</b>) is a pointer to a
+HV that represents some namespace/class, which means that the NAME
+field of the HV must be non-NULL (see description of HV below).  The
+STASH field is set when the value is blessed into a package (becomes
+an object).  The OBJECT flag will be set when STASH is.
 
 <p><center><img src="svpvmg.gif"></center>
 
-<p>The <i>MAGIC</i> structure in detail....
+<p>The field MAGIC points to an instance of <code>struct magic</code>
+(typedefed as <code>MAGIC</code>).  This struct has 8 fields:
+<ol>
+
+<li>
+<i>moremagic</i> is a pointer to another MAGIC and is used to form a
+single linked list of the MAGICs attached to an SV.
+
+<li><i>virtual</i> is a pointer to a struct containing 5 function
+pointers.  The functions (if set) are invoked when the corresponding
+action happens to the SV.
+
+<li><i>private</i> is a 16 bit number (U16) not used by Perl.
+
+<li><i>type</i> is a character field and is used to denote which kind
+of magic this is.  The interpretation of the rest of the fields depend
+on the <i>type</i> (actually it is the callbacks attached to
+<i>virtual</i> that do any interpretation).  There is usually a direct
+correspondence between the <i>type</i> field and the <i>virtual</i>
+field.
+
+<li><i>flags</i> contains 8 flag bits.  Only 2 are generally used.
+Bit 1 is the <b>REFCOUNTED</b> flag.  It indicates that the <i>obj</i>
+is assumed to be an SV and that it's reference count must be
+decremented when this magic is freed.  The <b>GSKIP</b> flag indicate
+that invocation of the magical GET method should be suppressed.  Other
+flag bits are used depending of the kind of magic.
+
+<li><i>obj</i> is usually a pointer to some SV.  How it is used
+depends on the kind of magic this is.
+
+<li><i>ptr</i> is usually a pointer to some character string.  How it
+is used depends on the kind of magic this is.  If the <i>len</i> field
+is >= 0, then <i>ptr</i> is assumed to point to a malloced buffer and
+will be automatically freed when the magic is.
+
+<li><i>len</i> is usually the length of the character string pointed
+to by <i>ptr</i>.  How it is used depends on the kind of magic this
+is.
+
+</ol>
+
 
 <h2>SvPVBM</h2>
 
@@ -394,12 +441,15 @@ this value type.
 
 <p>A table of 256 elements is appended to the PVX.  This table
 contains the distance from the end of string of the last occurrence of
-each character in the original string.  In addition fbm_compile()
-locates the rarest character in the string (using builtin letter
-frequency tables) and stores this character in the BmRARE field.  The
-BmPREVIOUS field is set to the location of the first occurrence of the
-rare character.  (The purpose of the BmUSEFUL field is not clear to me
-yet.)
+each character in the original string. (In recent Perls, the table is
+not built for strings shorter than 3 character.)  In addition
+fbm_compile() locates the rarest character in the string (using
+builtin letter frequency tables) and stores this character in the
+BmRARE field.  The BmPREVIOUS field is set to the location of the
+first occurrence of the rare character. BmUSEFUL is incremented
+(decremented) by the RE engine when this constant substring (does not)
+help in optimizing RE engine access away.  If it goes below 0, then
+the corresponding substring is forgotten and freed;
 
 <p><center><img src="svpvbm.gif"></center>
 
@@ -469,8 +519,8 @@ goes in the TARGLEN field.
 
 <p>When assignment to an SvPVLV type occurs, then the value to be
 assigned is first copied into the SvPVLV itself (and affects the PVX,
-IVX or NVX), the magic SET method is invoked which will update the
-TARG accordingly.
+IVX or NVX). After this the magic SET method is invoked, which will
+update the TARG accordingly.
 
 
 <h2>AV</h2>
@@ -537,7 +587,7 @@ allow strings with embedded NULs.
 the same way.  MAX is the number of elements in ARRAY minus one. (The
 size of the ARRAY is required to be a power of 2, since the code that
 deals with hashes just mask off the last few bits of the HASH value to
-locate the correct HE column for a key: ARRAY[HASH & MAX]).  Also note
+locate the correct HE column for a key: <code>ARRAY[HASH & MAX]</code>).  Also note
 that ARRAY can be NULL when the hash is empty (but the MAX value will
 still be at least 7, which is the minimum value assigned by Perl.)
 
@@ -546,7 +596,7 @@ IVX field has been renamed KEYS and is the number of hash elements in
 the HASH.  The NVX field is unused.
 
 <p>The HEs are simple structs containing 3 pointers.  A pointer to the
-next HE and a pointer to the key and the value of the given hash
+next HE, a pointer to the key and a pointer to the value of the given hash
 element.
 
 <p>The HEKs are special variable sized structures that store the hash
@@ -554,7 +604,7 @@ keys.  They contain 3 fields.  The <i>hash</i> value of the string,
 the <i>len</i>gth of the string, and the <i>len</i>+1 bytes for the
 key string itself.  (As a special case, a <i>len</i> value of
 <code>HEf_SVKEY</code> (-2) indicate that a pointer to an SV is stored
-in the HEK instead of a string.  This is used for some magical hashes.)
+in the HEK instead of a string.  This hack is used for some magical hashes.)
 
 <p><center><img src="hv.gif"></center>
 
@@ -598,10 +648,30 @@ SvNULL flags:
 
 </dl></blockquote>
 
-<h2>CV</h2>
 <h2>GV</h2>
-<h2>FM</h2>
+
+<p><center><img src="gv.gif"></center>
+
+<h2>CV</h2>
+
+<p><center><img src="cv.gif"></center>
+
+<h2>SvPVFM</h2>
+
+<p><center><img src="svpvfm.gif"></center>
+
+
 <h2>IO</h2>
+
+<p><center><img src="io.gif"></center>
+
+<h2>OP</h2>
+
+COP/UNOP/BINOP/LISTOP/LOGOP/CONDOP/PMOP/SVOP/GVOP/PVOP/LOOP
+
+<h2>REGEXP</h2>
+
+<h2>PerlInterpreter</h2>
 
 <h2> More stuff ..... </h2>
 
@@ -620,7 +690,7 @@ SvNULL flags:
 
 <i>&copy; 1998 Gisle Aas</i><br>
 <a href="mailto:aas@sn.no">&lt;aas@sn.no&gt;</a><br>
-$Date: 1998/02/03 19:18:31 $
+$Date: 1998/02/06 15:20:52 $
 </small>
 </div>
 

@@ -1,5 +1,8 @@
+%require "common.ps"
+%require "rect.ps"
+%require "mws.ps"
 
-/chararray {
+/chararray {                   % <x> <y> [(f)(o)(o)(\\0)] chararray -
    10 dict begin
       /chars exch def
       /y exch def
@@ -9,19 +12,18 @@
       /w cw len mul def
       gsave
          x y translate
-         0.8 setlinewidth
-         0 -10 w 0 rect stroke
-         0.4 setlinewidth
+         0.8 LW
+         0 -10 w 0 rect S
+         0.4 LW
          cw cw w cw sub {
-            dup 0 M -10 L stroke
+            dup 0 M -10 L S
          } for
-         /Courier findfont 6 scalefont setfont
-         cw 2 div -7 M
+         /Courier 8 SF
+         cw 2 div -7.5 M
          chars {
-            gsave cshow grestore
-            cw 0 rmoveto
+            gsave currentpoint cw 1 sub mwcs grestore
+            cw 0 RM
          } forall
-         /Courier findfont 8 scalefont setfont
          w 2 M (char[]) rshow
       grestore
    end
