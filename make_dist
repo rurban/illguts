@@ -14,6 +14,8 @@ sh("cp *.html $VNAME");
 sh("cp *.ps *.epsx $VNAME");
 sh("cp *.gif $VNAME");
 sh("cp Makefile README VERSION eps2gif eps2ppm epsx2eps make_dist $VNAME");
+sh("mkdir $VNAME/slides");
+sh("cp -r slides/img slides/mk-slides slides/slides.pds $VNAME/slides");
 
 sh("tar cf $VNAME.tar $VNAME");
 sh("rm -rf $VNAME");
