@@ -6,7 +6,7 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 
-<h1 align=center>PerlGuts Illustrated<br><small>Version 0.04</small></h1>
+<h1 align=center>PerlGuts Illustrated<br><small>Version 0.05</small></h1>
 
 <p>This document is meant to supplement the <i>perlguts(1)</i> manual
 page that comes with Perl.  It includes commented illustrations of all
@@ -30,12 +30,12 @@ help emulate something like C++ inheritance of types.  The various
 data types that Perl implement are illustrated in this class hierarchy
 diagram.  The arrows indicate inheritance.
 
-<p><center><img src="types.gif"></center>
+<p><center><img src="svtypes.gif"></center>
 
 <p>As you can see, Perl uses multiple inheritance with C <i>SvNULL</i> (also named just <i>SV</i>)
 acting as some kind of virtual base class.  All the Perl types are
 identified by small numbers, and the internal Perl code often gets away
-with testing the ISA-relationship between types with the <= operator.
+with testing the ISA-relationship between types with the &lt;= operator.
 As you can see from the figure above, this can only work reliably for
 some comparisons.  All Perl data value objects are tagged with their
 type, so you can always ask an object what its type is and act
@@ -180,6 +180,12 @@ just to find that the information is not there.
 
   <dd> This flag indicates that the object has any other magical methods
        (besides get/len/set magic method) or even methodless magic attached.
+
+        <p>The RMAGICAL flag is used mainly for tied HV and AV (having 'P'
+	magic) and SVs which have magic <i>clear</i> method. It is used as an
+	optimization to avoid setting GMAGICAL and SMAGICAL flags for SVs
+	which need to be marked as MAGICAL otherwise.
+
        <p>
        Any of GMAGICAL, SMAGICAL and RMAGICAL is called MAGICAL
        <p>
@@ -343,9 +349,7 @@ As a special hack in order to improve the speed of removing characters
 from the beginning of a string, the OOK flag is used.  When this flag
 is on, then the IVX value is not interpreted as an integer value, but
 is instead used as an <i>offset</i> into the string.  The PVX, CUR,
-LEN is adjusted to point within the allocated string instead.  The
-sv_chop()/sv_backoff() routines adjust the offsets and set/clear the
-OOK flag.
+LEN is adjusted to point within the allocated string instead.
 
 <p><center><img src="ook.gif"></center>
 
@@ -430,7 +434,7 @@ depends on the kind of magic this is.
 
 <li><i>ptr</i> is usually a pointer to some character string.  How it
 is used depends on the kind of magic this is.  If the <i>len</i> field
-is >= 0, then <i>ptr</i> is assumed to point to a malloced buffer and
+is &gt;= 0, then <i>ptr</i> is assumed to point to a malloced buffer and
 will be automatically freed when the magic is.
 
 <li><i>len</i> is usually the length of the character string pointed
@@ -589,7 +593,7 @@ iterator starts out with RITER = -1 and EITER = NULL.
 
 <li>The last two fields are only used when the hash represents a name
 space (<i>stash</i>).  PMROOT points to a node in the Perl syntax
-tree.  It is used to implement the require function.  NAME is a
+tree.  It is used to implement the reset() for REs.  NAME is a
 NUL-terminated string which denotes the name of the name space (or
 <i>package</i>).  This is one of the few places where Perl does not
 allow strings with embedded NULs.
@@ -666,7 +670,7 @@ SvNULL flags:
 but has five additional fields; GP, NAME, NAMELEN, GvSTASH, FLAGS.
 
 <p>The GP is a pointer to structure that holds pointers to data of
-various types.  Perl use a pointer (instead of including the GP fields
+various kinds.  Perl use a pointer (instead of including the GP fields
 in the xpvgv) in order to implement the proper glob aliasing
 behavior (i.e. different GVs can share the same GP).
 
@@ -706,15 +710,18 @@ an GLOB based on the name of another glob.
 
 <p>GPs can be shared between one or more GVs.  The data type fields
 for the GP are: SV, IO, FORM, AV, HV, CV.  These hold a pointer to the
-corresponding data type (The SV must point to some SV with type <=
-SVt_PVLV. The FORM field must point to a SvPVFM if non-NULL.).  The SV
-is always present (but might point to a SvNULL object).
+corresponding data type object. (The SV must point to some simple SvNULL
+subtype (i.e. with type &lt;= SVt_PVLV). The FORM field must point to a
+SvPVFM if non-NULL.  The IO field must point to an IO if non-NULL, the AV
+to an AV, etc.)  The SV is always present (but might point to a
+SvNULL object).  All the others are initially NULL.
 
 <p>The additional administrative fields in the GP are: REFCNT, EGV,
 CVGEN, LASTEXPR, LINE, FILEGV.
 
 <p>REFCNT is a reference counter.  It says how many GVs have a pointer
-to this GP.  When the counter reach 0 the GP is freed.
+to this GP.  It is incremented/decremented as new GVs reference/forget
+this GP.  When the counter reach 0 the GP is freed.
 
 <p>EGV is a pointer to the GV that originally created this GP (used to
 tell the real name of any aliased symbol).  If the original GV is freed,
@@ -734,10 +741,12 @@ is incremented.)
 
 <p>LASTEXPR is an integer I don't understand the meaning of yet.
 
-<p>FILE is a pointer to a GV that contains the name of the file where
-this symbol was first created.
+<p>FILEGV is a pointer to a GV where the SV of the GP is the name of
+the file where this symbol was first created.  The NAME of this GV is
+the filename prefixed with "_&lt;" and GvSTASH is
+<code>defstash</code> (see description of stashes below).
 
-LINE is the corresponding line number in the FILE.
+LINE is the corresponding line number in the file.
 
 <h3>Stashes</h3>
 
@@ -748,12 +757,13 @@ GVs.  The root of the namespace is pointed to by the variable
 
 <p>In the figure below we have simplified the representation of
 stashes to a single box.  The text in the blue field is the NAME of
-the HV.  The hash elements keys are shown as field names and the
-element values are shown as a pointers to globs (GV).  The GVs are also
-simplified to a single box.  The text in the green field in the fully
-qualified name of the GV. Only the GP data fields are shown.
+the HV/stash.  The hash elements keys are shown as field names and the
+element values are shown as a pointers to globs (GV).  The GVs are
+also simplified to a single box.  The text in the green field in the
+fully qualified name of the GV. Only the GP data fields are shown (and
+FORM has been eliminated because it was not 2 letters long :-).
 
-<p>The figure illustrates how the scalar (named) variables <code>$foo</code>
+<p>The figure illustrates how the scalar variables <code>$::foo</code>
 and <code>$foo::bar::baz</code> are represented by Perl.
 
 <p><center><img src="stash.gif"></center>
@@ -777,8 +787,8 @@ is at least 4 levels deep and each glob is 3 levels, giving at least
 
 <p>The <code>defstash</code> stash is also a place where globs
 representing source files are entered.  These entries are prefixed
-with "_<".  The FILE field of the GP points to the same glob as the
-corresponding "_<" entry in <code>defstash</code> does.
+with "_&lt;".  The FILEGV field of the GP points to the same glob as the
+corresponding "_&lt;" entry in <code>defstash</code> does.
 
 
 <a name="cv"><h2>CV</h2></a>
@@ -788,8 +798,10 @@ twelve additional fields; CvSTASH, START, ROOT, XSUB, GV, FILEGV,
 DEPTH, PADLIST, OUTSIDE, MUTEXP, OWNER, FLAGS.  (The fields MUTEXP and
 OWNER are only present for Perls that support threading).
 
-
 <p><center><img src="cv.gif"></center>
+
+<p><i>I will need to describe PADs and OPs before detailed description
+of CVs makes sense.</i>
 
 <a name="svpmfm"><h2>SvPVFM</h2></a>
 
@@ -800,15 +812,103 @@ OWNER are only present for Perls that support threading).
 
 <p><center><img src="io.gif"></center>
 
-<a name="op"><h2>OP</h2></a>
+<a name="pad"><h2>PAD</h2></a>
 
-COP/UNOP/BINOP/LISTOP/LOGOP/CONDOP/PMOP/SVOP/GVOP/PVOP/LOOP
+NOTYET
+
+<a name="op"><h2><a href="op.html">OP</a></h2></a>
+
+<i>I will perhaps make a separate document that describes <a
+href="op.html">syntax trees and OP codes</a>.</i>
+
+<h2>Stacks</h2>
+
+During compilation and runtime Perl use several stacks to manage
+itself and the program running.  The first three implements scopes and
+variables and values which are restored (or actions to be performed)
+when the scope is left.
+
+<p>The <code>scopestack</code> pushes the <code>savestack_ix</code>
+when <code>ENTER</code> is executed.  On <code>LEAVE</code> the top
+<code>savestack_ix</code> entry is popped and all things saved on the
+<code>savestack</code> since this is restored.  This means that a
+ENTER/LEAVE pairs represents dynamic nestable scopes.
+
+<p>The <code>savestack</code> contains records of things saved in
+order to be restored when the scopes are left.  Each record consist of
+2-4 ANY elements.  The first one is a type code, which is used to
+decide how long the record is and how to interpret the other elements.
+(In the figure the type codes are marked pinkish color.)  The
+restoring involves updating memory locations of various types as well
+as more general callbacks (destructors).
+
+<p>The <code>tmps_stack</code> implement mortal SVs.  Each time a new
+mortal is made, then <code>tmps_ix</code> is incremented and the
+corresponding entry in <code>tmps_stack</code> made to point to it.
+When <code>SAVETMPS</code> is executed, then the old
+<code>tmps_floor</code> value is saved on the <code>savestack</i> and
+then <code>tmps_floor</code> is set equal to <code>tmps_ix</code>.
+When <code>FREETMPS</code> is executed, then all SVs pointed to by the
+pointers between <code>tmps_floor</code> and <code>tmps_ix</code> will
+have their REFCNT decremented.  How many this will be depend
+on how many scopes has been left.  (Note that the
+<code>tmps_floor</code> and <code>tmps_ix</code> values is the index
+of the last SV* pushed. They start out as -1 when the stack is empty.)
+
+<p><center><img src="scope.gif"></center>
+
+<p>The next fours stacks manage subroutine calls (and evals and
+loops).
+
+<p>The first one is simply denoted is <em>the stack</em> and is really
+an AV.  The variable <code>curstack</code> points to this AV.  To
+speed up access Perl also maintain direct pointers to the start
+(<code>stack_base</code>) and the end (<code>stack_max</code>) of the
+allocated ARRAY of this AV.  The AV so special that it is marked as
+not REAL and the FILL field is not updated.  Instead we use a
+dedicated pointed called <code>stack_sp</code>, the stack pointer.
+The stack is used to pass arguments to PP operations and subroutines
+and is also the place where the result of these operations as well as
+subroutine return values are placed.
+
+<p>The <code>markstack</code> is used to indicate the extent of the
+stack to be passed as @_ to Perl subroutines.  When a subroutine is to
+be called, then first the start of the arguments are marked by pushing
+the <code>stack_sp</code> offset onto <code>markstack</code>, then the
+arguments themselves are calculated and pushed on the stack.  Then a
+<code>@_</code> array is set up with pointers the SV* on the stack
+between the <code>MARK</code> and <code>stack_sp</code> and the
+subroutine starts running.  For XSUB routines, the creation of
+<code>@_</code> is suppressed, and the routine will use the
+<code>MARK</code> directly to find it's arguments.
+
+
+<p>The <code>retstack</code> contains pointers to the operation to go
+to after subroutines return.  Each time a subroutine is called a new
+OP* is pushed on this stack.  When a subroutine returns, Perl pop the
+top OP* from <code>retstack</code> and continue execution from this
+place.
+
+<p>The <code>cxstack</code> (context stack) contains records that
+describe the current context.  Each time a subroutine, an eval or a
+loop is entered, then a new PERL_CONTEXT record is pushed on the
+<code>cxstack</code>.  When subroutine/eval/loop finished then the
+record top record is poped and the corresponding values restored.  The
+PERL_CONTEXT record is descibed below.
+
+<p><center><img src="stack.gif"></center>
+
+<h3>PERL_CONTEXT</h3>
+
+NOTYET
 
 <h2>REGEXP</h2>
 
+NOTYET
+
 <h2>PerlInterpreter</h2>
 
-<h2> More stuff ..... </h2>
+NOTYET
 
 
 
@@ -825,7 +925,8 @@ COP/UNOP/BINOP/LISTOP/LOGOP/CONDOP/PMOP/SVOP/GVOP/PVOP/LOOP
 
 <i>&copy; 1998 Gisle Aas</i><br>
 <a href="mailto:aas@sn.no">&lt;aas@sn.no&gt;</a><br>
-$Date: 1998/02/18 12:16:03 $
+$Date: 1998/02/24 20:30:27 $
 </small>
 </div>
 
+</BODY>

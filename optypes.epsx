@@ -1,0 +1,56 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: 80 195 260 312
+%%Creator: Gisle Aas (Copyright 1998)
+
+0.5 dup scale
+
+%require "common.ps"
+%require "arrow.ps"
+
+/S {                                   % x y str
+  dup stringwidth pop 2 div            % x y str dx
+  4 2 roll                             % str dx x y
+  moveto                               % str dx
+  gsave
+     % draw a nice box around the text
+     0 -2 rmoveto
+     dup 3 add
+     dup 0 rlineto
+     0 20 rlineto
+     dup 2 mul neg 0 rlineto
+     0 -20 rlineto
+     closepath
+     gsave 0.95 setgray fill grestore
+     0.5 setlinewidth stroke
+     pop
+  grestore
+  neg 0 rmoveto                        % str
+  show
+} def
+
+/A {
+  20 add   % adjust to-y
+  3 2 roll 3 sub 3 1 roll % adjust from-y
+  1.5 7 9 arrow fill
+} def
+
+
+%---------------------------------
+
+/Helvetica 18 SF
+270 600 (OP) S
+
+200 550 (COP) S    270 600 200 550 A
+270 550 (UNOP) S   270 600 270 550 A
+340 550 (SVOP) S   270 600 345 550 A
+410 550 (GVOP) S   270 600 410 550 A
+480 550 (PVOP) S   270 600 480 550 A
+
+270 500 (BINOP)  S 270 550 270 500 A
+350 500 (LOGOP)  S 270 550 350 500 A
+440 500 (CONDOP) S 270 550 440 500 A
+
+270 450 (LISTOP) S 270 500 270 450 A
+
+235 400 (PMOP) S   270 450 235 400 A
+305 400 (LOOP) S   270 450 305 400 A

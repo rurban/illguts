@@ -1,0 +1,21 @@
+/distance {
+   4 dict begin
+      /ix exch def
+      /len exch def
+      /y exch def
+      /x exch def
+      ix { /len len 3 sub def } if  % proper arrow heads
+      gsave
+        newpath
+        1.5 setlinewidth
+        x y M len 0 rlineto stroke
+        0.5 setlinewidth
+        x y 2 sub M 0 4 rlineto stroke
+        ix { %ifelse
+           x len add 3 add y M -3 3 rlineto 0 -6 rlineto closepath fill
+        } {
+           x len add y 2 sub M 0 4 rlineto stroke
+        } ifelse
+      grestore
+   end
+} def

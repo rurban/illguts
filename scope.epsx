@@ -1,0 +1,94 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: 15 23 305 200
+%%Creator: Gisle Aas (Copyright 1998)
+
+%require "common.ps"
+%require "rect.ps"
+%require "ptr.ps"
+%require "break.ps"
+%require "dist.ps"
+
+/Courier 8 SF
+200 62 M (I32) rshow
+300 112 M (ANY) rshow
+300 162 M (SV*) rshow
+
+/Helvetica-Bold 10 SF
+80 52 M (scopestack) rshow   85  55  100  55 ptrn
+80 102 M (savestack) rshow   85 105  100 105 ptrn
+80 152 M (tmps_stack) rshow  85 155  100 155 ptrn
+
+/Helvetica 8 SF
+80 40 M (scopestack_ix) rshow
+80 30 M (scopestack_max) rshow
+
+80 90 M (savestack_ix) rshow
+80 80 M (savestack_max) rshow
+
+80 120 M (tmps_max) rshow
+/Helvetica-Oblique 8 SF
+80 140 M (tmps_floor) rshow
+80 130 M (tmps_ix) rshow
+
+% scopestack
+gsave 0.8 setgray 120 50 200 60 rect fill grestore
+100 50 200 60 rect stroke
+100 10 200 { dup 50 M 60 L stroke } for
+170 62.5 break
+
+%savestack
+gsave palered [120 150 170 200 230] {100 M 10 10 rrect fill } forall grestore
+gsave 0.8 setgray 240 100 300 110 rect fill grestore
+100 100 300 110 rect stroke
+100 10 300 { dup 100 M 110 L stroke } for
+270 112.5 break
+
+%tmps_stack
+gsave 0.8 setgray 210 150 300 160 rect fill grestore
+100 150 300 160 rect stroke
+100 10 300 { dup 150 M 160 L stroke } for
+270 162.5 break
+
+red
+100  42  20 false distance % scopestack_ix
+100  32 100 false distance % scopestack_max
+
+100  92 140 false distance % savestack_ix
+100  82 200 false distance % savestack_max
+
+100 142  80 true  distance % tmps_floor
+100 132 100 true  distance % tmps_ix
+100 122 200 false distance % tmps_max
+
+% draw two scopestack entries
+gsave
+   % erase the savestack lines where the arrows should be
+   1 setgray
+   5 setlinewidth
+   130 98 M 130 70 L stroke
+   180 98 M 180 70 L stroke
+   % same for tmps_stack lines while we have this context
+   120 148 M 120 115 L stroke
+   150 148 M 150 115 L stroke
+grestore
+105 55 105 75 130 75 130 102 ptrn
+115 55 115 70 180 70 180 102 ptrn
+
+% draw a saved tmps_floor (in savestack)
+215 105 215 115 150 115 150 152 ptrn
+135 105 135 115 120 115 120 152 ptrn
+
+
+% draw some SVs pointed to by the tmps_stack
+%require "sv.ps"
+
+2 dict begin
+  /x 50 def
+
+  0.5 setgray
+  105 10 205 {
+     155 x 180 ptrn
+     gsave x 5 sub 191 translate 0.35 dup scale 0 0 sv2 grestore
+     /x x 20 add def
+  } for
+end

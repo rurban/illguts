@@ -1,0 +1,40 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -5 115 355 310
+%%Creator: Gisle Aas (Copyright 1998)
+
+%require "common.ps"
+%require "box.ps"
+%require "rect.ps"
+%require "mws.ps"
+%require "op.ps"
+
+/Courier 8 SF
+50 302 M (cop)     rshow
+110 302 M (svop)   rshow
+170 302 M (gvop)   rshow
+230 302 M (pvop)   rshow
+290 302 M (logop)  rshow
+350 302 M (condop) rshow
+
+/XX { {gsave currentpoint 30 mws pop grestore 0 -15 RM} forall } def
+
+0 300 7 12 newbox
+0 300 12 op
+[(label)(stash)(filegv)(seq)(arybase)(line)] XX
+
+
+60 300 7 7 newbox
+60 300 7 op
+[(sv)] XX
+
+120 300 7 7 newbox
+120 300 7 op [(gv)] XX
+
+180 300 7 7 newbox
+180 300 7 op [(pv)] XX
+
+240 300 8 8 newbox
+240 300 8 op [(first)(other)] XX
+
+300 300 8 9 newbox
+300 300 9 op [(first)(true)(false)] XX

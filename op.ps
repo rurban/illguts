@@ -1,0 +1,45 @@
+%require "common.ps"
+%require "box.ps"
+%require "mws.ps"
+
+/op {
+   10 dict begin
+   /size exch def
+   /y    exch def
+   /x    exch def
+
+   /w 50 def
+   /w2 w 2 div def
+
+   /x2   x w add def
+
+   /y2   y 15 4 mul sub def
+   /y3   y 15 5 mul sub def
+   /y4   y 15 6 mul sub def
+
+   gsave  x y3 x w2 add y2 rect palered fill grestore
+   gsave  x w2 add y4 x2 y3 rect 0.8 setgray fill grestore
+
+   x y size box
+
+   % a few extra dividers
+   x w2 add dup y2 exch y4 M L stroke
+   x w 4 div add dup y3 exch y4 M L stroke
+
+   /Helvetica 11 SF
+   5 x add y 3 add 15 sub M
+
+   [(next) (sibling) (ppaddr) (targ)] {
+       gsave
+       currentpoint 30 mws pop
+       grestore
+       0 -15 RM
+   } forall
+
+   (type) x w 4 div add   y3 3 add w2 mwcs
+   (seq)  x w 4 div 3 mul add y3 3 add w2 mwcs
+   (flags) x w 8 div add y4 3 add 10 mwcs
+   (priv)  x w 8 div 3 mul add y4 3 add 10 mwcs
+
+   5 x add y4 3 add 15 sub M
+} def
