@@ -17,3 +17,19 @@
    end
 } def
 
+/newbox {   % yellow mark those which are new
+   4 dict begin
+     /to exch def
+     /from exch def
+     /y exch def
+     /x exch def
+
+     gsave
+       1 1 0.8 setrgbcolor  % yellow
+       x y from 1 sub 15 mul sub 
+       x 50 add y to 15 mul sub rect
+       fill
+     grestore
+   end
+} def
+

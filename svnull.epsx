@@ -70,5 +70,5 @@ newpath 70 50 3 0 360 arc fill
 70 50 M 90 50 L stroke
 90 45 M 90 55 L stroke
 93 47 M 93 53 L stroke
-96 49 M 96 51 L stroke
+%96 49 M 96 51 L stroke
 grestore

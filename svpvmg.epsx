@@ -19,6 +19,7 @@
 170 287 M (magic) rshow
 240 287 M (magic) rshow
 
+55 300 6 7 newbox
 55 300 7 box
 
 /Helvetica findfont 11 scalefont setfont

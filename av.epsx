@@ -21,8 +21,13 @@ gsave
    0.8 setgray
    55 225 105 255 rect fill
 grestore
+55 300 8 9 newbox
 55 300 9 box
-55 150 55 18 add 165 rect stroke
+
+% flags box
+55 150 55 18 add 165 rect
+gsave 1 1 0.8 setrgbcolor fill grestore
+stroke
 
 
 /Helvetica findfont 11 scalefont setfont

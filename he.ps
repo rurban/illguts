@@ -5,9 +5,11 @@
      /x2 x 70 add def
      /cw 8 def           % hek char width
      /x3 x2 40 add len 1 add cw mul add def
+
+     1 setlinewidth
      x y 3 box
 
-    /Helvetica findfont 11 scalefont setfont
+     /Helvetica findfont 11 scalefont setfont
      x 5 add y 12 sub M
 
      [(next)(hek)(val)] {
@@ -66,6 +68,7 @@
 
      % VAL arrow and corresponding SV
      gsave 1 setgray x 55 add y 39 sub x2 y 36 sub rect fill grestore
+     1 setlinewidth
      x 42.5 add y 37.5 sub x2 ptr1
      x2 y 33 sub sv
 

@@ -21,6 +21,7 @@ gsave
    0.8 setgray
    55 225 105 240 rect fill
 grestore
+55 300 8 11 newbox
 55 300 11 box
 
 /Helvetica findfont 11 scalefont setfont
@@ -37,7 +38,9 @@ grestore
 97.5 292.5 130 ptr1 % ARRAY
 %97.5 217.5 130 ptr1 % MAGIC
 %97.5 202.5 130 ptr1 % STASH
-97.5 172.5 115 172.5 115 245 130 245 ptrn % EITER
+gsave 0.3 setgray [4 3] 2 setdash
+  97.5 172.5 115 172.5 115 245 130 245 ptrn  % EITER
+grestore
 97.5 142.5 115 142.5 115 110 ptrn % NAME
 
 % NAME string

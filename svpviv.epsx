@@ -13,6 +13,7 @@
 40  302 M (sv) rshow
 105 302 M (xpviv) rshow
 
+55 300 4 4 newbox
 55 300 4 box
 
 /Helvetica findfont 11 scalefont setfont
