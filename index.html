@@ -6,7 +6,7 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 
-<h1 align=center>PerlGuts Illustrated<br><small>Version 0.08</small></h1>
+<h1 align=center>PerlGuts Illustrated<br><small>Version 0.09</small></h1>
 
 <p>This document is meant to supplement the <i>perlguts(1)</i> manual
 page that comes with Perl.  It contains commented illustrations of all
@@ -30,7 +30,7 @@ help emulate something like C++ inheritance of types.  The various
 data types that Perl implement are illustrated in this class hierarchy
 diagram.  The arrows indicate inheritance (IS-A relationships).
 
-<p><center><img src="svtypes.gif"></center>
+<p><center><img src="svtypes.png"></center>
 
 <p>As you can see, Perl uses multiple inheritance with C <i>SvNULL</i> (also named just <i>SV</i>)
 acting as some kind of virtual base class.  All the Perl types are
@@ -102,7 +102,7 @@ names reported by the <i>Devel::Peek</i> module.
 <i>undefined</i> scalar value.  It consist of the "struct sv" only,
 and looks like this:
 
-<p><center><img src="svnull.gif"></center>
+<p><center><img src="svnull.png"></center>
 
 <p>It contains a pointer (ANY) to more data, which in this case is
 always NULL.  All the subtypes are implemented by attaching
@@ -126,7 +126,7 @@ other state information.  Some flags are just used as optimizations
 in order to avoid having to dereference several levels of pointers
 just to find that the information is not there.
 
-<p><center><img src="flags.gif" alt=""></center>
+<p><center><img src="flags.png" alt=""></center>
 
 <p>The purpose of the flag bits are:
 
@@ -318,7 +318,7 @@ string.  The byte at (PVX + CUR) should always be '\0' in order
 to make sure that the string is NUL-terminated if passed to C library
 routines.  This requires that LEN is always at least 1 larger than CUR.
 
-<p><center><img src="svpv.gif"></center>
+<p><center><img src="svpv.png"></center>
 
 <p>The POK flag indicates that the string pointed to by PVX contains
 an valid string value.  If the POK flag is off and the ROK flag is
@@ -335,13 +335,13 @@ indicates if the IVX value is valid.  If both the IOK and POK flag is
 on, then the PVX will (usually) be a string representation of the same
 number found in IVX.
 
-<p><center><img src="svpviv.gif"></center>
+<p><center><img src="svpviv.png"></center>
 
 <p>The <i>SvPVNV</i> type is like <i>SvPVIV</i> but has an additional
 field to hold a single <i>double</i> value called NVX.  The
 corresponding flag is called NOK.
 
-<p><center><img src="svpvnv.gif"></center>
+<p><center><img src="svpvnv.png"></center>
 
 <a name="ook"><h2>SvOOK</h2></a>
 
@@ -351,7 +351,7 @@ is on, then the IVX value is not interpreted as an integer value, but
 is instead used as an <i>offset</i> into the string.  The PVX, CUR,
 LEN is adjusted to point within the allocated string instead.
 
-<p><center><img src="ook.gif"></center>
+<p><center><img src="ook.png"></center>
 
 <h2><a name="sviv">SvIV</a> and <a name="svnv">SvNV</a></h2>
 
@@ -363,9 +363,9 @@ them.  This arrangement makes it possible for code to always access
 the IVX/NVX fields at a fixed offset from where the SV field ANY
 points.
 
-<p><center><img src="sviv.gif"></center>
+<p><center><img src="sviv.png"></center>
 
-<p><center><img src="svnv.gif"></center>
+<p><center><img src="svnv.png"></center>
 
 <a name="svrv"><h2>SvRV</h2></a>
 
@@ -374,14 +374,14 @@ pointer which points to an SV (which can be any of the SvNULL
 subtypes).  A SvRV object with ROK flag off represents an undefined
 value.
 
-<p><center><img src="svrv.gif"></center>
+<p><center><img src="svrv.png"></center>
 
 <p>Subclasses of SvPV can also be treated as SvRV objects when the ROK
 flag is turned on for them.  The PVX will then be used as the RV field
 of the SvRV.  Of course ROK and POK is mutually exclusive and the
 CUR/LEN fields have no meaning when ROK is on.
 
-<p><center><img src="svpvrv.gif"></center>
+<p><center><img src="svpvrv.png"></center>
 
 <a name="svpvmg"><h2>SvPVMG</h2></a>
 
@@ -402,7 +402,7 @@ The STASH field is set when the value is blessed into a package
 The GV and CV subclasses introduce their own unrelated fields called
 STASH which might be confusing.)</i></small>
 
-<p><center><img src="svpvmg.gif"></center>
+<p><center><img src="svpvmg.png"></center>
 
 <p>The field MAGIC points to an instance of <code>struct magic</code>
 (typedefed as <code>MAGIC</code>).  This struct has 8 fields:
@@ -469,7 +469,7 @@ first occurrence of the rare character. BmUSEFUL is incremented
 help in optimizing RE engine access away.  If it goes below 0, then
 the corresponding substring is forgotten and freed;
 
-<p><center><img src="svpvbm.gif"></center>
+<p><center><img src="svpvbm.png"></center>
 
 <p>The extra SvPVBM information and the character distance table is
 only valid when the <b>VALID</b> flag is on.  A magic structure with
@@ -534,7 +534,7 @@ string to be affected) is assigned to the TARG field.  The substr
 offset value goes in the TARGOFF field and the substr length parameter
 goes in the TARGLEN field.
 
-<p><center><img src="svpvlv.gif"></center>
+<p><center><img src="svpvlv.png"></center>
 
 <p>When assignment to an SvPVLV type occurs, then the value to be
 assigned is first copied into the SvPVLV itself (and affects the PVX,
@@ -558,7 +558,7 @@ difference is that the value of FILL/MAX is always one less than
 CUR/LEN would be in the same situation.  The IVX/NVX fields are
 unused.
 
-<p><center><img src="av.gif"></center>
+<p><center><img src="av.png"></center>
 
 <p>The array pointed to by ARRAY contains pointers to any of the
 SvNULL subtypes.  Usually ALLOC and ARRAY both point to the start of
@@ -648,7 +648,7 @@ As a special case, a <i>len</i> value of <code>HEf_SVKEY</code> (-2)
 indicate that a pointer to an SV is stored in the HEK instead of a
 string.  This hack is used for some magical hashes.
 
-<p><center><img src="hv.gif"></center>
+<p><center><img src="hv.png"></center>
 
 <p>In a perfect hash both KEYS and FILL are the same value.  This
 means than all HEs can be located directly from the pointer in the
@@ -667,7 +667,7 @@ SvNULL flags:
        have lots of hashes with the same keys.
        The SHAREKEYS flag is on by default for newly created HVs.
        <p>
-       <center><img src="strtab.gif"></center>
+       <center><img src="strtab.png"></center>
 
        <p>
        What is special with the <code>strtab</code> hash is that the <i>val</i>
@@ -730,7 +730,7 @@ figure).  The magic GET method is used to stringify the globs (as the fully
 qualified name prefixed with '*').  The magic SET method is used to alias
 an GLOB based on the name of another glob.
 
-<p><center><img src="gv.gif"></center>
+<p><center><img src="gv.png"></center>
 
 <h3>GP</h3>
 
@@ -792,7 +792,7 @@ FORM has been eliminated because it was not 2 letters long :-).
 <p>The figure illustrates how the scalar variables <code>$::foo</code>
 and <code>$foo::bar::baz</code> are represented by Perl.
 
-<p><center><img src="stash.gif"></center>
+<p><center><img src="stash.png"></center>
 
 <p>All resolution of qualified names starts with the stash pointed to
 by the <code>defstash</code> variable.  Nested name spaces are
@@ -825,7 +825,7 @@ thirteen additional fields; CvSTASH, START, ROOT, XSUB, XSUBANY, GV, FILEGV,
 DEPTH, PADLIST, OUTSIDE, MUTEXP, OWNER, FLAGS.  (The fields MUTEXP and
 OWNER are only present for Perls that support threading).
 
-<p><center><img src="cv.gif"></center>
+<p><center><img src="cv.png"></center>
 
 <p><i>I will need to describe PADs and OPs before detailed description
 of CVs makes sense.</i>
@@ -835,7 +835,7 @@ of CVs makes sense.</i>
 The <i>SvPVFM</i> is like <i>CV</i> above, but adds a single field
 called LINES.
 
-<p><center><img src="svpvfm.gif"></center>
+<p><center><img src="svpvfm.png"></center>
 
 
 <a name="io"><h2>IO</h2></a>
@@ -843,7 +843,7 @@ called LINES.
 The <i>IO</i> is like <i>SvPVMG</i> above, but has quite a few
 additional fields.
 
-<p><center><img src="io.gif"></center>
+<p><center><img src="io.png"></center>
 
 <a name="pad"><h2>PAD</h2></a>
 
@@ -888,7 +888,7 @@ many scopes has been left.  Note that the <code>tmps_floor</code> and
 <code>tmps_ix</code> values is the index of the last SV* pushed. They
 both start out as -1 when the stack is empty.
 
-<p><center><img src="scope.gif"></center>
+<p><center><img src="scope.png"></center>
 
 <p>The next fours stacks manage subroutine calls, evals, and
 loops.
@@ -929,7 +929,7 @@ loop is entered, then a new PERL_CONTEXT record is pushed on the
 record top record is poped and the corresponding values restored.  The
 PERL_CONTEXT record will eventually be descibed below.
 
-<p><center><img src="stack.gif"></center>
+<p><center><img src="stack.png"></center>
 
 <h3>PERL_CONTEXT</h3>
 
@@ -958,7 +958,7 @@ NOTYET
 
 <i>&copy; 1998-1999 Gisle Aas</i><br>
 <a href="mailto:gisle@aas.no">&lt;gisle@aas.no&gt;</a><br>
-$Date: 1999/06/11 18:33:29 $
+$Date: 1999/11/02 17:02:43 $
 </small>
 </div>
 

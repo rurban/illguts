@@ -1,3 +1,0 @@
-#!/bin/sh
-
-./eps2ppm $1 | pnmscale 0.4 | ppmquant 32 | ppmtogif -sort
