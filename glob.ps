@@ -1,0 +1,38 @@
+%require "common.ps"
+%require "mws.ps"
+
+/glob {
+   10 dict begin
+   gsave
+      /name exch def
+      /y exch def
+      /x exch def
+
+      /w 25 def
+      /h 10 def
+
+      /x2 x w add def
+      /y2 y 6 h mul sub def
+
+      /Courier 6 SF
+      x2 y 2 add M (glob) rshow
+
+      1 setlinewidth
+      gsave palegreen x y x2 y h sub rect fill grestore
+      x y x2 y2 rect stroke
+
+      /Helvetica-Bold 8 SF
+      name x 2 add y 8 sub w 4 sub mws pop
+
+      0.5 setlinewidth
+      /Helvetica 8 SF
+      /y y h sub def
+      [(SV)(IO)(AV)(HV)(CV)] {
+          x y M x2 y L stroke
+          x 2 add y 8 sub w 10 sub mws pop
+	  /y y h sub def
+      } forall
+
+   grestore
+   end
+} def

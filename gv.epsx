@@ -14,7 +14,7 @@
 0 300 sv
 
 /Courier 8 SF
-40  302 M (sv) rshow
+40  302 M (gv) rshow
 105 302 M (xpvgv) rshow
 170  77 M (hv) rshow
 

@@ -3,6 +3,14 @@
 /gp {                                  % <x> <y> gp -
     4 dict begin
         /y exch def  /x exch def
+        /x2 x 50 add def
+
+        gsave palegreen
+          x y x2 y 15 sub rect fill
+          x y 30 sub x2 y 90 sub rect fill
+          x y 105 sub x2 y 120 sub rect fill
+        grestore
+
 	x y 12 box
 
         /Courier 8 SF

@@ -13,7 +13,7 @@
 0 300 sv
 
 /Courier 8 SF
-40  302 M (sv) rshow
+40  302 M (cv) rshow
 105 302 M (xpvcv) rshow
 
 55 300 8 19 newbox

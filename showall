@@ -1,2 +1,0 @@
-#!/bin/sh
-for i in *.eps; do ghostview $i; done

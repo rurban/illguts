@@ -1,0 +1,31 @@
+#!/usr/bin/perl -w
+
+$NAME = "illguts";
+chop($VERSION = `cat VERSION`);
+die "Bad version number" unless $VERSION =~ /^\d+\.\d\d$/;
+
+sh("grep 'Version $VERSION' index.html");
+
+$VNAME = "$NAME-$VERSION";
+
+mkdir($VNAME, 0755) || die "Can't create $VNAME: $!";
+
+sh("cp index.html $VNAME");
+sh("cp *.ps *.epsx $VNAME");
+sh("cp *.gif $VNAME");
+sh("cp Makefile README VERSION eps2gif eps2ppm epsx2eps make_dist $VNAME");
+
+sh("tar cf $VNAME.tar $VNAME");
+sh("rm -rf $VNAME");
+sh("gzip -9f $VNAME.tar");
+#sh("tar tzf $VNAME.tar.gz");
+sh("ls -l $VNAME.tar.gz");
+
+
+sub sh
+{
+    for (@_) {
+	print STDERR "$_\n";
+	system($_) and die "$_ failed: $?";
+    }
+}

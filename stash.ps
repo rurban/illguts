@@ -1,0 +1,52 @@
+%require "common.ps"
+%require "rect.ps"
+
+/stash {
+   10 dict begin
+   gsave
+      /elem exch def
+      /name exch def
+      /y exch def
+      /x exch def
+      /h 10 def
+      /w 50 def
+      /x2 x w add def
+      /y2 y elem length 1.7 add h mul sub def
+      
+      gsave
+         paleblue
+         x y x2 y h sub rect F
+      grestore
+
+      /Helvetica-Bold 10 SF
+      x 5 add y 9 sub M name show
+
+      1 setlinewidth
+      gsave
+          %0.5 setlinewidth
+          0.5 setgray
+          [2 1] 1 setdash
+          x y2 M
+          x w 3 div add    y2 h add
+          x2 w 3 div sub   y2 h sub
+          x2 y2 curveto stroke
+      grestore
+
+      x y2 M x y L x2 y L x2 y2 L stroke
+
+      /Courier-Bold 8 SF
+      0.5 setlinewidth
+      /y2 y h sub def
+      x y2 M x2 y2 L stroke
+      elem {
+	/y2 y2 h sub def
+        x y2 M x2 y2 L stroke
+        x 5 add y2 2 add M show
+      } forall
+
+      /Courier 6 SF
+      x2 y 2 add M (stash) rshow
+
+   grestore
+   end
+} def

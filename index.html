@@ -6,7 +6,7 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 
-<h1 align=center>PerlGuts Illustrated<br><small>Version 0.03</small></h1>
+<h1 align=center>PerlGuts Illustrated<br><small>Version 0.04</small></h1>
 
 <p>This document is meant to supplement the <i>perlguts(1)</i> manual
 page that comes with Perl.  It includes commented illustrations of all
@@ -70,7 +70,7 @@ hold a string and an integer value.  An <i>SvPVNV</i> value can hold a
 string, an integer and a double value.  The <i>SvPVMG</i> is used when
 magic is attached or the value is blessed.  The <i>SvPVBM</i> adds
 information for fast searching (Boyer-Moore) on the string value.  The
-<i>SvPVLV</i> represents a l-value object (the result of substr).
+<i>SvPVLV</i> represents a L-value object.
 <i>CV</i> is a code value, which represents a perl
 function/subroutine/closure or contains a pointer to an XSUB.
 <i>GV</i> is a glob value and <i>IO</i> contains pointers to open
@@ -96,7 +96,7 @@ names reported by the <i>Devel::Peek</i> module.
 
 </i></small></blockquote>
 
-<h2>SvNULL and struct sv</h2>
+<a name="svnull"><h2>SvNULL and struct sv</h2></a>
 
 <p>The simplest type is SvNULL.  It always represents an
 <i>undefined</i> scalar value.  It consist of the "struct sv" only,
@@ -238,7 +238,14 @@ just to find that the information is not there.
 
   <dt> 16) <b>IOKp</b> (Integer OK Private)
 
-  <dd>has valid non-public integer value
+  <dd>has valid non-public integer value.
+
+      <p>The private OK flags (IOKp, NOKp, POKp) 
+      are used by the magic system.  During
+      execution of a magic callback, the private flags will be used to set
+      the public flags.  When the callback returns, then the
+      public flags are cleared.  This effectively is used to pass the
+      value to get/set to/from magic callbacks.
        <p>
 
   <dt> 17) <b>NOKp</b> (Numeric OK Private)
@@ -292,9 +299,9 @@ Perl.  In the Perl source code this structure is typedefed to
 Routines that can take any type as parameter will have
 <code>SV*</code> as parameter.  Routines that only work with arrays or
 hashes have <code>AV*</code> or <code>HV*</code> respectively in their
-parameter list.
+parameter list.  Likewise for the rest.
 
-<h2>SvPV</h2>
+<a name="svpv"><h2>SvPV</h2></a>
 
 <p>A scalar that can hold a string value is called an <i>SvPV</i>.  In
 addition to the <i>SV</i> struct of SvNULL, an <i>xpv</i> struct is
@@ -314,7 +321,7 @@ below) and CUR/LEN is unused.  A SvPV with both POK and ROK flags
 turned off represents <i>undef</i>.  The PVX pointer can also be NULL
 when POK is off and no string storage has been allocated.
 
-<h2>SvPVIV and SvPVNV</h2>
+<h2><a name="svpviv">SvPVIV</a> and <a name="svpvnv">SvPVNV</a></h2>
 
 <p>The <i>SvPVIV</i> type is like <i>SvPV</i> but has an additional
 field to hold a single integer value called IVX.  The IOK flag
@@ -330,18 +337,19 @@ corresponding flag is called NOK.
 
 <p><center><img src="svpvnv.gif"></center>
 
-<h2>SvOOK</h2>
+<a name="ook"><h2>SvOOK</h2></a>
 
 As a special hack in order to improve the speed of removing characters
 from the beginning of a string, the OOK flag is used.  When this flag
 is on, then the IVX value is not interpreted as an integer value, but
 is instead used as an <i>offset</i> into the string.  The PVX, CUR,
 LEN is adjusted to point within the allocated string instead.  The
-sv_chop()/sv_backoff() routines adjust the offset.
+sv_chop()/sv_backoff() routines adjust the offsets and set/clear the
+OOK flag.
 
 <p><center><img src="ook.gif"></center>
 
-<h2>SvIV and SvNV</h2>
+<h2><a name="sviv">SvIV</a> and <a name="svnv">SvNV</a></h2>
 
 <p>As a special case we also have <i>SvIV</i> and <i>SvNV</i> types
 that only have room for a single integer or a single double value.
@@ -355,7 +363,7 @@ points.
 
 <p><center><img src="svnv.gif"></center>
 
-<h2>SvRV</h2>
+<a name="svrv"><h2>SvRV</h2></a>
 
 <p>The <i>SvRV</i> subtype just lets the SV field ANY point to a
 pointer which points to an SV (which can be any of the SvNULL
@@ -366,11 +374,11 @@ value.
 
 <p>Subclasses of SvPV can also be treated as SvRV objects when the ROK
 flag is turned on for them.  The PVX will then be used as the RV field
-of the SvRV.
+of the SvRV.  Of course ROK and POK is mutually exclusive.
 
 <p><center><img src="svpvrv.gif"></center>
 
-<h2>SvPVMG</h2>
+<a name="svpvmg"><h2>SvPVMG</h2></a>
 
 <p>The <i>SvPVMG</i> is like <i>SvPVNV</i> above, but has two
 additional fields; MAGIC and STASH.  MAGIC is a pointer to additional
@@ -378,11 +386,14 @@ structures that contains callback functions and other data.  If the
 MAGIC pointer is non-NULL, then one or more of the MAGICAL flags will
 be set.
 
-<p>STASH (<b>s</b>ymbol <b>t</b>able h<b>ash</b>) is a pointer to a
-HV that represents some namespace/class, which means that the NAME
-field of the HV must be non-NULL (see description of HV below).  The
-STASH field is set when the value is blessed into a package (becomes
-an object).  The OBJECT flag will be set when STASH is.
+<p>STASH (<b>s</b>ymbol <b>t</b>able h<b>ash</b>) is a pointer to a HV
+that represents some namespace/class, which means that the NAME field
+of the HV must be non-NULL (see description of HV ans stashes below).
+The STASH field is set when the value is blessed into a package
+(becomes an object).  The OBJECT flag will be set when STASH is.
+<small><i>(IMHO, this field should really have been named "CLASS".
+The GV and CV subclasses introduce their own unrelated fields called
+STASH which might be confusing.)</i></small>
 
 <p><center><img src="svpvmg.gif"></center>
 
@@ -429,9 +440,9 @@ is.
 </ol>
 
 
-<h2>SvPVBM</h2>
+<a name="svpvbm"><h2>SvPVBM</h2></a>
 
-<p>The <i>SvPVMG</i> is like <i>SvPVMG</i> above, but has three
+<p>The <i>SvPVBM</i> is like <i>SvPVMG</i> above, but has three
 additional fields; BmUSEFUL, BmPREVIOUS, BmRARE.  The SvPVBM value
 types are used internally to implement very fast lookup of the string
 in PVX using the Boyer-Moore algorithm.  They are used by the Perl
@@ -463,7 +474,7 @@ should be <i>tail anchored</i>, i.e. a match should only be considered
 at the end of the string (or before newline at the end of the string).
 
 
-<h2>SvPVLV</h2>
+<a href="svpvlv"><h2>SvPVLV</h2></a>
 
 The <i>SvPVLV</i> is like <i>SvPVMG</i> above, but has four additional
 fields; TARGOFF, TARGLEN, TARG, TYPE.  The typical use is for Perl
@@ -523,7 +534,7 @@ IVX or NVX). After this the magic SET method is invoked, which will
 update the TARG accordingly.
 
 
-<h2>AV</h2>
+<a name="av"><h2>AV</h2></a>
 
 <p>An array is in many ways represented similar to strings.  An AV
 contains all the fields of SvPVMG and adds the following tree fields:
@@ -532,10 +543,11 @@ SV (which is returned when <code>$#array</code> is requested). FLAGS
 contains some extra flag bits that are specific of the array subtype.
 
 <p>The first three fields of xpvav have been renamed even though they
-serve nearly the same function.  PVX has become ARRAY.  CUR has become
-FILL and LEN has become MAX.  One difference is that the value of
-FILL/MAX is always one less than CUR/LEN would be in the same
-situation.  The IVX/NVX fields are unused.
+serve nearly the same function as the corresponding SvPV fields.  PVX
+has become ARRAY, CUR has become FILL and LEN has become MAX.  One
+difference is that the value of FILL/MAX is always one less than
+CUR/LEN would be in the same situation.  The IVX/NVX fields are
+unused.
 
 <p><center><img src="av.gif"></center>
 
@@ -557,7 +569,7 @@ understand the issue)
 
 </dl></blockquote>
 
-<h2>HV</h2>
+<a name="hv"><h2>HV</h2></a>
 
 <p>Hashes are the most complex of the Perl data types.  In addition to
 what we have seen above, HVs use <i>HE</i> structs to represent a
@@ -619,16 +631,16 @@ SvNULL flags:
 
   <dt> 21) <b>SHAREKEYS</b>
 
-  <dd> When this flag is set, then all HEK structures containing the
-       same strings will be shared between hashes.  This should reduce
-       the storage occupied by hash keys.
+  <dd> When this flag is set, then the hash will share the HEK structures
+       with a special hash pointed to by the <code>strtab</code> variable.
+       This reduce the storage occupied by hash keys, especially when we
+       have lots of hashes with the same keys.
        The SHAREKEYS flag is on by default for newly created HVs.
        <p>
        <center><img src="strtab.gif"></center>
 
        <p>
-       The shared HEKs are stored in a special HV called
-       <code>strtab</code>.  What is special here is that the <i>val</i>
+       What is special with the <code>strtab</code> hash is that the <i>val</i>
        field of the HE structs is used as a reference counter for the
        HEK.  The counter is incremented when new hashes link up this HEK
        and decremented when the key is removed from the hashes.
@@ -648,24 +660,147 @@ SvNULL flags:
 
 </dl></blockquote>
 
-<h2>GV</h2>
+<a name="gv"><h2>GV</h2></a>
+
+<The <i>GV</i> ("glob value" aka "symbol") is like <i>SvPVMG</i> above,
+but has five additional fields; GP, NAME, NAMELEN, GvSTASH, FLAGS.
+
+<p>The GP is a pointer to structure that holds pointers to data of
+various types.  Perl use a pointer (instead of including the GP fields
+in the xpvgv) in order to implement the proper glob aliasing
+behavior (i.e. different GVs can share the same GP).
+
+<p>The NAME/NAMELEN denotes the unqualified name of this symbol and
+GvSTASH points to the symbol table where this symbol belongs.  The
+fully qualified symbol name is obtained by taking the NAME of the
+GvSTASH (see HV above) and appending "::" and NAME to it.  The hash
+pointed to by GvSTASH will usually contain an element with NAME as key
+and a pointer to this GV as value.  See description of stashes below.
+
+<p>The FLAGS field contains space for 8 additional flag bits:
+
+<blockquote><dl>
+
+ <dt>0) <b>INTRO</b>
+
+ <dt>1) <b>MULTI</b>
+ <dd> Have we seen more than one occurrence of this glob.  Used to
+      implement the "possibly typo" warning.
+
+ <dt>2) <b>ASSUMECV</b>
+
+ <dt>4) <b>IMPORTED_SV</b>
+ <dt>5) <b>IMPORTED_AV</b>
+ <dt>6) <b>IMPORTED_HV</b>
+ <dt>7) <b>IMPORTED_CV</b>
+</dl></blockquote>
+
+<p>A magic of type '*' is always attached to the GV (not shown in the
+figure).  The magic GET method is used to stringify the globs (fully
+qualified name prefixed with '*').  The magic SET method is used to alias
+an GLOB based on the name of another glob.
 
 <p><center><img src="gv.gif"></center>
 
-<h2>CV</h2>
+<h3>GP</h3>
+
+<p>GPs can be shared between one or more GVs.  The data type fields
+for the GP are: SV, IO, FORM, AV, HV, CV.  These hold a pointer to the
+corresponding data type (The SV must point to some SV with type <=
+SVt_PVLV. The FORM field must point to a SvPVFM if non-NULL.).  The SV
+is always present (but might point to a SvNULL object).
+
+<p>The additional administrative fields in the GP are: REFCNT, EGV,
+CVGEN, LASTEXPR, LINE, FILEGV.
+
+<p>REFCNT is a reference counter.  It says how many GVs have a pointer
+to this GP.  When the counter reach 0 the GP is freed.
+
+<p>EGV is a pointer to the GV that originally created this GP (used to
+tell the real name of any aliased symbol).  If the original GV is freed,
+but GP should stay since another GV reference it, then the EGV is
+NULLed.
+
+<p>CVGEN is an integer used to validate method cache CV entries in the
+GP.  If CVGEN is zero, then the CV is real.  If CVGEN is non-zero, but
+less than the global variable <tt>subgeneration</tt>, then the CV
+contains a stale method cache entry.  If CVGEN is equal to
+<tt>subgeneration</tt> then the CV contains a valid method cache
+entry.
+
+(Every time some operation that might invalidate some of the
+method caches are performed, then the <tt>subgeneration</tt> variable
+is incremented.)
+
+<p>LASTEXPR is an integer I don't understand the meaning of yet.
+
+<p>FILE is a pointer to a GV that contains the name of the file where
+this symbol was first created.
+
+LINE is the corresponding line number in the FILE.
+
+<h3>Stashes</h3>
+
+GVs and stashes work together to implement the name spaces of Perl.
+Stashes are named HVs with all the element values being pointers to
+GVs.  The root of the namespace is pointed to by the variable
+<code>defstash</code>.
+
+<p>In the figure below we have simplified the representation of
+stashes to a single box.  The text in the blue field is the NAME of
+the HV.  The hash elements keys are shown as field names and the
+element values are shown as a pointers to globs (GV).  The GVs are also
+simplified to a single box.  The text in the green field in the fully
+qualified name of the GV. Only the GP data fields are shown.
+
+<p>The figure illustrates how the scalar (named) variables <code>$foo</code>
+and <code>$foo::bar::baz</code> are represented by Perl.
+
+<p><center><img src="stash.gif"></center>
+
+<p>All resolution of qualified names starts with the stash pointed to
+by the <code>defstash</code> variable.  Nested name spaces are
+implemented by a stash entry with a key ending in "::".  The entry for
+"main::" ensures that <code>defstash</code> is also known as "main"
+package (and has the side-effect that the "main::main::main" package
+is <code>defstash</code> too.)
+
+Unqualified names are resolved starting at <code>curstash</code> or
+<code>curcop-&gt;cop_stash</code> which are influenced by the
+<code>package</code> declaration in Perl.
+
+<p>As you can see from this figure, there are lot of pointers to
+dereference in order to get look up deeply nested names.  Each stash
+is at least 4 levels deep and each glob is 3 levels, giving at least
+24 pointer dereferences to access the data in the
+<code>$foo::bar::baz</code> variable from <code>defstash</code>.
+
+<p>The <code>defstash</code> stash is also a place where globs
+representing source files are entered.  These entries are prefixed
+with "_<".  The FILE field of the GP points to the same glob as the
+corresponding "_<" entry in <code>defstash</code> does.
+
+
+<a name="cv"><h2>CV</h2></a>
+
+<The <i>CV</i> ("code value") is like <i>SvPVMG</i> above, but has
+twelve additional fields; CvSTASH, START, ROOT, XSUB, GV, FILEGV,
+DEPTH, PADLIST, OUTSIDE, MUTEXP, OWNER, FLAGS.  (The fields MUTEXP and
+OWNER are only present for Perls that support threading).
+
 
 <p><center><img src="cv.gif"></center>
 
-<h2>SvPVFM</h2>
+<a name="svpmfm"><h2>SvPVFM</h2></a>
 
 <p><center><img src="svpvfm.gif"></center>
 
 
-<h2>IO</h2>
+<a name="io"><h2>IO</h2></a>
 
 <p><center><img src="io.gif"></center>
 
-<h2>OP</h2>
+<a name="op"><h2>OP</h2></a>
 
 COP/UNOP/BINOP/LISTOP/LOGOP/CONDOP/PMOP/SVOP/GVOP/PVOP/LOOP
 
@@ -690,7 +825,7 @@ COP/UNOP/BINOP/LISTOP/LOGOP/CONDOP/PMOP/SVOP/GVOP/PVOP/LOOP
 
 <i>&copy; 1998 Gisle Aas</i><br>
 <a href="mailto:aas@sn.no">&lt;aas@sn.no&gt;</a><br>
-$Date: 1998/02/06 15:20:52 $
+$Date: 1998/02/18 12:16:03 $
 </small>
 </div>
 
