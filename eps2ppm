@@ -1,0 +1,38 @@
+#!/usr/bin/perl -w
+
+$scale = 4;
+
+my $file = shift || die;
+open(FILE, $file) || die;
+
+die "Bad magic" unless <FILE> =~ /^%!PS-Adobe-/;
+
+my $gs = undef;
+while (<FILE>) {
+    if (my($llx, $lly, $urx, $ury) =
+          /^%%BoundingBox:\s*(-?[0-9\.]+)\s+(-?[0-9\.]+)\s+(-?[0-9\.]+)\s+(-?[0-9\.]+)/)
+    {
+
+	 warn "$file: BBox: $llx $lly $urx $ury\n";
+
+         my($w,$h) = map {$_ *= $scale} ($urx - $llx, $ury - $lly);
+         
+         open(GS, "| gs -sDEVICE=ppm -sOutputFile=- -g${w}x$h -q -") || die;
+	 $gs++;
+
+	 print GS "$scale dup scale $llx neg $lly neg translate %\n";
+	
+	
+    } elsif (/^%/ && !$gs) {
+         # ignore comments
+    } elsif (!$gs) {
+	 die "No bounding box found\n";
+    } else {
+         print GS;
+    }
+}
+
+print GS "\nshowpage\n";
+
+close(GS);
+

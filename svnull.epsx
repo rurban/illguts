@@ -1,0 +1,74 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -5 -5 100 70
+%%Creator: Gisle Aas (Copyright 1998)
+
+%include "common.ps"
+%include "mws.ps"
+%include "rect.ps"
+
+% shadow
+gsave
+3 -3 translate 0.5 setgray
+0 0 80 60 rect fill
+grestore
+
+% box
+0 0 80 60 rect
+gsave 1 setgray fill grestore
+
+% any color box
+gsave
+   newpath
+   0.8 0.8 1.0 setrgbcolor
+   0 40 80 60 rect
+   fill
+grestore
+
+
+% type color box
+gsave
+   newpath
+   1.0 0.8 0.8 setrgbcolor
+   60 0 80 20 rect
+   fill
+grestore
+
+% flag bit marks
+gsave
+   0.5 setgray
+   0.2 setlinewidth
+   0 60 24 div 60 {
+       dup 20 M 16 L stroke
+   } for
+   0.7 setlinewidth
+   20 20 M 20 15 L stroke
+   40 20 M 40 15 L stroke
+grestore
+
+%box
+stroke
+
+% dividers
+0 20 M 80 20 L stroke
+0 40 M 80 40 L stroke
+60 0 M 60 20 L stroke
+
+% text
+/Helvetia findfont 12 scalefont setfont
+5 45 M (ANY) show
+5 25 M (REFCNT) show
+5 04 M (FLAGS) show
+(TYPE) 62 5 16 mws
+
+/Courier findfont 8 scalefont setfont
+80 62 M (SV) rshow
+
+% ANY pointer
+gsave
+newpath 70 50 3 0 360 arc fill
+1.5 setlinewidth
+70 50 M 90 50 L stroke
+90 45 M 90 55 L stroke
+93 47 M 93 53 L stroke
+96 49 M 96 51 L stroke
+grestore

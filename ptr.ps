@@ -1,0 +1,48 @@
+/ptr1 {  % x1 y x2 <ptr1>
+   4 dict begin
+       /x2 exch def
+       /y  exch def
+       /x1 exch def
+       /x3 x2 7 sub def
+
+       newpath x1 y 2 0 360 arc fill  % arrow tail (*)
+       x1 y M x3 y L stroke           % arrow
+       x3 y 2.5 sub M x3 y 2.5 add L x2 y L closepath fill  % arrow head
+   end
+} def
+
+
+/ptrn { % x1 y1 x2 y2 ... xn yn <ptrn>
+   % first draw an bullet at first coordinate
+   count dup 2 sub roll
+   2 copy newpath 2 0 360 arc fill
+   M
+
+   % then a line for all but the last
+   count 2 idiv 1 sub {
+      count dup 2 sub roll L
+   } repeat
+
+   % only the last one, where the arrow-head must be
+   7 dict begin
+      /y exch def
+      /x exch def
+      currentpoint y sub neg /dy exch def
+      x sub neg /dx exch def
+
+      /al dx dx mul dy dy mul add sqrt def
+      /angle dy dx atan def
+      /b al 7 sub def
+
+      gsave
+         currentpoint translate
+         angle rotate
+         b 0 L stroke
+         b -2.5 M b 2.5 L al 0 L closepath fill  % arrow head
+      grestore
+
+      %b y L stroke
+      %b y 2.5 sub M b y 2.5 add L x y L closepath fill  % arrow head
+   end
+} def
+

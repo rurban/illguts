@@ -1,0 +1,29 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -5 250 225 310
+%%Creator: Gisle Aas (Copyright 1998)
+
+%include "common.ps"
+%include "sv.ps"
+%include "box.ps"
+%include "rect.ps"
+
+0 300 sv
+
+/Courier findfont 8 scalefont setfont
+40  302 M (sv) rshow
+105 302 M (xpv) rshow
+
+55 300 3 box
+
+/Helvetica findfont 11 scalefont setfont
+60 303 15 sub M
+
+[(PVX) (CUR) (LEN)] {
+    gsave
+    show
+    grestore
+    0 -15 rmoveto
+} forall
+
+%include "str.ps"
+

@@ -1,0 +1,35 @@
+/magic {
+   4 dict begin
+     /y exch def /x exch def
+     /x2 x 50 add 7.5 sub def
+
+     gsave
+        1.0 0.8 0.8 setrgbcolor
+        x 25 add y 45 sub x 37.5 add y 30 sub rect fill
+     grestore
+
+     x 25   add dup y 30 sub M y 45 sub L stroke
+     x 37.5 add dup y 30 sub M y 45 sub L stroke
+     (private) x 2.5 add y 42 sub 20 mws pop
+     (type) x 26.25 add y 42 sub 10 mws pop
+     (flags) x 38.75 add y 42 sub 10 mws pop
+
+     x y 6 box
+     x 5 add y 12 sub M
+     [(moremagic) (virtual) () (obj) (ptr) (len)] {
+        gsave
+        currentpoint 30 mws pop
+        grestore
+        0 -15 rmoveto
+     } forall
+
+     
+
+     x2 y  7.5 sub x 70 add ptr1
+     x2 y 22.5 sub x 60 add ptr1
+     x2 y 52.5 sub x 60 add ptr1
+     x2 y 67.5 sub x 60 add ptr1
+
+   end
+} def
+

@@ -1,0 +1,33 @@
+% Draw an SV at [0,0] [40,30] with arrow pointing at [55,25]
+
+/sv {
+    gsave
+
+    30 sub translate
+
+    0.5 setgray
+    0.1 setlinewidth
+    0 30 12 div 30 {
+       dup 10 M 6 L stroke
+    } for
+
+    0.8 0.8 1.0 setrgbcolor
+    0 20 M 0 30 L 40 30 L 40 20 L closepath fill
+    1.0 0.8 0.8 setrgbcolor
+    30 0 M 30 10 L 40 10 L 40 0 L closepath fill
+    0 setgray
+    0.8 setlinewidth
+    0 0 M 0 30 L 40 30 L 40 0 L closepath stroke
+    0.7 setlinewidth
+    0 10 M 40 10 L stroke
+    0 20 M 40 20 L stroke
+    30 0 M 30 10 L stroke
+
+    % arrow
+    1 setlinewidth
+    35 25 1.5 0 360 arc fill
+    35 25 M 50 25 L stroke
+    50 23 M 55 25 L 50 27 L closepath fill
+
+    grestore
+} def

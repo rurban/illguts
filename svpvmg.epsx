@@ -1,0 +1,60 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -5 145 265 310
+%%Creator: Gisle Aas (Copyright 1998)
+
+%include "common.ps"
+%include "sv.ps"
+%include "box.ps"
+%include "rect.ps"
+%include "ptr.ps"
+%include "mws.ps"
+%include "magic.ps"
+
+0 300 sv
+
+/Courier findfont 8 scalefont setfont
+40  302 M (sv) rshow
+105 302 M (xpvmg) rshow
+160 182 M (hv) rshow
+170 287 M (magic) rshow
+240 287 M (magic) rshow
+
+55 300 7 box
+
+/Helvetica findfont 11 scalefont setfont
+60 303 15 sub M
+
+[(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH)] {
+    gsave
+    currentpoint 30 mws pop
+    grestore
+    0 -15 rmoveto
+} forall
+
+%%include "str.ps"
+97.5 292.5 120 ptr1  % PVX arrow
+
+% magic arrow
+97.5 217.5
+110 217.5
+110 277.5
+120 277.5 ptrn
+
+%162.5 277.5 190 ptr1
+%232.5 277.5 260 ptr1
+
+% magic 1 & 2
+120 285 magic
+190 285 magic
+
+
+
+% stash arrow
+97.5 202.5
+110  202.5
+110  175
+120  175 ptrn
+
+120  180 sv
+
+

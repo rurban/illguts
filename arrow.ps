@@ -1,0 +1,38 @@
+/arrowdict 14 dict def
+arrowdict begin
+  /mtx matrix def
+end
+
+/arrow {              % from "PostScript Language - Tutorial & Cookbook"
+   arrowdict begin
+      /hl exch def
+      /ht exch 2 div def
+      /t  exch 2 div def
+      /hy exch def
+      /hx exch def
+      /ty exch def
+      /tx exch def
+
+      /dx hx tx sub def
+      /dy hy ty sub def
+      /al dx dx mul dy dy mul add sqrt def
+      /angle dy dx atan def
+      /base al hl sub def
+
+      /savematrix mtx currentmatrix def
+
+      tx ty translate
+      angle rotate
+
+      0 t neg moveto
+      base t neg lineto
+      base ht neg lineto
+      al 0 lineto
+      base ht lineto
+      base t lineto
+      0 t lineto
+      closepath
+
+      savematrix setmatrix
+   end
+} def

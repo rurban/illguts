@@ -1,0 +1,480 @@
+
+<title>PerlGuts Illustrated</title>
+
+<BODY bgcolor="#FFFFFF"
+text="#000000" link="#000055" vlink="#550000" alink="#000000"
+topmargin=0>
+
+
+<h1 align=center>PerlGuts Illustrated<br><small>Version 0.01</small></h1>
+
+<p>This document is meant to supplement the perlguts(1) manual page
+that comes with Perl.  It includes commented illustrations of all
+(eventually) major internal Perl data structures.  Having this
+document handy hopefully makes reading the Perl source code easier.
+I'll try to expand it as I learn more.
+
+<p>The first thing to look at are the data structures that represents
+Perl data; scalars of various kinds, arrays and hashes.  Internally
+Perl calls a scalar <i>SV</i> (scalar value), an array <i>AV</i>
+(array value) and a hash <i>HV</i> (hash value).  In addition it uses
+<i>IV</i> for integer value, <i>NV</i> for numeric value (aka double),
+<i>PV</i> for a pointer value (aka string value (char*), but 'S' was
+already taken), and <i>RV</i> for reference value.  The <i>IVs</i> are
+further guaranteed to be big enough to hold a <code>void*</code>.
+
+<p>The internal relationship between the Perl data types is really
+object oriented.  Perl relies on using C's structural equivalence to
+help emulate something like C++ inheritance of types.  The various
+data types that Perl implement are illustrated in this class hierarchy
+diagram.  The arrows indicate inheritance.
+
+<p><center><img src="types.gif"></center>
+
+<p>As you can see Perl use multiple inheritance with C <i>SvNULL</i>
+acting as some kind of virtual base class.  All the Perl types are
+identified by small numbers, and the internal Perl code often get away
+with testing the ISA-relationship between types with the <= operator.
+As you can see from the figure above, this can only work reliably for
+some comparisons.  All Perl data value objects are tagged with their
+type, so you can always ask an object what it's type is and act
+according to this information.
+
+<p>The symbolic type names (and associated value) are:
+
+<blockquote><dl>
+	<dt>0) <b>SVt_NULL</b>
+	<dt>1) <b>SVt_IV</b>
+	<dt>2) <b>SVt_NV</b>
+	<dt>3) <b>SVt_RV</b>
+	<dt>4) <b>SVt_PV</b>
+	<dt>5) <b>SVt_PVIV</b>
+	<dt>6) <b>SVt_PVNV</b>
+	<dt>7) <b>SVt_PVMG</b>
+	<dt>8) <b>SVt_PVBM</b>
+	<dt>9) <b>SVt_PVLV</b>
+	<dt>10) <b>SVt_PVAV</b>
+	<dt>11) <b>SVt_PVHV</b>
+	<dt>12) <b>SVt_PVCV</b>
+	<dt>13) <b>SVt_PVGV</b>
+	<dt>14) <b>SVt_PVFM</b>
+	<dt>15) <b>SVt_PVIO</b>
+</dl></blockquote>
+
+
+
+<p>In addition to the simple type names already mentioned, the
+following names are found in the figure: An <i>SvPVIV</i> value can
+hold a string and an integer value.  An <i>SvPVNV</i> value can hold a
+string, an integer and a double value.  The <i>SvPVMG</i> is used when
+magic is attached or the value is blessed.  The <i>SvPVBM</i> adds
+information for fast searching (Boyer-Moore) on the string value.  The
+<i>SvPVLV</i> represents a l-value object (the result of substr).
+<i>CV</i> is a code value, which represents a perl
+function/subroutine/closure or contains a pointer to an XSUB.
+<i>GV</i> is a glob value and <i>IO</i> contains pointers to open
+files and directories and other state information about files.  The
+<i>SvPVFM</i> is used to hold information on forms.
+
+<p>Perl data objects can change type as the value change.  The SVs is
+said to be upgraded in this case.  Type changes only go down the
+hierarchy.  (See the sv_upgrade() function in sv.c.)
+
+<p>The actual layout in memory does not really match how a typical C++
+compiler would implement a hierarchy like the one depicted above.
+Let's see how it is done.
+
+<blockquote><small><i>
+
+In the description below we use field names that match the macros that
+are used to access the corresponding field.  For instance the
+<code>xpv_cur</code> field of the <code>xpvXX</code> structs are
+accessed with the <code>SvCUR()</code> macro.  The field is referred
+to as <b>CUR</b> in the description below.
+
+</i></small></blockquote>
+
+<h2>SvNULL and struct sv</h2>
+
+<p>The simplest type is SvNULL.  It always represents an
+<i>undefined</i> scalar value.  It consist of the "struct sv" only,
+and looks like this:
+
+<p><center><img src="svnull.gif"></center>
+
+<p>It contains a pointer (ANY) to more data, which in this case is
+always NULL.  All the subtypes are implemented by attaching
+additional data to the ANY pointer.
+
+<p>The second field is an integer reference counter (REFCNT) which should
+tell us how many pointers reference this object.  When Perl data types
+are created this value is initialized to 1.  The field must be
+incremented when a new pointer is made to point to it and decremented
+when the pointer is destroyed or assigned a different value.  When the
+reference count reach zero the object is freed.
+
+<p>The third field contains some FLAGS and a TYPE sub-field.
+
+<p>The type field contains a code that represents one of the types
+shown in the type hierarchy figure above. 
+
+<p>The SV contains 24 flag bits. The flags bits are used to denote how
+the fields of the type value objects should be interpreted and various
+other state of the objects.  Some flags are just used as optimizations
+in order to avoid having to dereference several levels of pointers
+just to find that the information is not there.
+
+<p><center><img src="flags.gif" alt=""></center>
+
+<p>The purpose of the flag bits are:
+
+<blockquote>
+<dl>
+
+  <dt> 0) <b>PADBUSY</b>
+
+  <dd> reserved for tmp or my already
+       <p>
+
+  <dt> 1) <b>PADTMP</b>
+
+  <dd> in use as tmp
+       <p>
+
+  <dt> 2) <b>PADMY</b>
+
+  <dd> in use a "my" variable
+       <p>
+
+  <dt> 3) <b>TEMP</b>
+
+  <dd> string is stealable
+       <p>
+
+  <dt> 4) <b>OBJECT</b>
+
+  <dd> This flag is set when the object is "blessed".  It can only be
+       set for value type SvPVMG or subtypes of it.  This flag also
+       indicate that the STASH pointer is valid and 
+       points to a namespace HV.
+       <p>
+
+  <dt> 5) <b>GMAGICAL</b> (Get Magic)
+
+  <dd> This flag indicate that the object has a magic <i>get</i> or
+       <i>len</i> method to  be invoked.
+       It can only be set for value type SvPVMG or subtypes
+       of it.  This flag also indicate that the MAGIC pointer is valid.
+
+       <p>
+
+  <dt> 6) <b>SMAGICAL</b> (Set Magic)
+
+  <dd> This flag indicate that the object has a magic <i>set</i> method to
+       be invoked.
+       <p>
+
+  <dt> 7) <b>RMAGICAL</b> (Random Magic)
+
+  <dd> This flag indicate that the object has any other magical methods
+       (besides get/len/set magic method) or even methodless magic attacted.
+       <p>
+       Any of GMAGICAL, SMAGICAL and RMAGICAL is called MAGICAL
+       <p>
+
+  <dt> 8) <b>IOK</b> (Integer OK)
+
+  <dd> This flag indicate that the object has a valid IVX field value.
+       It can only be set for value type SvIV or subtypes of it.
+       <p>
+
+  <dt> 9) <b>NOK</b> (Numeric OK)
+
+  <dd> This flag indicate that the object has a valid NVX field value.
+       It can only be set for value type SvNV or subtypes of it.
+       <p>
+
+
+  <dt> 10) <b>POK</b> (Pointer OK)
+
+  <dd> This flag indicate that the object has a valid PVX, CUR and LEN
+       field values (i.e. a valid string value).
+       It can only be set for value type SvPV or subtypes of it.
+       <p>
+
+  <dt> 11) <b>ROK</b> (Reference OK)
+
+  <dd>  This flag indicate that the type is SvRV and that the RV field
+        contains a valid reference pointer.  A SvRV object with ROK flag
+        off represents an undefined value.
+       <p>
+
+  <dt> 12) <b>FAKE</b>
+
+  <dd>glob or lexical is just a copy
+       <p>
+
+  <dt> 13) <b>OOK</b>  (Offset OK)
+
+  <dd> This flag indicate that the IVX value is to be interpreted as
+       a string offset.  This flag can only be set for value type SvPVIV
+       or subtypes of it.  It also follows that the IOK (and IOKp) flag must
+       be off when OOK is on.  Take a look at the <i>SvOOK</i> figure
+       below.
+       <p>
+
+  <dt> 14) <b>BREAK</b>
+
+  <dd>refcnt is artificially low
+       <p>
+
+  <dt> 15) <b>READONLY</b>
+
+  <dd> This flag indicate that the value of the object may not be
+       modified.
+       <p>
+
+
+  <dt> 16) <b>IOKp</b> (Integer OK Private)
+
+  <dd>has valid non-public integer value
+       <p>
+
+  <dt> 17) <b>NOKp</b> (Numeric OK Private)
+
+  <dd>has valid non-public numeric value
+       <p>
+
+  <dt> 18) <b>POKp</b> (Pointer OK Private)
+
+  <dd>has valid non-public pointer value
+       <p>
+
+  <dt> 19) <b>SCREAM</b>
+
+  <dd>has been studied
+       <p>
+
+  <dt> 20) <b>AMAGIC</b>
+
+  <dd>has magical overloaded methods
+       <p>
+
+  <dt> 21) <b>SHAREKEYS</b>
+
+  <dt> 22) <b>LAZYDEL</b>
+
+  <dt> 22) <b>TAIL</b>
+
+  <dt> 23) <b>VALID</b>
+
+  <dt> 23) <b>COMPILED</b>
+ 
+</dl>
+</blockquote>
+
+<p>The <code>struct sv</code> is common for all subtypes of SvNULL in
+Perl.  In the Perl source code this structure is typedefed to
+<i>SV</i>, <i>AV</i>, <i>HV</i> and others.  Routines that can take
+any type as parameter will have <code>SV*</code> as parameter.
+Routines that only work with arrays or hashes have <code>AV*</code> or
+<code>HV*</code> respectively in their parameter list.
+
+<h2>SvPV</h2>
+
+<p>A scalar that can hold a string value is called an <i>SvPV</i>.  In
+addition to the <i>SV</i> struct of SvNULL, an <i>xpv</i> struct is
+allocated and it contains 3 fields.  PVX is the pointer to an
+allocated char array.  CUR is an integer giving the current length of
+the string.  LEN is an integer giving the length of the allocated
+string.  The char/byte at (PVX + CUR) should always be '\0' in order
+to make sure that the string is NUL-terminated if passed to C library
+routines.  This requires that LEN is always at least 1 larger than CUR.
+
+<p><center><img src="svpv.gif"></center>
+
+<p>The POK flag indicates if the string pointed to by PVX contains an
+valid value.  A SvPV with the POK flag turned off represents
+<i>undef</i>.  The PVX pointer can also be NULL when POK is off.
+
+<h2>SvPVIV and SvPVNV</h2>
+
+<p>The <i>SvPVIV</i> type is like <i>SvPV</i> but has an additional
+field to hold a single integer value called IVX.  The IOK flag
+indicates if the IVX value is valid.  If both the IOK and POK flag is
+on, then the PVX will (usually) be a string representation of the same
+number found in IVX.
+
+<p><center><img src="svpviv.gif"></center>
+
+<p>The <i>SvPVNV</i> type is like <i>SvPVIV</i> but has an additional
+field to hold a single <i>double</i> value called NVX.  The
+corresponding flag is called NOK.
+
+<p><center><img src="svpvnv.gif"></center>
+
+<h2>SvOOK</h2>
+
+As a special hack in order to improve the speed of removing characters
+from the beginning of a string, the OOK flag is used.  When this flag
+is on, then the IVX value is not interpreted as an integer value, but
+is instead used as an <i>offset</i> into the string.  The PVX, CUR,
+LEN is adjusted to point within the allocated string instead.  The
+sv_chop()/sv_backoff() routines adjusts the offset.
+
+<p><center><img src="ook.gif"></center>
+
+<h2>SvIV and SvNV</h2>
+
+<p>As a special case we also have <i>SvIV</i> and <i>SvNV</i> types
+that only have room for a single integer or a single double value.
+These are special in that the PVX/CUR/LEN fields are not present even
+if the ANY pointer acutally points to the ghostual incarnation of
+them.  This arrangement makes it possible for code to always access
+the IVX/NVX fields at a fixed offset from where the SV field ANY
+points.
+
+<p><center><img src="sviv.gif"></center>
+
+<p><center><img src="svnv.gif"></center>
+
+<h2>SvRV</h2>
+
+<p>The <i>SvRV</i> subtype just lets the SV field ANY point to a
+pointer which points to an SV (which can be any of the subtypes
+above and below).
+
+<p><center><img src="svrv.gif"></center>
+
+<h2>SvMG</h2>
+
+<p>The <i>SvPVMG</i> is like <i>SvPVNV</i> above, but has two
+additional fields; MAGIC and STASH.  MAGIC is a pointer to additional
+structures that contains callback functions and other data.  If the
+MAGIC pointer is non-NULL, then one or more of the MAGICAL flags will
+be set.
+
+
+<p>STASH is a pointer to a HV that represents some namespace/class.
+This field is set when the value is blessed into a package (becomes an
+object).  The OBJECT flag will be set when STASH is.
+
+<p><center><img src="svpvmg.gif"></center>
+
+<p>The <i>MAGIC</i> structure in detail....
+
+<h2>AV</h2>
+
+<p>An array is in many ways represented similar to strings.  An AV
+contains all the fields of SvPVMG and adds the following tree fields:
+ALLOC is a pointer to the allocated array.  ARYLEN is a pointer to an
+SV (which is returned when <code>$#array</code> is requested). FLAGS
+contains some extra flag bits that are specific of the array subtype.
+
+<p>The first three fields of xpvav has been renamed even if the serve nearly
+the same function.  PVX has become ARRAY.  CUR has become FILL and LEN
+has become MAX.  One difference is that the value of FILL/MAX is
+always one less than CUR/LEN would be in the same situation.  The
+IVX/NVX fields are unused.
+
+<p><center><img src="av.gif"></center>
+
+<p>The array pointed to by ARRAY contains pointers to any of the
+SvNULL subtypes.  Usually ALLOC and ARRAY both points to the start of
+the allocated array.  The use of two pointers is similar to the OOK
+hack described above.  The shift operation can be implemented
+efficiently by just adjusting the ARRAY pointer (and FILL/MAX).
+Similar the pop just involves decrementing the FILL count.
+
+<p>The are only 3 array flags used: (I'll try to describe them when I
+understand the issue)
+
+<blockquote><dl>
+
+  <dt> 0) <b>REAL</b>
+  <dt> 1) <b>REIFY</b>
+  <dt> 2) <b>REUSED</b>
+
+</dl></blockquote>
+
+<h2>HV</h2>
+
+<p>Hashes is the most complex of the Perl data types.  In addition to
+what we have seen above HVs use <i>HE</i> structs to represent a
+key/value pairs and <i>HEK</i> struct to represents keys.
+
+<p>The HV type itself contains all the fields of SvPVMG and then adds
+four new fields:
+
+<ul>
+<li>The first two fields are used to implement a single iterator over the
+elements in the hash.
+RITER which is an integer index into the array referenced by ARRAY and
+EITER which is a pointer to an HE.  In order find the next hash
+element one would first look at EITER->next and if it turns out to be
+NULL, RITER is incremented until ARRAY[RITER] is non-NULL.  The
+iterator starts out with RITER = -1 and EITER = NULL.
+
+<li>The last two fields are only used when the hash represents a name
+space.  PMROOT points to a node in the Perl syntax tree.  It is used
+to implement the require function.  NAME is a NUL-terminated string
+which denotes the name of the name space (or <i>package</i>).  This is
+one of the few places where Perl does not allow strings with embedded
+</ul>
+
+<p>As for AVs the first few fields of the xpvhv has been renamed in
+the same way.  MAX is the number of elements in ARRAY minus one. (The
+size of the ARRAY is required to be a power of 2, since the code just
+ARRAY[HASH & MAX] to locate the correct HE column for an key).  Also
+note that ARRAY can be NULL (but MAX will never be below 7).
+
+
+The FILL is the number of elements in ARRAY which is not NULL.  The
+IVX field has been renamed as KEYS an is the number of hash elements
+in the HASH.  The NVX field is unused.
+
+<p><center><img src="hv.gif"></center>
+
+<p>In a perfect hash both KEYS and FILL are the same value.  This
+means than all HEs can be located directly in the ARRAY (and all the
+he->next pointers are NULL).
+
+<p>The following two hash specific flags are found among the common
+SvNULL flags:
+
+<blockquote><dl>
+
+  <dt> 21) <b>SHAREKEYS</b>
+
+  <dd> keys live on shared string table
+       <p>
+
+  <dt> 22) <b>LAZYDEL</b>
+
+  <dd>entry in xhv_eiter must be deleted
+       <p>
+
+</dl></blockquote>
+
+
+<h2> More stuff ..... </h2>
+
+
+
+<!-- ############################################################ -->
+
+<pre>
+
+
+</pre>
+
+<hr>
+<div align=right>
+<small>
+
+<i>&copy; 1998 Gisle Aas</i><br>
+<a href="mailto:aas@sn.no">&lt;aas@sn.no&gt;</a>
+
+</small>
+</div>
+

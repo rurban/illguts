@@ -1,0 +1,19 @@
+/box {
+   10 dict begin
+      /no exch def
+      /y  exch def
+      /x  exch def
+
+      /x2 x 50 add def
+      /y2 y no 15 mul sub def
+
+      y2 15 add 15 y {
+	dup x exch M
+        x2 exch L stroke
+      } for
+
+      x y M x2 y L x2 y2 L x y2 L closepath
+      stroke
+   end
+} def
+

@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+
+while (<>) {
+   if (/^%\s*include\s+\"([^\"]+)\"/) {
+       include($1);
+       next;
+   }
+   print;
+}
+
+sub include
+{
+   my $file = shift;
+   local(*FILE);
+   unless (open(FILE, $file)) {
+       print "% Can't include $file: $!\n";
+       print STDERR "$file: $!\n";
+       return;
+   }
+   local($_);
+   while (<FILE>) {
+       if (/^%\s*include\s+\"([^\"]+)\"/) {
+	   include($1);
+	   next;
+       }
+       print;
+   }
+   close(FILE);
+}

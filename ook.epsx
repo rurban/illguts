@@ -1,0 +1,113 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -5 235 225 315
+%%Creator: Gisle Aas (Copyright 1998)
+
+%include "common.ps"
+%include "sv.ps"
+%include "box.ps"
+%include "rect.ps"
+%include "ptr.ps"
+0 300 sv
+
+/Courier findfont 8 scalefont setfont
+40  302 M (sv) rshow
+105 302 M (xpviv) rshow
+
+/Courier-Bold findfont 6 scalefont setfont
+15 264 M (POK,OOK) cshow
+
+55 300 4 box
+
+/Helvetica findfont 11 scalefont setfont
+60 303 15 sub M
+
+[(PVX) (CUR) (LEN) (IVX)] {
+    gsave
+    show
+    grestore
+    0 -15 rmoveto
+} forall
+
+% arrow from PVX
+%newpath 97.5 292.5 2 0 360 arc fill
+%97.5 292.5 M 113 292.5 L stroke
+%113 290 M 120 292.5 L 113 295 L closepath fill
+
+97.5 292.5 110 292.5 110 310 140 310 140 300 ptrn
+
+% char* box
+gsave
+   0.8 setgray
+   120 285 140 300 rect fill
+   190 285 220 300 rect fill
+grestore
+
+0.5 setlinewidth
+130 10 210 {
+   dup 300 M 285 L stroke
+} for
+1 setlinewidth
+120 285 220 300 rect stroke
+
+/Courier findfont 8 scalefont setfont
+220 302 M (char[]) rshow
+
+125 290 M
+[() () (c) (?) (x) (y) (z) (\\0)] {
+   gsave
+     dup stringwidth pop 2 div neg 0 rmoveto show
+   grestore
+   10 0 rmoveto
+} forall
+
+
+
+%break in the midle of char*
+gsave
+153 283 M 143 290 163 295 153 302 curveto
+158 302 L 168 295 148 290 158 283 curveto
+closepath
+1 setgray
+fill
+grestore
+
+gsave
+0.5 setgray
+[2 1] 0 setdash
+153 283 M 143 290 163 295 153 302 curveto
+158 302 M 168 295 148 290 158 283 curveto
+stroke
+grestore
+
+
+gsave
+0.7 0 0 setrgbcolor
+
+% CUR length
+0.5 setlinewidth
+140 275 M 140 280 L
+140 277.5 M 190 277.5 L
+190 275 M 190 280 L
+stroke
+140 277.5 M 144 279 L 144 276 L closepath fill
+190 277.5 M 186 279 L 186 276 L closepath fill
+
+% LEN length
+140 265 M 140 260 L
+140 262.5 M 220 262.5 L
+220 265 M 220 260 L
+stroke
+140 262.5 M 144 264 L 144 261 L closepath fill
+220 262.5 M 216 264 L 216 261 L closepath fill
+
+% IVX/OOB length
+0.5 setlinewidth
+120 245 M 120 250 L
+120 247.5 M 140 247.5 L
+140 245 M 140 250 L
+stroke
+120 247.5 M 124 249 L 124 246 L closepath fill
+140 247.5 M 136 249 L 136 246 L closepath fill
+
+grestore
+

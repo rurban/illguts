@@ -1,0 +1,74 @@
+/he {
+   10 dict begin
+     /cont exch def /str exch def /y exch def  /x exch def
+     /len str length def
+     /x2 x 70 add def
+     /cw 8 def           % hek char width
+     /x3 x2 40 add len 1 add cw mul add def
+     x y 3 box
+
+    /Helvetica findfont 11 scalefont setfont
+     x 5 add y 12 sub M
+
+     [(next)(hek)(val)] {
+        gsave
+        currentpoint 30 mws pop
+        grestore
+        0 -15 rmoveto
+     } forall
+
+     % PTR to next
+     cont { % ifelse
+         x 42.5 add   y 7.5 sub
+         x 57   add   y 7.5 sub
+         x 57   add   y 55  sub
+         x 25   add   y 55  sub
+         x 25   add   y 70  sub
+         ptrn
+     } {
+         newpath x 42.5 add y 7.5 sub 2 0 360 arc fill
+     } ifelse
+     
+     % HEK arrow
+     gsave 1 setgray x 55 add y 24 sub x2 y 21 sub rect fill grestore
+     x 42.5 add y 22.5 sub x2 ptr1
+
+     % HEK
+     0.8 setlinewidth
+     gsave 0.8 setgray x3 cw sub y 27 sub x3 y 15 sub rect fill grestore
+     x2 y 27 sub x3 y 15 sub rect stroke         % box
+     x2 20 add dup y 27 sub M y 15 sub L stroke  % sep between HASH/LEN
+     x2 40 add dup y 27 sub M y 15 sub L stroke  % sep between HASH/LEN
+
+     % sep between characters
+     gsave 0.3 setlinewidth
+     x2 40 add cw x3 cw sub {
+         dup y 27 sub M
+         y 15 sub L stroke
+     } for
+     grestore
+
+     /Helvetica findfont 8 scalefont setfont
+     (hash) x2 2 add y 25 sub 16 mws pop
+     x2 30 add y 25 sub M (len) cshow
+     /Courier findfont 6 scalefont setfont
+     x2 40 add cw 2 div add y 24 sub M
+     str {
+       gsave 1 string dup 3 2 roll 0 exch put cshow grestore
+       cw 0 rmoveto
+     } forall
+     (\\0) cshow
+
+     % anotate boxes
+     /Courier findfont 10 scalefont setfont
+     x 50 add y 2 add M (he) rshow
+     x3 y 13 sub M (hek) rshow
+
+     % VAL arrow and corresponding SV
+     gsave 1 setgray x 55 add y 39 sub x2 y 36 sub rect fill grestore
+     x 42.5 add y 37.5 sub x2 ptr1
+     x2 y 33 sub sv
+
+   end
+} def
+
