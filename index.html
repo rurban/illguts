@@ -5,13 +5,13 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.16, for perl 5.11.2</small></h1>
+<small>Version 0.17pre, for perl 5.11.2</small></h1>
 
-<p>This document is meant to supplement the <i>perlguts(1)</i> manual
+<p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl.  It contains commented illustrations of all
 major internal Perl data structures.  Having this
 document handy hopefully makes reading the Perl source code easier.
-It might also help you interpret the <i>Devel::Peek</i>
+It might also help you interpret the <i><a href="http://perldoc.perl.org/Devel/Peek.html">Devel::Peek</a></i>
 dumps.
 
 <p><i>Most of the internal perl structures had been refactored with
@@ -106,7 +106,7 @@ names reported by the <i>Devel::Peek</i> module.
 
 <p>The simplest type is the "struct sv".  It represents the common
 structure for a SV, GV, CV, AV, HV, IO and P5RX, without any struct
-xpvxx attached to it. It consist of four words, the _SV_HEAD with 3
+xpv<i>xx</i> attached to it. It consist of four words, the _SV_HEAD with 3
 values and the SV_U union with one pointer.</p>
 
 <b>_SV_HEAD and SV_U union</b>
@@ -363,9 +363,11 @@ an <i>xpv</i> struct is allocated and it contains 3 fields.
 <b>svu_pv</b> was formerly called <b>PVX</b> and before 5.10
 it was the first field of xpv. svu_pv/PVX is the pointer to
 an allocated char array. All old field names <b>must</b> be
-accessed through the old macros, which is called SvPVX().  CUR
-is an integer giving the current length of the string.  LEN
-is an integer giving the length of the allocated string.
+accessed through the old macros, which is called SvPVX(). 
+
+<b>CUR</b> is an integer giving the current length of the string.  
+
+<b>LEN</b> is an integer giving the length of the allocated string.
 The byte at (PVX + CUR) should always be '\0' in order to
 make sure that the string is NUL-terminated if passed to C
 library routines.  This requires that LEN is always at least
@@ -373,7 +375,7 @@ library routines.  This requires that LEN is always at least
 
 <p><center><img src="svpv.png"></center>
 
-<p>The POK flag indicates that the string pointed to by PVX
+<p>The <b>POK</b> flag indicates that the string pointed to by PVX
 contains an valid string value.  If the POK flag is off and
 the ROK flag is turned on, then the PVX field is used as a
 pointer to an RV (see <a href="#svrv">SvRV</a> below) and
@@ -385,7 +387,7 @@ allocated.
 <h2><a name="svpviv">SvPVIV</a> and <a name="svpvnv">SvPVNV</a></h2>
 
 <p>The <i>SvPVIV</i> type is like <i>SvPV</i> but has an additional
-field to hold a single integer value called IVX in xiv_u.  The IOK flag
+field to hold a single integer value called <b>IVX</b> in <b>xiv_u</b>.  The <b>IOK</b> flag
 indicates if the IVX value is valid.  If both the IOK and POK flag is
 on, then the PVX will (usually) be a string representation of the same
 number found in IVX.
@@ -433,8 +435,6 @@ points. -->
 A SvRV object with ROK flag off represents an undefined value.
 
 <p><center><img src="svrv.png"></center>
-
-<p>A SvRV shares the same structure as a SvIV.
 
 <a name="svpvmg"><h2>SvPVMG</h2></a>
 
@@ -969,7 +969,7 @@ class hierarchy diagram shows:
 
 <p><center><img src="op2.png"></center>
 
-<p>A typical small optree for <code>$a = $b + $c</code> would be:
+<p>A typical small optree for <code>$a = $b + 42</code> would be:
 
 <center><img src="opsample.png"> <img src="opsamp2.png"></center>
 
@@ -997,9 +997,11 @@ class hierarchy diagram shows:
 	8  &lt;@&gt; leave[1 ref] vKP/REFC
 </pre></td></tr></table>
 
-We have two BINOPs, SASSIGN and ADD as &lt;2&gt; 
-and three SVOPs, GVSV and CONST as &lt;$&gt;. <i>Note that for a threaded perl the GVSV OPs would have been PADOPs.</i>
-A SVOP pushes a SV onto the stack. A BINOP takes two args from the stack, and pushes a result.
+We have two BINOPs, SASSIGN and ADD as &lt;2&gt; and three SVOPs, GVSV
+and CONST as &lt;$&gt;. <i>Note that for a threaded perl the GVSV OPs
+would have been PADOPs.</i>
+A SVOP pushes a SV onto the stack. A BINOP takes two args from the
+stack, and pushes a result.
 <p>
 
 <b>B::Concise Types</b>:<br>
@@ -1134,33 +1136,13 @@ PERL_CONTEXT record will eventually be described below.
 
 <p><center><img src="stack.png"></center>
 
-<h3>PERL_CONTEXT</h3>
-
-NOTYET
-
-<h2>REGEXP</h2>
-
-NOTYET
-
-<h2>my_perl PerlInterpreter</h2>
-
-NOTYET
-
-
-<!-- ############################################################ -->
-
-<pre>
-
-
-</pre>
-
 <hr>
 <div align="right">
 <small>
 <i>&copy; 1998-1999 Gisle Aas. 2009 Reini Urban</i><br>
 <a href="mailto:gisle@aas.no">&lt;gisle@aas.no&gt;</a><br>
 <a href="mailto:rurban@cpan.org">&lt;rurban@cpan.org&gt;</a><br>
-$Date: 2009-11-22 18:16:51 rurban $
+$Date: 2009-12-13 14:27:43 rurban $
 </small>
 </div>
 

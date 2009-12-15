@@ -1,0 +1,10 @@
+.history
+*.tar.gz
+*~
+*.patch
+*.eps
+hhk.pl
+up
+.cpan-*
+
+

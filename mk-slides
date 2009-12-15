@@ -1,0 +1,123 @@
+#!/usr/bin/perl -w
+# $Id: mk-slides,v 1.1 1998/08/11 10:20:51 aas Exp $
+
+$file = shift || die;
+
+$NAME = "illguts";
+chop($VERSION = `cat VERSION`);
+die "Bad version number" unless $VERSION =~ /^\d+\.\d\d$/;
+$VNAME = "$NAME-$VERSION";
+$event = shift || $VNAME; # "Perl Conference 2.0"
+$copy  = shift  || "© 1998 Gisle Aas, 2009 Reini Urban";
+
+$base = $file;
+$base =~ s/\.pds$// or die "File must end with .pds\n";
+
+open(F, $file) or die "Can't open $file: $!";
+
+if (-d $base) {
+    #print "Cleaning $base...\n";
+    system("rm -rf $base/*");
+} else {
+    mkdir($base, 0755) || die "Can't create $base: $!";
+}
+
+@slide = ();
+@slides = ();
+$no = 0;
+$comment = 0;
+
+while (<F>) {
+    if (/=slide\s+(.*)/) {
+	if (@slide) {
+	    # avslutt forrige
+	    push(@slide, qq(</table></center>\n));
+	    push(@slides, join("", @slide));
+	    @slide = ();
+        }
+	$title = $1;
+	push(@slide, qq(
+<center><table cellpadding="30" border="2" width="95%"><tr><td bgcolor="#FFFFFF"><h1>$title</h1>\n));
+	push(@titles, $title);
+	$no++;
+	$comment = 0;
+    } elsif (!@slide) {
+	push(@index_head, $_);
+    } elsif (/=comment/) {
+	$comment++;
+    } else {
+	if ($comment) {
+	    $comment[$no-1] .= $_;
+	} else {
+	    push(@slide, $_);
+	}
+    }
+}
+if (@slide) {
+    # avslutt siste
+    push(@slide, qq(</table></center>\n));
+    push(@slides, join("", @slide));
+}
+
+
+$tot = @slides;
+
+for $no (1 .. $tot) {
+    my $file = "s$no.html";
+    my $title = $titles[$no-1];
+
+    open(F, ">$base/$file") or die "Can't create $file: $!";
+
+    $title =~ s/<\/?[^>]+>//g;
+    printf "%3d) %s\n", $no, $title;
+    print F qq(<title>$title</title><body bgcolor="#CCCCCC" xbackground="../img/cbg.gif">);
+    print F '<form action="#" id="controlForm">';
+    if ($no < $tot) {
+	my $next = $no + 1;
+	$slides[$no-1] =~ s!(<center><table cellpadding="30" border="2" width="95%"><tr><td bgcolor="#FFFFFF"><h1>)(.*)(</h1>\n)!$1<a href="s$next.html">$2</a>$3!;
+    }
+    print F $slides[$no-1];
+
+    # Manøver-knapper
+    print F qq(\n<p><table border="0" width="100%">);
+    print F qq(<tr><td width="100%"><font size="-2">$event<br>$copy</font></td>\n);
+    print F qq(<td>$no/$tot</td>);
+    print F qq(<td>);
+    print F '<form action="#" id="controlForm"><table border="1"><tr><td>';
+    if ($no > 1) {
+	my $prev = $no - 1;
+	print F qq(<a accesskey="z" id="prev" href="s$prev.html"><img src="../img/left.gif" alt="««" border=0></a>);
+    }
+    print F qq(<a accesskey="t" id="toggle" href="index.html"><img src="../img/up.gif" alt="/\\" border=0></a>);
+    if ($no < $tot) {
+	my $next = $no + 1;
+	print F qq(<a accesskey="x" href="s$next.html"><img src="../img/right.gif" alt="»»" border=0></a>);
+    }
+    print F "</div></td></tr></table>";
+    print F "</td>";
+    print F "</tr></table></form>\n<p>\n";
+
+    print F "<p><br><p><br><p><small>$comment[$no-1]</small>\n" if $comment[$no-1];
+    print F qq(</body>\n);
+    close(F);
+}
+
+open(INDEX, ">$base/index.html") or die "Can't create $base/index.html: $!";
+
+print INDEX <<EOT;
+<title>$base - $event</title>
+<body bgcolor="#CCCCCC">
+<a href="../index.html"><img src="../img/up.gif" alt="[UP]" align=right></a>
+
+EOT
+
+print INDEX @index_head;
+
+print INDEX "<ol>\n";
+$no = 1;
+for $title (@titles) {
+    my $file = "s$no.html";
+    print INDEX qq(<li><a href="$file">$title</a>\n);
+    $no++;
+}
+print INDEX "</ol>\n";

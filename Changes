@@ -1,0 +1,79 @@
+0.17 2009-12-?? rurban@cpan.org
+	* index.html: more links.
+	  RV is not the exact same as a IV
+
+0.16 2009-12-01 rurban@cpan.org
+	* opsamp2: added
+	* eps2png: cleanup
+
+0.15 2009-12-01 rurban@cpan.org
+	* op.ps: type:9, opt:7
+	* op1, op2: fixed cop,padop. removed condop
+	* optypes: exchanged condop with padop
+
+0.14 2009-11-30 rurban@cpan.org
+	* op1.epsx: shortened pmop
+	* pad.espx: added intermediate AVs, PL_curpad, PL_comppad
+          and PL_comppad_name
+	* svng,svpvbm,svpvmg: better bounding box
+	* svpvrv.epsx, svpvrv.png: removed
+
+0.13 2009-11-23 rurban@cpan.org
+	* some typos
+        * opsample.epsx: smaller bubble
+	* Fixed opcode flags (parsed Concise vs static)
+        * CV: added pad.ps with PADLIST ptr
+
+0.12 2009-11-22 rurban@cpan.org
+        * mk-slides: fix version
+        * make_dist: force perms
+        * slides/index.html: Removed unused S5 js from 
+        * svpvmg.epsx: len,obj,ptr reshuffle, added magic_state
+        * gv.epsx: renamed FLAGS to GvFLAGS
+        * io.epsx: renamed FLAGS to IoFLAGS
+        * index.html: Fixed GV
+        * Added PAD to slides
+	* Added opsample.epsx, added OP Concise explanation,
+	  removed abc-simple.png
+
+0.11 2009-11-22 rurban@cpan.org
+        * Added Changes (written with info from backpan)
+        * Changed IV + NV text, fixed svnv.epsx
+        * Added GvNAME to PVLV
+        * Rewrote AV, HV, GV
+        * illguts.pdf: added
+
+0.10 2009-11-21 rurban@cpan.org
+        * Rewrite of all files for the Perl 5.10 changes. 
+          Uptodate with current 5.11.2 (BIND and RV added).
+        * Added illguts.chm Windows HTML Help File
+        * Added abc-simple.png from Simon Cozens Tutorial
+        * Restructuring of slides: Added accesskeys META-z, META-x, META-t
+
+0.09 1999-11-05 gaas@cpan.org
+        * replaced .gif by .png
+
+0.08 1999-06-11 gaas@cpan.org
+        * url change from http://home.sn.no/~aas/perl/guts/ 
+        to http://gisle.aas.no/perl/
+
+0.06 1998-07-03 gaas@cpan.org
+	+ /nsglob
+
+0.05 1998-02-24 gaas@cpan.org
+	+ svtypes.gif, optypes.gif, op1.gif, op2.gif, stack.gif, scope.gif
+
+0.04 1998-02-18 gaas@cpan.org
+	+ stash.gif
+
+0.03 1998-02-06 gaas@cpan.org
+        + svpvrv.gif, gv.gif, cv.gif, svpvfm.gif, io.gif     
+        * Postscript improvements
+        * Adedd SvPVMG fields
+
+0.02 1998-02-03 gaas@cpan.org
+        * Added svpvbm, svpvlv, strtab
+        * Added HE, HEK, SHAREKEYS info
+
+0.01 1998-02-02 gaas@cpan.org
+	* first release

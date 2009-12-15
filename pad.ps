@@ -1,0 +1,76 @@
+%%Creator: Reini Urban, Copyright 2009
+
+%require "common.ps"
+%require "sv.ps"
+%require "box.ps"
+%require "rect.ps"
+%require "mws.ps"
+%require "ptr.ps"
+%require "break.ps"
+
+/Helvetica 8 SF
+105 252 M (PADLIST AV) rshow
+55 250 2 2 newbox
+55 250 3 box
+
+stroke
+
+/Helvetica 11 SF
+60 253 15 sub M
+[(@_) (PAD 1) (PAD 2)] {
+    gsave
+    currentpoint 30 mws pop
+    grestore
+    0 -15 RM
+} forall
+
+% PAD 0 250-7.5
+105 242.5 130 252 ptrn
+% PAD 1
+105 227.5 130 222 ptrn
+
+gsave
+  130 255 translate 0.6 dup scale 
+  0 0 sv2
+  0 -50 sv2
+grestore
+
+% AV0 => AvARRAY
+154 234 190 247.5 ptrn
+% AV1 => AvARRAY
+154 204 190 212.5 ptrn
+
+gsave 
+60 0 translate
+
+% PAD1 box
+0.5 setlinewidth
+145 15 240 {
+   dup 240 M 255 L stroke
+} for
+145 15 240 {
+   dup 205 M 220 L stroke
+} for
+1 setlinewidth
+130 255 250 240 rect stroke
+130 220 250 205 rect stroke
+/Courier findfont 8 scalefont setfont
+130 257 M (@_ AV*[]) show
+130 222 M (AV*[targ]) show
+/Helvetica 8 SF
+132 243 M ($a) show
+147 243 M ($b) show
+
+192 255 break
+192 220 break
+
+gsave
+1 dict begin
+/y 200 def
+[137.5 212.5] {
+   gsave dup 3 sub y translate 0.40 dup scale 0 0 sv2 grestore
+   dup 212.5 3 2 roll y ptrn
+} forall
+end
+
+grestore

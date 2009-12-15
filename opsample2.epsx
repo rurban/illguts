@@ -1,0 +1,50 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: 5 100 225 225
+%%Creator: Reini Urban (Copyright 2009)
+
+%require "common.ps"
+%require "ptr.ps"
+
+% start and root pointing to the "optree" linked list with args pointing to pads and ops
+% enter nextstate gvsv const add gvsv sassign leave
+%                 $b   42        $a
+
+
+/Courier 10 SF
+10 210 M (ENTER $b 42 ADD $a SASSIGN LEAVE) show
+
+/arcsize 34 def /yscale 0.3 def
+/y arcsize yscale mul def
+
+/bubble % <text> <x> <y> bubble -
+{ 
+  gsave
+    /yt exch def
+    /xt exch def
+    xt yt translate
+    0 -2 M
+    cshow          % text still on the stack
+    newpath
+    0.7 yscale scale
+    0 0 arcsize 0 360 arc S
+    % 0.9 setgray F
+  grestore
+} def
+
+40 0 translate
+/dy 30 def /dx 50 def
+/y1 180 def
+        /y2 y1 dy sub def /y3 y2 dy sub def
+/x1 0 def
+        /x2 x1 dx add def /x3 x2 dx add def /x4 x3 dx add def
+
+/Helvetica 9 SF
+x2 2 sub y1 y sub  x1 y2 y add ptrn % sassign->a
+x2 2 add y1 y sub  x3 y2 y add ptrn % sassign->add
+x3 2 sub y2 y sub  x2 y3 y add ptrn % add->b
+x3 2 add y2 y sub  x4 y3 y add ptrn % add->42
+(SASSIGN)  x2 y1 bubble
+($a)       x1 y2 bubble
+(ADD) 	   x3 y2 bubble
+($b) 	   x2 y3 bubble
+(42)	   x4 y3 bubble

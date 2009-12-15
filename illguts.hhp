@@ -1,0 +1,16 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=illguts.chm
+Default topic=index.html
+Display compile notes=No
+Display compile progress=No
+Full-text search=Yes
+Index file=illguts.hhk
+Language=0x409 Englisch (USA)
+Title=illguts-0.17
+
+[FILES]
+index.html
+
+[INFOTYPES]
+

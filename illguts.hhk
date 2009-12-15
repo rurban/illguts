@@ -1,0 +1,324 @@
+<HTML>
+<!-- Sitemap 1.0 -->
+<OBJECT type="text/site properties">
+</OBJECT>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="illguts">
+		<param name="Local" value="index.html#top">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SV">
+		<param name="Local" value="index.html#svtypes">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SvOOK">
+		<param name="Local" value="index.html#SvOOK">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SvFLAGS">
+		<param name="Local" value="index.html#flags">
+		</OBJECT>
+        <UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVf_IOK">
+		<param name="Local" value="index.html#SVf_IOK">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVf_NOK">
+		<param name="Local" value="index.html#SVf_NOK">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVf_POK">
+		<param name="Local" value="index.html#SVf_POK">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVf_ROK">
+		<param name="Local" value="index.html#SVf_ROK">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVp_IOK">
+		<param name="Local" value="index.html#SVp_IOK">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVp_NOK">
+		<param name="Local" value="index.html#SVp_NOK">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVp_POK">
+		<param name="Local" value="index.html#SVp_POK">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVp_SCREAM">
+		<param name="Local" value="index.html#SVp_SCREAM">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVpgv_GP">
+		<param name="Local" value="index.html#SVpgv_GP">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVphv_CLONEABLE">
+		<param name="Local" value="index.html#SVphv_CLONEABLE">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVprv_PCS_IMPORTED">
+		<param name="Local" value="index.html#SVprv_PCS_IMPORTED">
+		</OBJECT>
+          <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVs_GMG">
+		<param name="Local" value="index.html#SVs_GMG">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVs_OBJECT">
+		<param name="Local" value="index.html#SVs_OBJECT">
+		</OBJECT>
+          <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVs_PADSTYLE">
+		<param name="Local" value="index.html#SVs_PADSTYLE">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVs_PADMY">
+		<param name="Local" value="index.html#SVs_PADMY">
+		</OBJECT>
+          <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVs_PADTMP">
+		<param name="Local" value="index.html#SVs_PADTMP">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVs_RMG">
+		<param name="Local" value="index.html#SVs_RMG">
+		</OBJECT>
+          <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVs_SMG">
+		<param name="Local" value="index.html#SVs_SMG">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVs_TEMP">
+		<param name="Local" value="index.html#SVs_TEMP">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVf_FAKE">
+		<param name="Local" value="index.html#SVf_FAKE">
+		</OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+                <param name="Keyword" value="SVphv_REHASH">
+                <param name="Local" value="index.html#SVphv_REHASH">
+                </OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVf_OOK">
+		<param name="Local" value="index.html#SVf_OOK">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVf_BREAK">
+		<param name="Local" value="index.html#SVf_BREAK">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVf_READONLY">
+		<param name="Local" value="index.html#SVf_READONLY">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVf_AMAGIC">
+		<param name="Local" value="index.html#SVf_AMAGIC">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVphv_SHAREKEYS">
+		<param name="Local" value="index.html#SVphv_SHAREKEYS">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVf_UTF8">
+		<param name="Local" value="index.html#SVf_UTF8">
+		</OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+                <param name="Keyword" value="SVpav_REIFY">
+                <param name="Local" value="index.html#SVpav_REIFY">
+                </OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+                <param name="Keyword" value="SVphv_HASKFLAGS">
+                <param name="Local" value="index.html#SVphv_HASKFLAGS">
+                </OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVpbm_VALID">
+		<param name="Local" value="index.html#SVpbm_VALID">
+		</OBJECT>
+                </OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+                <param name="Keyword" value="SVpav_REAL">
+                <param name="Local" value="index.html#SVpav_REAL">
+                </OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVphv_LAZYDEL">
+		<param name="Local" value="index.html#SVphv_LAZYDEL">
+		</OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+                <param name="Keyword" value="SVrepl_EVAL">
+                <param name="Local" value="index.html#SVrepl_EVAL">
+                </OBJECT>
+  	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SVpfm_COMPILED">
+		<param name="Local" value="index.html#SVpfm_COMPILED">
+		</OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+                <param name="Keyword" value="SVf_IVisUV">
+                <param name="Local" value="index.html#SVf_IVisUV">
+                </OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+                <param name="Keyword" value="SVpbm_TAIL">
+                <param name="Local" value="index.html#SVpbm_TAIL">
+                </OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+                <param name="Keyword" value="SVprv_WEAKREF">
+                <param name="Local" value="index.html#SVprv_WEAKREF">
+                </OBJECT>
+
+        </UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="_SV_HEAD">
+		<param name="Local" value="index.html#_SV_HEAD">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="AV">
+		<param name="Local" value="index.html#av">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="CV">
+		<param name="Local" value="index.html#cv">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="GV">
+		<param name="Local" value="index.html#gv">
+		</OBJECT>
+        <UL>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="GvFLAGS">
+		<param name="Local" value="index.html#GvFLAGS">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="GP">
+		<param name="Local" value="index.html#gp">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="Stashes">
+		<param name="Local" value="index.html#stash">
+		</OBJECT>
+        </UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="GP">
+		<param name="Local" value="index.html#gp">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="HV">
+		<param name="Local" value="index.html#hv">
+		</OBJECT>
+        <UL>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="HE">
+		<param name="Local" value="index.html#he">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="HEK">
+		<param name="Local" value="index.html#hek">
+		</OBJECT>
+        </UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="IO">
+		<param name="Local" value="index.html#io">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SvOOK">
+		<param name="Local" value="index.html#SvOOK">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="OP">
+		<param name="Local" value="index.html#op">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="PAD">
+		<param name="Local" value="index.html#pad">
+		</OBJECT>
+        <UL>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="PADLIST">
+		<param name="Local" value="index.html#pad">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="PL_curpad">
+		<param name="Local" value="index.html#pad">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="PL_comppad">
+		<param name="Local" value="index.html#pad">
+		</OBJECT>
+        </UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="IV">
+		<param name="Local" value="index.html#sviv">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="NV">
+		<param name="Local" value="index.html#svnv">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="PV">
+		<param name="Local" value="index.html#svpv">
+		</OBJECT>
+        <UL>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="PVBM">
+		<param name="Local" value="index.html#svpvbm">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="PVIV">
+		<param name="Local" value="index.html#svpviv">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="PVNV">
+		<param name="Local" value="index.html#svpvnv">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="PVLV">
+		<param name="Local" value="index.html#svpvlv">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="PVMG">
+		<param name="Local" value="index.html#svpvmg">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="PVFM">
+		<param name="Local" value="index.html#svpvfm">
+		</OBJECT>
+          <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="PVAV">
+		<param name="Local" value="index.html#av">
+		</OBJECT>
+          <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="PVHV">
+		<param name="Local" value="index.html#hv">
+		</OBJECT>
+        </UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="RV">
+		<param name="Local" value="index.html#svrv">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="SvTYPE">
+		<param name="Local" value="index.html#svtypes">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="Stacks">
+		<param name="Local" value="index.html#stacks">
+		</OBJECT>
+        <UL>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="savestack">
+		<param name="Local" value="index.html#stacks">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="Scope">
+		<param name="Local" value="index.html#scope">
+		</OBJECT>
+        </UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="Stashes">
+		<param name="Local" value="index.html#stash">
+		</OBJECT>
+</UL></HTML>

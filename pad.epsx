@@ -1,0 +1,18 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: 40 175 320 275
+%%Creator: Reini Urban (Copyright 2009)
+
+%include "pad.ps"
+
+/Courier findfont 8 scalefont setfont
+% 10 225 M (DEPTH) show
+% 40 227.5 55 227.5 ptrn
+
+60 265 M (PL_comppad_name) rshow
+62 263 70 252 ptrn
+
+35 180 M (PL_comppad) rshow
+39 182 70 222 ptrn
+
+55 180 M (PL_curpad) show
+102 182 130 212.5 ptrn

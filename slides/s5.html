@@ -1,0 +1,33 @@
+<title>SvPV</title><body bgcolor="#CCCCCC" xbackground="../img/cbg.gif"><form action="#" id="controlForm">
+<center><table cellpadding="30" border="2" width="95%"><tr><td bgcolor="#FFFFFF"><h1><a href="s6.html">SvPV</a></h1>
+
+<p><img src="../svpv.png">
+
+<hr><xmp>
+SV*   newSVpv(char*, int);
+SV*   newSVpvn(char*, int);
+SV*   newSVpvf(const char*, ...);
+
+char* SvPV(SV*, STRLEN len); /* macro */
+char* SvPV_force(SV*, STRLEN len);
+char* SvPVX(SV*);
+
+int SvCUR(SV*);
+SvCUR_set(SV*, I32 val);
+char* SvEND(SV*);
+char* SvGROW(SV*, STRLEN newlen);
+
+void  sv_catpv(SV*, char*);
+void  sv_catpvn(SV*, char*, int);
+void  sv_catpvf(SV*, const char*, ...);
+void  sv_catpvfn(SV*, const char*, STRLEN,
+                 va_list *, SV **, I32, bool);
+void  sv_catsv(SV*, SV*);
+</xmp>
+
+</table></center>
+
+<p><table border="0" width="100%"><tr><td width="100%"><font size="-2">illguts-0.16<br>© 1998 Gisle Aas, 2009 Reini Urban</font></td>
+<td>5/21</td><td><form action="#" id="controlForm"><table border="1"><tr><td><a accesskey="z" id="prev" href="s4.html"><img src="../img/left.gif" alt="««" border=0></a><a accesskey="t" id="toggle" href="index.html"><img src="../img/up.gif" alt="/\" border=0></a><a accesskey="x" href="s6.html"><img src="../img/right.gif" alt="»»" border=0></a></div></td></tr></table></td></tr></table></form>
+<p>
+</body>
