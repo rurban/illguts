@@ -1,5 +1,5 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 145 285 337
+%%BoundingBox: -5 140 285 337
 %%Creator: Gisle Aas (Copyright 1998)
 
 %require "common.ps"
@@ -18,13 +18,15 @@
 105 302 M (xpvmg) rshow
 160 182 M (hv) rshow
 
-55 300 6 7 newbox
-55 300 7 box
+55 300 5 6 newbox
+55 300 6 box
+% unused xnv_u
+gsave 0.8 setgray 55 285 105 300 rect F grestore
 
 /Helvetica 11 SF
 60 303 15 sub M
 
-[(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH)] {
+[(xnv_u) (cur) (len) (xiv_u) (MAGIC) (STASH)] {
     gsave
     currentpoint 30 mws pop
     grestore
@@ -32,21 +34,21 @@
 } forall
 
 %%include "str.ps"
-97.5 292.5 120 ptr1  % PVX arrow
+% 97.5 292.5 120 ptr1  % PVX arrow
 
 % stash arrow
-97.5 202.5
-110  202.5
-110  175
+97.5 202.5 15 add
+110  202.5 15 add
+110  175 
 120  175 ptrn
 
 % stash HV
 120  180 sv
 
 % MAGIC ptr arrow
-97.5 217.5
-110 217.5
-110 277.5
+97.5 217.5 15 add
+110 217.5 15 add
+110 277.5 
 120 277.5 ptrn
 
 % magic

@@ -22,10 +22,10 @@
 gsave 0.8 setgray 55 285 105 255 rect fill grestore
 55 300 3 box
 
-/Helvetica 11 SF
+/Helvetica 9 SF
 60 303 15 sub M
 
-[(PVX) (CUR) (LEN)] {
+[(xnv_u) (cur) (len)] {
     gsave
     show
     grestore

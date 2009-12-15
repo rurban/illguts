@@ -16,14 +16,16 @@
 105 302 M (xpviv) rshow
 
 /Courier-Bold 6 SF
-15 264 M (POK,OOK) cshow
+15 271 M (POK,OOK) cshow
 
 55 300 4 box
+% unused xnv_u
+gsave 0.8 setgray 55 285 105 300 rect F grestore
 
 /Helvetica 11 SF
 60 303 15 sub M
 
-[(PVX) (CUR) (LEN) (IVX)] {
+[(xnv_u) (cur) (len) (xiv_u)] {
     gsave
     show
     grestore
@@ -31,11 +33,15 @@
 } forall
 
 % arrow from PVX
-%newpath 97.5 292.5 2 0 360 arc fill
-%97.5 292.5 M 113 292.5 L stroke
-%113 290 M 120 292.5 L 113 295 L closepath fill
+% newpath 97.5 292.5 2 0 360 arc fill
+% 97.5 292.5 M 113 292.5 L stroke
+% 113 290 M 120 292.5 L 113 295 L closepath fill
 
-97.5 292.5 110 292.5 110 310 140 310 140 300 ptrn
+% arrow from sv_u.pvx
+/Helvetica-Bold 9 SF
+5 262 M (svu_pv) show
+42 265 47 265 47 310 140 310 140 300 ptrn
+% 97.5 292.5 110 292.5 110 310 140 310 140 300 ptrn
 
 % char* box
 gsave

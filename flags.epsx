@@ -1,6 +1,6 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 47 245 168
-%%Creator: Gisle Aas (Copyright 1998)
+%%BoundingBox: -5 67 245 168
+%%Creator: Gisle Aas (Copyright 1998), Reini Urban 2009
 
 %require "common.ps"
 %require "mws.ps"
@@ -49,35 +49,35 @@ gsave
   % some backgrounds
   paleblue
   % emphasis of the XOK flags
-  120 100 160 140 rect fill
-  50  100  80 140 rect fill
+  170 100 240 140 rect fill
+  % 50  100  80 140 rect fill
 
   % MAGIC flags
   yellow
-  160 100 190 140 rect fill
+  80 100 110 140 rect fill
 grestore
 
 0 100 [
-  (PADBUSY)
-  (PADTMP)
-  (PADMY)
+  (SVf_IOK)
+  (SVf_NOK)
+  (SVf_POK)
+  (SVf_ROK)
+  (SVp_IOK)
+  (SVp_NOK)
+  (SVp_POK)
+  (SCREAM ..)
+  (PADSTALE ..)
+  (PADTMP ..)
+  (PADMY/OUR)
   (TEMP)
   (OBJECT)
-  (GMAGICAL)
-  (SMAGICAL)
-  (RMAGICAL)
-  (IOK)
-  (NOK)
-  (POK)
-  (ROK)
-  (FAKE)
+  (GMG)
+  (SMG)
+  (RMG)
+  (FAKE ..)
   (OOK)
   (BREAK)
   (READONLY)
-  (IOKp)
-  (NOKp)
-  (POKp)
-  (SCREAM)
   (AMAGIC)
   (SHAREKEYS)
   (LAZYDEL/TAIL)
@@ -88,36 +88,36 @@ grestore
 /Helvetica findfont 8 scalefont setfont
 red
 
-% Combined flags
-
-[55 65 75 125 135 145 155] {
+% Flags with multiple meanings
+[5 15 25 75 135 145 155 165] {
    dup 147 M 153 L
 } forall
-55 153 M 155 153 L
-105 153 M 105 158 L
+5 153 M 165 153 L
+85 153 M 85 158 L
 S
-gsave 0 setgray 105 159 M (OK) cshow grestore
+gsave 0 setgray 85 159 M (Multiple) cshow grestore
 
-
-145 100 M 145 90 L 155 90 L 155 100 L  150 90 M 150 85 L stroke
-gsave 0 setgray 150 77 M (NIOK) cshow grestore
-
-85 100 M 85 90 L 125 90 L 125 100 L 105 90 M 105 85 L stroke
-gsave 0 setgray 105 77 M (THINKFIRST) cshow grestore
-
-165 100 M 165 90 L 185 90 L 185 100 L 175 100 M 175 85 L stroke
-gsave 0 setgray 165 77 M (MAGICAL) show grestore
-
-% PRIVSHIFT
-80 57 M 80 63 L
-80 60 M 160 60 L S
-160 60 M 155 58 L 155 62 L CP F
-
+% PRIVSHIFT 170-240
+170 67 M 170 73 L
+170 70 M 210 70 L S
+210 70 M 205 68 L 205 72 L CP F
 gsave
   paleblue
-  50  66  80 69 rect F
-  130 66 160 69 rect F
+  170 91 200 94 rect F
+  210 91 240 94 rect F
 grestore
+gsave 0 setgray 190 77 M (PRIVSHIFT) cshow grestore
 
-gsave 0 setgray 120 52 M (PRIVSHIFT) cshow grestore
+225 100 M 225 90 L 235 90 L 235 100 L  230 90 M 230 85 L stroke
+gsave 0 setgray 230 77 M (NIOK) cshow grestore
 
+% SVf_READONLY|SVf_ROK|SVf_FAKE
+red
+45 100 M 45 94 L 75 94 L 75 100 L 75 94 M 205 94 L 205 100 L 
+45 94 M 55 94 L 55 85 L stroke
+gsave 0 setgray 45 77 M (THINKFIRST) cshow grestore
+
+85 100 M 85 90 L 105 90 L 105 100 L 95 100 M 95 85 L stroke
+gsave 0 setgray 85 77 M (MAGICAL) show grestore
+
+% gsave 0 setgray 20 77 M (In work...) cshow grestore

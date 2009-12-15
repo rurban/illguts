@@ -16,24 +16,28 @@
 40  302 M (sv) rshow
 105 302 M (xpvlv) rshow
 
-55 300 8 11 newbox
-55 300 11 box
+% unused xiv_u
+gsave 0.8 setgray 55 240 105 255 rect F grestore
+% unused xnv_u
+gsave 0.8 setgray 55 285 105 300 rect F grestore
+55 300 7 10 newbox
+55 300 10 box
 
 /Helvetica 11 SF
 60 303 15 sub M
 
-[(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (TARGOFF) (TARGLEN) (TARG) (TYPE)] {
+[(xnv_u) (cur) (len) (xiv_u) (MAGIC) (STASH) (TARGOFF) (TARGLEN) (TARG) (TYPE)] {
     gsave
     currentpoint 30 mws pop
     grestore
     0 -15 rmoveto
 } forall
 
-97.5 157.5 130 ptr1
-130 165 sv
+97.5 157.5 15 add 130 ptr1
+130 180 sv
 
 
-97.5 217.5 130 245 ptrn
+97.5 217.5 15 add 130 245 ptrn
 
 gsave
 130 250 translate 0.7 dup scale

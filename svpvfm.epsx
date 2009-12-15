@@ -20,7 +20,7 @@
 /Helvetica 11 SF
 60 303 15 sub M
 
-[(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (CvSTASH) (START) () (OWNER) (FLAGS) (LINES)] {
+[(GvSTASH) (cur) (len) (DEPTH) (MAGIC) (STASH) (CvSTASH) (START) (START_u) () (OWNER) (FLAGS) (LINES)] {
     gsave
     currentpoint 30 mws pop
     grestore

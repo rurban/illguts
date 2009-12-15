@@ -1,5 +1,5 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 262 180 310
+%%BoundingBox: -5 252 180 310
 %%Creator: Gisle Aas (Copyright 1998)
 
 %require "common.ps"
@@ -8,20 +8,22 @@
 %require "rect.ps"
 %require "ptr.ps"
 
-0 300 sv
+0 300 sv2
+
+% arrow
+% 55 292.5 70 ptr1
+
+% rv arrow
+42  265
+60  265
+60  292.5
+80  292.5 ptrn
+
+/Helvetica-Bold 9 SF
+5 262 M (svu_rv) show
 
 /Courier 8 SF
 40  302 M (sv) rshow
-105 302 M (xrv) rshow
-160 299.5 M (sv) rshow
-
-55 300 1 1 newbox
-55 300 1 box
-
-/Helvetica 11 SF
-60 303 15 sub M (RV) show
-
-% arrow
-97.5 292.5 120 ptr1
-120 297.5 sv
+120 299.5 M (sv) rshow
+80 297.5 sv
 

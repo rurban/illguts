@@ -6,12 +6,11 @@
         /x2 x 50 add def
 
         gsave palegreen
-          x y x2 y 15 sub rect fill
-          x y 30 sub x2 y 90 sub rect fill
-          x y 105 sub x2 y 120 sub rect fill
+          x y x2 y 45 sub rect fill
+          x y 75 sub x2 y 120 sub rect fill
         grestore
 
-	x y 12 box
+	x y 11 box
 
         /Courier 8 SF
         x 50 add y 2 add M (gp) rshow
@@ -20,7 +19,7 @@
         /Helvetica 11 SF
         x 5 add y 12 sub M
 
-        [(SV) (REFCNT) (IO) (FORM) (AV) (HV) (EGV) (CV) (CVGEN) (LASTEXPR) (LINE) (FILEGV)] {
+        [(SV) (IO) (CV) (CVGEN) (REFCNT) (HV) (AV) (FORM) (EGV) (LINE) (FILE_HEK)] {
     gsave
     currentpoint 30 mws pop
     grestore

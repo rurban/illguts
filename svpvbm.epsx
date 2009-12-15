@@ -12,22 +12,28 @@
 %require "break.ps"
 
 0 300 sv
+% arrow from sv_u.pvx
+/Helvetica-Bold 9 SF
+5 262 M (svu_pv) show
+42 265 47 265 47 312 112 312 112 292.5 120 292.5 ptrn
 
 /Courier 8 SF
 40  302 M (sv) rshow
 105 302 M (xpvbm) rshow
-170 227 M (magic) rshow
+170 227 15 add M (magic) rshow
 
 /Courier-Bold 6 SF
-15 264 M (POK,VALID) cshow
+15 274 M (POK,VALID) cshow
 
-55 300 8 10 newbox
-55 300 10 box
+% unused xnv_u and ivx
+gsave 0.8 setgray 55 285 105 300 rect F grestore
+gsave 0.8 setgray 55 240 105 255 rect F grestore
+55 300 7 9 newbox
+55 300 9 box
 
 /Helvetica 11 SF
 60 303 15 sub M
-
-[(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (BmUSEFUL) (BmPREVIOUS) (BmRARE)] {
+[(xnv_u) (cur) (len) (xiv_u) (MAGIC) (STASH) (BmUSEFUL) (BmPREVIOUS) (BmRARE)] {
     gsave
     currentpoint 30 mws pop
     grestore
@@ -35,7 +41,7 @@
 } forall
 
 % arrow from PVX
-97.5 292.5 120 ptr1
+% 97.5 292.5 120 ptr1
 
 % char* box
 gsave
@@ -91,6 +97,6 @@ stroke
 grestore
 
 % Magic
-97.5 217.5 120 ptr1
-120 225 ('B') smagic
-185 210 [() () () (&magic_setbm) ()] mgvtbl
+97.5 217.5 15 add 120 ptr1
+120 240 ('B') smagic
+185 225 [() () () (&magic_setbm) ()] mgvtbl
