@@ -16,7 +16,8 @@
 40  302 M (sv) rshow
 105 302 M (xpvlv) rshow
 
-% unused xiv_u
+% xiv_u as GvNAME
+55 300 4 4 newbox
 % gsave 0.8 setgray 55 240 105 255 rect F grestore
 % unused xnv_u
 gsave 0.8 setgray 55 285 105 300 rect F grestore

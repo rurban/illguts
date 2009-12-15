@@ -5,25 +5,35 @@ chop($VERSION = `cat VERSION`);
 die "Bad version number" unless $VERSION =~ /^\d+\.\d\d$/;
 
 sh("grep 'Version $VERSION' index.html");
+sh("grep 'Title=' illguts.hhp");
+sh('find . -type f -exec chmod 0644 "{}" ";"');
+sh('find . -type d -exec chmod 0755 "{}" ";"');
+my @exe = qw(mk-slides eps2png eps2ppm epsx2eps make_dist);
+print "chmod 0754, @exe, 'up'\n";
+chmod 0754, @exe, 'up';
 
 $VNAME = "$NAME-$VERSION";
-
 mkdir($VNAME, 0755) || die "Can't create $VNAME: $!";
 
 sh("cp *.html $VNAME");
 sh("cp *.ps *.epsx $VNAME");
 sh("cp *.png $VNAME");
-sh("cp Changes illguts.pdf illguts.chm illguts.hhp illguts.hhk Makefile README VERSION eps2png eps2ppm epsx2eps make_dist $VNAME");
+sh("cp Changes illguts.pdf illguts.chm illguts.hhp illguts.hhk Makefile README VERSION"
+   ." slides.pds ".join(" ", @exe)." $VNAME");
+sh("cp -r img $VNAME/");
 sh("mkdir $VNAME/slides");
-sh("cp -r img mk-slides slides.pds $VNAME/");
-sh("cp -r slides/*.html $VNAME/slides/");
+sh("cp slides/*.html $VNAME/slides/");
+sh("find $VNAME -type f -exec chmod 0444 \"{}\" \";\"");
+chdir $VNAME;
+print "cd $VNAME; chmod 0754, @exe; cd ..\n";
+chmod 0754, @exe;
+chdir "..";
 
 sh("tar cf $VNAME.tar $VNAME");
 sh("rm -rf $VNAME");
 sh("gzip -9f $VNAME.tar");
 #sh("tar tzf $VNAME.tar.gz");
 sh("ls -l $VNAME.tar.gz");
-
 
 sub sh
 {

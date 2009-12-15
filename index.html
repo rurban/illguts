@@ -5,7 +5,7 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 <h1 align="center" name="top">
-PerlGuts Illustrated<br><small>Version 0.11, for perl 5.11.2
+PerlGuts Illustrated<br><small>Version 0.12, for perl 5.11.2
 </small></h1>
 
 <p>This document is meant to supplement the <i>perlguts(1)</i> manual
@@ -438,16 +438,17 @@ A SvRV object with ROK flag off represents an undefined value.
 
 <a name="svpvmg"><h2>SvPVMG</h2></a>
 
-<p>The <i>SvPVMG</i> is like <i>SvPVNV</i> above, but has two
-additional fields; MAGIC and STASH.  MAGIC is a pointer to additional
-structures that contains callback functions and other data.  If the
+<p>Blessed scalars ar othr magic attached. <i>SvPVMG</i> has two
+additional fields; MAGIC and STASH. MAGIC is a pointer to additional
+structures that contains callback functions and other data. If the
 MAGIC pointer is non-NULL, then one or more of the MAGICAL flags will
 be set.
 
 <p>STASH (<b>s</b>ymbol <b>t</b>able h<b>ash</b>) is a pointer to a HV
-that represents some namespace/class.
-(That the HV represents some namespace means that the NAME field
-of the HV must be non-NULL. See description of <a href="hv">HVs</a> and <a href="#stash">stashes</a> below).
+that represents some namespace/class.  (That the HV represents some
+namespace means that the NAME field of the HV must be non-NULL. See
+description of <a href="hv">HVs</a> and <a href="#stash">stashes</a>
+below).
 
 The STASH field is set when the value is blessed into a package
 (becomes an object).  The OBJECT flag will be set when STASH is.
@@ -478,17 +479,17 @@ on the <i>type</i> (actually it is the callbacks attached to
 correspondence between the <i>type</i> field and the <i>virtual</i>
 field.
 
-<li><i>flags</i> contains 8 flag bits.  Only 2 are generally used.
-Bit 1 is the <b>REFCOUNTED</b> flag.  It indicates that the <i>obj</i>
+<li><i>flags</i> contains 8 flag bits, where 2 of them are generally used.
+Bit 2 is the <b>REFCOUNTED</b> flag.  It indicates that the <i>obj</i>
 is assumed to be an SV and that it's reference count must be
 decremented when this magic is freed.  The <b>GSKIP</b> flag indicate
-that invocation of the magical GET method should be suppressed.  Other
-flag bits are used depending of the kind of magic.
+that invocation of the magical GET method should be suppressed. 
+Other flag bits are used depending of the kind of magic.
 
-<li><i>obj</i> is usually a pointer to some SV.  How it is used
-depends on the kind of magic this is.
+<li><i>obj</i> is usually a pointer to some SV, <i>SvTIED_obj</i>.
+How it is used depends on the kind of magic this is.
 
-<li><i>ptr</i> is usually a pointer to some character string.  How it
+<li><i>ptr</i> is usually a pointer to some character <i>MgPV</i> string.  How it
 is used depends on the kind of magic this is.  If the <i>len</i> field
 is &gt;= 0, then <i>ptr</i> is assumed to point to a malloced buffer and
 will be automatically freed when the magic is.
@@ -496,8 +497,12 @@ will be automatically freed when the magic is.
 <li><i>len</i> is usually the length of the character string pointed
 to by <i>ptr</i>.  How it is used depends on the kind of magic this
 is.
-
 </ol>
+
+The struct magic_state is stored on the global <a
+href="#stacks">savestack</a>.  <i>mgs_sv</i> points to our magical sv,
+and <i>mgs_ss_ix</i> points on the savestack after the saved
+destructor.
 
 
 <a name="svpvbm"><h2>SvPVBM (old)</h2></a>
@@ -759,21 +764,24 @@ to by GvSTASH will usually contain an element with NAME as
 key and a pointer to this GV as value.  See description of
 <a href="#stash">stashes</a> below.
 
-<p>FLAGS:
+<p>GvFLAGS:
 <blockquote><dl>
 
- <dt>0) <b>INTRO</b>
+ <dt>0x1) <b>INTRO</b>
 
- <dt>1) <b>MULTI</b>
+ <dt>0x2) <b>MULTI</b>
  <dd> Have we seen more than one occurrence of this glob.  Used to
       implement the "possibly typo" warning.
 
- <dt>2) <b>ASSUMECV</b>
+ <dt>0x4) <b>ASSUMECV</b>
+            The GV is most likely a CV.
+ <dt>0x8) <b>IN_PAD</b>
+            With ithreads new GVs are created temporary on the PAD, and not as global SV.
 
- <dt>4) <b>IMPORTED_SV</b>
- <dt>5) <b>IMPORTED_AV</b>
- <dt>6) <b>IMPORTED_HV</b>
- <dt>7) <b>IMPORTED_CV</b>
+ <dt>0x10) <b>IMPORTED_SV</b>
+ <dt>0x20) <b>IMPORTED_AV</b>
+ <dt>0x40) <b>IMPORTED_HV</b>
+ <dt>0x80) <b>IMPORTED_CV</b>
 </dl></blockquote>
 
 <p>A magic of type '*' is always attached to the GV (not shown in the
@@ -800,10 +808,10 @@ CVGEN, LASTEXPR, LINE, FILEGV.
 to this GP.  It is incremented/decremented as new GVs reference/forget
 this GP.  When the counter reach 0 the GP is freed.
 
-<p>EGV is a pointer to the GV that originally created this GP (used to
-tell the real name of any aliased symbol).  If the original GV is freed,
-but GP should stay since another GV reference it, then the EGV is
-NULLed.
+<p>EGV, the effective gv, if *glob, is a pointer to the GV that
+originally created this GP (used to tell the real name of any aliased
+symbol).  If the original GV is freed, but GP should stay since
+another GV reference it, then the EGV is NULLed.
 
 <p>CVGEN is an integer used to validate method cache CV entries in the
 GP.  If CVGEN is zero, then the CV is real.  If CVGEN is non-zero, but
@@ -816,12 +824,7 @@ entry.
 method caches are performed, then the <tt>subgeneration</tt> variable
 is incremented.)
 
-<p>LASTEXPR is an integer I don't understand the purpose of yet.
-
-<p>FILEGV is a pointer to a GV where the SV of the GP is the name of
-the file where this symbol was first created.  The NAME of this GV is
-the filename prefixed with "_&lt;" and GvSTASH is
-<code>defstash</code> (see description of <a href="#stash">stashes</a> below).
+<p>FILE_HEK is the name of the file where this symbol was first created. 
 
 <p>LINE is the corresponding line number in the file.
 
@@ -872,9 +875,8 @@ same glob as the corresponding "<code>_&lt;</code>" entry in
 <a name="cv"><h2>CV</h2></a>
 
 The <i>CV</i> ("code value") is like <i>SvPVMG</i> above, but has
-thirteen additional fields; CvSTASH, START, ROOT, XSUB, XSUBANY, GV, FILEGV,
-DEPTH, PADLIST, OUTSIDE, MUTEXP, OWNER, FLAGS.  (The fields MUTEXP and
-OWNER are only present for Perls that support threading).
+some renamed and additional fields; CvSTASH, START, ROOT, GV, FILE,
+DEPTH, PADLIST, OUTSIDE, OUTSIDE_SEQ, FLAGS.
 
 <p><center><img src="cv.png"></center>
 
@@ -904,7 +906,7 @@ additional fields.
 
 <p><center><img src="io.png"></center>
 
-<b>FLAGS (xio_flags)</b>
+<b>IoFLAGS</b>
 <blockquote><dl>
 <dt>1  IOf_ARGV		this fp iterates over ARGV
 <dt>2  IOf_START	check for null ARGV and substitute '-'
@@ -972,7 +974,76 @@ class hierarchy diagram shows:
 
 <p>A typical small optree for <code>$a = $b + $c</code> would be:
 
-<center><img src="abc-simple.png"></center>
+<center><img src="opsample.png"></center>
+
+<table><tr valign="top"><td><pre>
+	$ perl-nonthreaded -MO=Concise -e '$a = $b + 42'
+	8  &lt;@&gt; leave[1 ref] vKP/REFC -&gt;(end)
+	1     &lt;0&gt; enter -&gt;2
+	2     &lt;;&gt; nextstate(main 1 -e:1) v:{ -&gt;3
+	7     &lt;2&gt; sassign vKS/2 -&gt;8
+	5        &lt;2&gt; add[t1] sK/2 -&gt;6
+	-           &lt;1&gt; ex-rv2sv sK/1 -&gt;4
+	3              &lt;$&gt; gvsv(*b) s -&gt;4
+	4           &lt;$&gt; const(IV 42) s -&gt;5
+	-        &lt;1&gt; ex-rv2sv sKRM*/1 -&gt;7
+	6           &lt;$&gt; gvsv(*a) s -&gt;7
+</pre><i>(Note: ex-ops are Nullified)</i></td><td><pre>
+	$ perl-nonthreaded -MO=Concise,-exec -e '$a = $b + 42'
+	1  &lt;0&gt; enter
+	2  &lt;;&gt; nextstate(main 1 -e:1) v:{
+	3  &lt;$&gt; gvsv(*b) s
+	4  &lt;$&gt; const(IV 42) s
+	5  &lt;2&gt; add[t1] sK/2
+	6  &lt;$&gt; gvsv(*a) s
+	7  &lt;2&gt; sassign vKS/2
+	8  &lt;@&gt; leave[1 ref] vKP/REFC
+</pre></td></tr></table>
+
+We have two BINOPs, SASSIGN and ADD as &lt;2&gt; 
+and three SVOPs, GVSV and CONST as &lt;$&gt;.
+
+<table><tr valign="top"><td><pre>
+my %argnum = (
+    'S',  1,   # scalar
+    'L',  2,   # list
+    'A',  3,   # array value
+    'H',  4,   # hash value
+    'C',  5,   # code value
+    'F',  6,   # file value
+    'R',  7,   # scalar reference
+);
+</pre></td><td><pre>
+my %opclass = (
+    '0',  0,   # baseop
+    '1',  1,   # unop
+    '2',  2,   # binop
+    '|',  3,   # logop
+    '@',  4,   # listop
+    '/',  5,   # pmop
+    '$',  6,   # svop_or_padop
+    '#',  7,   # padop
+    '"',  8,   # pvop_or_svop
+    '{',  9,   # loop
+    ';',  10,  # cop
+    '%',  11,  # baseop_or_unop
+    '-',  12,  # filestatop
+    '}',  13,  # loopexop
+);
+</pre></td><td><pre>
+my %opflags = (
+    'm' =>   1,   # needs stack mark
+    'f' =>   2,   # fold constants
+    's' =>   4,   # always produces scalar
+    't' =>   8,   # needs target scalar
+    'T' =>   8|256, # ... which may be lexical
+    'i' =>  16,   # always produces integer
+    'I' =>  32,   # has corresponding int op
+    'd' =>  64,   # danger, unknown side effects
+    'u' => 128,   # defaults to $_
+);
+</pre></td></tr></table>
+
 
 <p><i>For syntax trees and OP codes also see 
 <a href="http://www.perlfoundation.org/perl5/index.cgi?optree_guts">http://www.perlfoundation.org/perl5/index.cgi?optree_guts</a> 
@@ -1053,7 +1124,7 @@ describe the current context.  Each time a subroutine, an eval or a
 loop is entered, then a new PERL_CONTEXT record is pushed on the
 <code>cxstack</code>.  When subroutine/eval/loop finished then the
 record top record is poped and the corresponding values restored.  The
-PERL_CONTEXT record will eventually be descibed below.
+PERL_CONTEXT record will eventually be described below.
 
 <p><center><img src="stack.png"></center>
 
@@ -1083,7 +1154,7 @@ NOTYET
 <i>&copy; 1998-1999 Gisle Aas. 2009 Reini Urban</i><br>
 <a href="mailto:gisle@aas.no">&lt;gisle@aas.no&gt;</a><br>
 <a href="mailto:rurban@cpan.org">&lt;rurban@cpan.org&gt;</a><br>
-$Date: 2009-11-22 14:39:10 $
+$Date: 2009-11-22 18:16:51 rurban $
 </small>
 </div>
 

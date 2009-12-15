@@ -31,7 +31,7 @@
 
 /Helvetica 11 SF
 60 303 15 sub M
-[(GvSTASH) (FLAGS) (ASSIGN_GEN) (NAMEHEK) (MAGIC) (STASH)] {
+[(GvSTASH) (GvFLAGS) (ASSIGN_GEN) (NAMEHEK) (MAGIC) (STASH)] {
     gsave
     currentpoint 30 mws pop
     grestore

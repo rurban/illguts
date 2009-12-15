@@ -24,6 +24,7 @@ png=svhead.png \
    optypes.png\
    op1.png    \
    op2.png    \
+   opsample.png\
    stack.png  \
    scope.png  \
    pad.png

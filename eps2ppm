@@ -16,7 +16,7 @@ while (<FILE>) {
 	 warn "$file: BBox: $llx $lly $urx $ury\n";
 
          my($w,$h) = map {$_ *= $scale} ($urx - $llx, $ury - $lly);
-         
+
          open(GS, "| gs -sDEVICE=ppm -sOutputFile=- -g${w}x$h -q -") || die;
 	 $gs++;
 
@@ -35,4 +35,3 @@ while (<FILE>) {
 print GS "\nshowpage\n";
 
 close(GS);
-

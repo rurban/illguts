@@ -18,11 +18,13 @@
 
 55 300 7 21 newbox
 55 300 21 box
+% unused xnv_u + xiv_u
+gsave 0.8 setgray 55 285 105 300 rect F grestore
+gsave 0.8 setgray 55 240 105 255 rect F grestore
 
 /Helvetica 11 SF
 60 303 15 sub M
-
-[(xnv_u) (cur) (len) (xiv_u) (MAGIC) (STASH) (IFP) (OFP) (dirp_u) (LINES) (PAGE) (PAGE_LEN) (LINES_LEFT) (TOP_NAME) (TOP_GV) (FMT_NAME) (FMT_GV) (BOTTOM_NAME) (BOTTOM_GV) (TYPE) (FLAGS)] {
+[(xnv_u) (cur) (len) (xiv_u) (MAGIC) (STASH) (IFP) (OFP) (dirp_u) (LINES) (PAGE) (PAGE_LEN) (LINES_LEFT) (TOP_NAME) (TOP_GV) (FMT_NAME) (FMT_GV) (BOTTOM_NAME) (BOTTOM_GV) (IoTYPE) (IoFLAGS)] {
     gsave
     currentpoint 30 mws pop
     grestore
