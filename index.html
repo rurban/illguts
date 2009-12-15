@@ -5,7 +5,7 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 <h1 align="center" name="top">
-PerlGuts Illustrated<br><small>Version 0.13, for perl 5.11.2
+PerlGuts Illustrated<br><small>Version 0.14, for perl 5.11.2
 </small></h1>
 
 <p>This document is meant to supplement the <i>perlguts(1)</i> manual
@@ -15,10 +15,9 @@ document handy hopefully makes reading the Perl source code easier.
 It might also help you interpret the <i>Devel::Peek</i>
 dumps.
 
-<p><i>illguts is still in the transition to 5.10. Most of
-the internal perl structures had been refactored with
+<p><i>Most of the internal perl structures had been refactored with
 perl-5.10.0, for earlier perls and comparison use 
-<a href="http://cpansearch.perl.org/src/GAAS/illguts-0.09/index.html">illguts-0.09</a>.</i>
+<a href="http://cpansearch.perl.org/src/GAAS/illguts-0.09/index.html">illguts-0.09</a>.</i></p>
 
 <p>The first things to look at are the data structures that represent
 Perl data; scalars of various kinds, arrays and hashes.  Internally
@@ -106,10 +105,10 @@ names reported by the <i>Devel::Peek</i> module.
 
 <a name="_SV_HEAD"><h2>_SV_HEAD and struct sv</h2></a>
 
-<p>The simplest type is the "struct sv".
-It represents the common structure for a SV, GV, CV, AV, HV, IO and P5RX, without 
-any PV or magic attached to it. It consist of four words, the _SV_HEAD with 3 values 
-and the SV_U union with one pointer.</p>
+<p>The simplest type is the "struct sv".  It represents the common
+structure for a SV, GV, CV, AV, HV, IO and P5RX, without any struct
+xpvxx attached to it. It consist of four words, the _SV_HEAD with 3
+values and the SV_U union with one pointer.</p>
 
 <b>_SV_HEAD and SV_U union</b>
 <p><center><img src="svhead.png" alt="_SV_HEAD"></center><p>
@@ -129,8 +128,10 @@ value.  When the reference count reaches zero the object is freed.
 <p>The third word contains a <b>FLAGS</b> field and a <b>TYPE</b> field as 32 bit
 unsigned integer.
 
-<p>The forth and last word contains the <b>sv_u union</b>, which contains
-a pointer to another SV (a RV), the <a href="#svpv">PV</a> string, the <a href="#av">AV</a> svu_array, a <a href="#he">HE</a> hash or a <a href="#gp">GP</a> struct.
+<p>The forth and last word contains the <b>sv_u union</b>, which
+contains a pointer to another SV (a RV), the <a href="#svpv">PV</a>
+string, the <a href="#av">AV</a> svu_array, a <a href="#he">HE</a>
+hash or a <a href="#gp">GP</a> struct.
 
 <a name="flags">The TYPE field contains a small number (0-127, mask 0xff) that
 represents one of the SVt_ types shown in the type hierarchy figure
@@ -962,6 +963,7 @@ by name.
 
 A Perl program/subroutine is represented internally by a syntax tree built from OP nodes. 
 Perl 5.005 had 346 different OP-codes, Perl 5.11.2 has 365 OP-Codes, see <tt>opnames.h</tt>.
+Each op represents a <tt>pp_<i>opname</i>()</tt> function.
 In Perl there are 12 different OP classes, that are related like the following 
 class hierarchy diagram shows: 
 

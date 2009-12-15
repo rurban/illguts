@@ -31,8 +31,8 @@
 180 300 9 9 newbox
 180 300 9 op [(first)(last)(children)] XX
 
-240 300 10 16 newbox
-240 300 16 op [(first)(last)(children)(pmreplroot)(pmreplstart)(pmnext)(pmregexp)(pmshort)] XX
+240 300 10 14 newbox
+240 300 14 op [(first)(last)(children)(pmreplroot)(pmreplstart)(pmnext)(pmregexp)(pmshort)] XX
 
 300 300 10 12 newbox
 300 300 12 op [(first)(last)(children)(redoop)(nextop)(lastop)] XX

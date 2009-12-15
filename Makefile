@@ -8,7 +8,6 @@ png=svhead.png \
    svpvmg.png \
    svpvbm.png \
    svpvlv.png \
-   svpvrv.png \
    av.png     \
    hv.png     \
    strtab.png \
@@ -38,7 +37,7 @@ chm: illguts.chm
 pdf: illguts.pdf
 
 illguts.pdf: index.html $(png)
-	htmldoc --quiet --webpage --format pdf14 index.html >$@
+	htmldoc --quiet --webpage --format pdf14 index.html -f $@
 
 slides: slides/index.html
 
@@ -94,6 +93,5 @@ svpviv.png: svpviv.epsx common.ps sv.ps rect.ps ptr.ps box.ps str.ps break.ps
 svpvlv.png: svpvlv.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps magic.ps
 svpvmg.png: svpvmg.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps magic.ps chararray.ps
 svpvnv.png: svpvnv.epsx common.ps sv.ps rect.ps ptr.ps box.ps str.ps break.ps
-svpvrv.png: svpvrv.epsx common.ps sv.ps rect.ps ptr.ps box.ps
 svrv.png: svrv.epsx common.ps sv.ps rect.ps ptr.ps box.ps
 svtypes.png: svtypes.epsx common.ps arrow.ps
