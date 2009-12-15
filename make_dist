@@ -5,7 +5,7 @@ chop($VERSION = `cat VERSION`);
 die "Bad version number" unless $VERSION =~ /^\d+\.\d\d$/;
 
 sh("grep 'Version $VERSION' index.html");
-sh("grep 'Title=' illguts.hhp");
+sh("grep 'Title=illguts-$VERSION' illguts.hhp");
 sh('find . -type f -exec chmod 0644 "{}" ";"');
 sh('find . -type d -exec chmod 0755 "{}" ";"');
 my @exe = qw(mk-slides eps2png eps2ppm epsx2eps make_dist);
