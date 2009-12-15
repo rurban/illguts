@@ -12,7 +12,6 @@ while (<FILE>) {
     if (my($llx, $lly, $urx, $ury) =
           /^%%BoundingBox:\s*(-?[0-9\.]+)\s+(-?[0-9\.]+)\s+(-?[0-9\.]+)\s+(-?[0-9\.]+)/)
     {
-
 	 warn "$file: BBox: $llx $lly $urx $ury\n";
 
          my($w,$h) = map {$_ *= $scale} ($urx - $llx, $ury - $lly);
@@ -21,7 +20,6 @@ while (<FILE>) {
 	 $gs++;
 
 	 print GS "$scale dup scale $llx neg $lly neg translate %\n";
-	
 	
     } elsif (/^%/ && !$gs) {
          # ignore comments
@@ -33,5 +31,4 @@ while (<FILE>) {
 }
 
 print GS "\nshowpage\n";
-
 close(GS);

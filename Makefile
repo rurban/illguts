@@ -57,6 +57,7 @@ eps:
 %.png: %.epsx
 	./epsx2eps $< >$@.eps
 	./eps2png $@.eps >$@
+	test -s $@ || rm $@
 	rm $@.eps
 
 clean:
@@ -67,7 +68,7 @@ dist: all VERSION
 
 # deps
 av.png: av.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps break.ps
-cv.png: cv.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps magic.ps
+cv.png: cv.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps magic.ps pad.ps
 flags.png: flags.epsx common.ps mws.ps rect.ps
 gv.png: gv.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps gp.ps chararray.ps
 hv.png: hv.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps he.ps chararray.ps break.ps
@@ -76,7 +77,7 @@ ook.png: ook.epsx common.ps sv.ps rect.ps ptr.ps box.ps break.ps
 op1.png: op1.epsx common.ps box.ps rect.ps mws.ps op.ps
 op2.png: op2.epsx common.ps box.ps rect.ps mws.ps op.ps
 optypes.png: optypes.epsx common.ps arrow.ps
-pad.png: pad.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps break.ps
+pad.png: pad.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps break.ps pad.ps
 scope.png: scope.epsx common.ps rect.ps ptr.ps break.ps dist.ps sv.ps
 stack.png: stack.epsx common.ps rect.ps ptr.ps break.ps dist.ps sv.ps box.ps mws.ps
 stash.png: stash.epsx common.ps stash.ps rect.ps ptr.ps box.ps glob.ps mws.ps sv.ps

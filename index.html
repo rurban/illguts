@@ -5,7 +5,7 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 <h1 align="center" name="top">
-PerlGuts Illustrated<br><small>Version 0.12, for perl 5.11.2
+PerlGuts Illustrated<br><small>Version 0.13, for perl 5.11.2
 </small></h1>
 
 <p>This document is meant to supplement the <i>perlguts(1)</i> manual
@@ -438,7 +438,7 @@ A SvRV object with ROK flag off represents an undefined value.
 
 <a name="svpvmg"><h2>SvPVMG</h2></a>
 
-<p>Blessed scalars ar othr magic attached. <i>SvPVMG</i> has two
+<p>Blessed scalars or other magic attached. <i>SvPVMG</i> has two
 additional fields; MAGIC and STASH. MAGIC is a pointer to additional
 structures that contains callback functions and other data. If the
 MAGIC pointer is non-NULL, then one or more of the MAGICAL flags will
@@ -499,7 +499,7 @@ to by <i>ptr</i>.  How it is used depends on the kind of magic this
 is.
 </ol>
 
-The struct magic_state is stored on the global <a
+The <code>struct magic_state</code> is stored on the global <a
 href="#stacks">savestack</a>.  <i>mgs_sv</i> points to our magical sv,
 and <i>mgs_ss_ix</i> points on the savestack after the saved
 destructor.
@@ -627,7 +627,7 @@ hack described above.  The shift operation can be implemented
 efficiently by just adjusting the ARRAY pointer (and FILL/MAX).
 Similarly, the pop just involves decrementing the FILL count.
 
-<p>The are only 2 array flags defined:
+<p>There are only 2 array flags defined:
 
 <blockquote><dl>
 
@@ -764,7 +764,14 @@ to by GvSTASH will usually contain an element with NAME as
 key and a pointer to this GV as value.  See description of
 <a href="#stash">stashes</a> below.
 
-<p>GvFLAGS:
+<p>A magic of type '*' is always attached to the GV (not shown in the
+figure).  The magic GET method is used to stringify the globs (as the fully
+qualified name prefixed with '*').  The magic SET method is used to alias
+an GLOB based on the name of another glob.
+
+<p><center><img src="gv.png"></center>
+
+<p><a name="GvFLAGS"><b>GvFLAGS</b></a>:
 <blockquote><dl>
 
  <dt>0x1) <b>INTRO</b>
@@ -784,13 +791,6 @@ key and a pointer to this GV as value.  See description of
  <dt>0x80) <b>IMPORTED_CV</b>
 </dl></blockquote>
 
-<p>A magic of type '*' is always attached to the GV (not shown in the
-figure).  The magic GET method is used to stringify the globs (as the fully
-qualified name prefixed with '*').  The magic SET method is used to alias
-an GLOB based on the name of another glob.
-
-<p><center><img src="gv.png"></center>
-
 <h3><a name="gp">GP</a></h3>
 
 <p>GPs can be shared between one or more GVs.  The data type fields
@@ -801,14 +801,14 @@ SvPVFM if non-NULL.  The IO field must point to an IO if non-NULL, the AV
 to an AV, etc.)  The SV is always present (but might point to a
 SvNULL object).  All the others are initially NULL.
 
-<p>The additional administrative fields in the GP are: REFCNT, EGV,
-CVGEN, LASTEXPR, LINE, FILEGV.
+<p>The additional administrative fields in the GP are: CVGEN, REFCNT, EGV,
+LINE, FILE_HEK.
 
 <p>REFCNT is a reference counter.  It says how many GVs have a pointer
 to this GP.  It is incremented/decremented as new GVs reference/forget
 this GP.  When the counter reach 0 the GP is freed.
 
-<p>EGV, the effective gv, if *glob, is a pointer to the GV that
+<p>EGV, the "effective gv", if *glob, is a pointer to the GV that
 originally created this GP (used to tell the real name of any aliased
 symbol).  If the original GV is freed, but GP should stay since
 another GV reference it, then the EGV is NULLed.
@@ -818,11 +818,10 @@ GP.  If CVGEN is zero, then the CV is real.  If CVGEN is non-zero, but
 less than the global variable <tt>subgeneration</tt>, then the CV
 contains a stale method cache entry.  If CVGEN is equal to
 <tt>subgeneration</tt> then the CV contains a valid method cache
-entry.
-
-(Every time some operation that might invalidate some of the
+entry.<br>
+Every time some operation that might invalidate some of the
 method caches are performed, then the <tt>subgeneration</tt> variable
-is incremented.)
+is incremented.
 
 <p>FILE_HEK is the name of the file where this symbol was first created. 
 
@@ -876,7 +875,7 @@ same glob as the corresponding "<code>_&lt;</code>" entry in
 
 The <i>CV</i> ("code value") is like <i>SvPVMG</i> above, but has
 some renamed and additional fields; CvSTASH, START, ROOT, GV, FILE,
-DEPTH, PADLIST, OUTSIDE, OUTSIDE_SEQ, FLAGS.
+DEPTH, PADLIST, OUTSIDE, OUTSIDE_SEQ, CvFLAGS.
 
 <p><center><img src="cv.png"></center>
 
@@ -886,7 +885,7 @@ The <code>CvSTASH</code> is a pointer to the <a href="#stash">stash</a> in which
 
 DEPTH and <a href="#pad">PADLIST</a> are needed to access and check the current scratchpad.
 
-Lexicals are access by looking up the name under GV, the glob in which
+Lexicals are accessed by looking up the name under GV, the glob in which
 the CV was defined. (really ?)
 
 <p>See <a href="#pad">PAD</a>s and <a href="#op">OP</a>s below.
@@ -1001,47 +1000,56 @@ class hierarchy diagram shows:
 </pre></td></tr></table>
 
 We have two BINOPs, SASSIGN and ADD as &lt;2&gt; 
-and three SVOPs, GVSV and CONST as &lt;$&gt;.
+and three SVOPs, GVSV and CONST as &lt;$&gt;. <i>Note that for a threaded perl the GVSV OPs would have been PADOPs.</i><p>
 
-<table><tr valign="top"><td><pre>
-my %argnum = (
-    'S',  1,   # scalar
-    'L',  2,   # list
-    'A',  3,   # array value
-    'H',  4,   # hash value
-    'C',  5,   # code value
-    'F',  6,   # file value
-    'R',  7,   # scalar reference
-);
+<b>B::Concise Types</b>:<br>
+<table cellpadding="3"><tr valign="top"><td><pre>
+argnum:
+S scalar
+L list
+A array value
+H hash value
+C code value
+F file value
+R scalar reference
 </pre></td><td><pre>
-my %opclass = (
-    '0',  0,   # baseop
-    '1',  1,   # unop
-    '2',  2,   # binop
-    '|',  3,   # logop
-    '@',  4,   # listop
-    '/',  5,   # pmop
-    '$',  6,   # svop_or_padop
-    '#',  7,   # padop
-    '"',  8,   # pvop_or_svop
-    '{',  9,   # loop
-    ';',  10,  # cop
-    '%',  11,  # baseop_or_unop
-    '-',  12,  # filestatop
-    '}',  13,  # loopexop
-);
+opclass:
+0 baseop
+1 unop
+2 binop
+| logop
+@ listop
+/ pmop
+$ svop_or_padop
+# padop
+" pvop_or_svop
+{ loop
+; cop
+% baseop_or_unop
+- filestatop
+} loopexop
 </pre></td><td><pre>
-my %opflags = (
-    'm' =>   1,   # needs stack mark
-    'f' =>   2,   # fold constants
-    's' =>   4,   # always produces scalar
-    't' =>   8,   # needs target scalar
-    'T' =>   8|256, # ... which may be lexical
-    'i' =>  16,   # always produces integer
-    'I' =>  32,   # has corresponding int op
-    'd' =>  64,   # danger, unknown side effects
-    'u' => 128,   # defaults to $_
-);
+parsed op_flags:
+v Want void
+s Want scalar (single value)
+l Want list of any length
+K Kids
+P Parens, or block needs explicit scope entry
+R REF
+M MOD. Will modify (lvalue)
+S Stacked. Some arg is arriving on the stack
+* Special. Do something weird for this op
+</pre></td><td><pre>
+static opcode.pl: %opflags
+m needs stack mark
+f fold constants
+s always produces scalar
+t needs target scalar
+T ... which may be lexical
+i always produces integer
+I has corresponding int op
+d danger, unknown side effects
+u defaults to $_
 </pre></td></tr></table>
 
 
@@ -1112,18 +1120,17 @@ subroutine starts running.  For XSUB routines, the creation of
 <code>@_</code> is suppressed, and the routine will use the
 <code>MARK</code> directly to find it's arguments.
 
-
 <p>The <code>retstack</code> contains pointers to the operation to go
 to after subroutines return.  Each time a subroutine is called a new
-OP* is pushed on this stack.  When a subroutine returns, Perl pop the
-top OP* from <code>retstack</code> and continue execution from this
+OP* is pushed on this stack.  When a subroutine returns, Perl pops the
+top OP* from <code>retstack</code> and continues execution from this
 place.
 
 <p>The <code>cxstack</code> (context stack) contains records that
 describe the current context.  Each time a subroutine, an eval or a
 loop is entered, then a new PERL_CONTEXT record is pushed on the
 <code>cxstack</code>.  When subroutine/eval/loop finished then the
-record top record is poped and the corresponding values restored.  The
+record top record is pop'ed and the corresponding values restored.  The
 PERL_CONTEXT record will eventually be described below.
 
 <p><center><img src="stack.png"></center>
