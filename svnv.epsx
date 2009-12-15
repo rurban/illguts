@@ -14,7 +14,7 @@
 gsave
   0.7 setgray
   [3 2] 0 setdash
-  55 300 5 box
+  55 300 4 box
 grestore
 
 55 300 0 sub 1 box
@@ -23,14 +23,14 @@ grestore
 60 303 15 sub M
 
 0.7 setgray
-[() (cur) (len)] {
+[() (cur) (len) (xiv_u)] {
     gsave
     show
     grestore
     0 -15 RM
 } forall
-(xiv_u) show
+% (xiv_u) show
 0 setgray
 
 /Helvetica 12 SF
-80 290 M (xnv_nv) cshow
+80 289 M (xnv_nv) cshow

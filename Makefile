@@ -30,12 +30,19 @@ png=svhead.png \
 
 png: $(png)
 
-all: illguts.chm $(png) slides
+all: $(png) chm pdf slides
+
+chm: illguts.chm
+
+pdf: illguts.pdf
+
+illguts.pdf: index.html $(png)
+	htmldoc --quiet --webpage --format pdf14 index.html >$@
+
+slides: slides/index.html
 
 illguts.chm: index.html illguts.hhp illguts.hhk $(png)
 	-hhc illguts.hhp
-
-slides: slides/index.html
 
 slides/index.html: slides.pds index.html
 	./mk-slides slides.pds

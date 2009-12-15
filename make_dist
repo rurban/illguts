@@ -13,7 +13,7 @@ mkdir($VNAME, 0755) || die "Can't create $VNAME: $!";
 sh("cp *.html $VNAME");
 sh("cp *.ps *.epsx $VNAME");
 sh("cp *.png $VNAME");
-sh("cp illguts.chm illguts.hhp illguts.hhk Makefile README VERSION eps2png eps2ppm epsx2eps make_dist $VNAME");
+sh("cp Changes illguts.pdf illguts.chm illguts.hhp illguts.hhk Makefile README VERSION eps2png eps2ppm epsx2eps make_dist $VNAME");
 sh("mkdir $VNAME/slides");
 sh("cp -r img mk-slides slides.pds $VNAME/");
 sh("cp -r slides/*.html $VNAME/slides/");

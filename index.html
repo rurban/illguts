@@ -1,4 +1,3 @@
-
 <title>PerlGuts Illustrated</title>
 
 <body bgcolor="#FFFFFF"
@@ -6,7 +5,7 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 <h1 align="center" name="top">
-PerlGuts Illustrated<br><small>Version 0.10, for perl 5.11.2
+PerlGuts Illustrated<br><small>Version 0.11, for perl 5.11.2
 </small></h1>
 
 <p>This document is meant to supplement the <i>perlguts(1)</i> manual
@@ -16,9 +15,10 @@ document handy hopefully makes reading the Perl source code easier.
 It might also help you interpret the <i>Devel::Peek</i>
 dumps.
 
-<p><i>illguts is still in the transition to 5.10. Most of the 
-internal perl structures had been refactored with perl-5.10.0, 
-for earlier perls and comparison use <a href="http://cpansearch.perl.org/src/GAAS/illguts-0.09/index.html">illguts-0.09</a>.</i>
+<p><i>illguts is still in the transition to 5.10. Most of
+the internal perl structures had been refactored with
+perl-5.10.0, for earlier perls and comparison use 
+<a href="http://cpansearch.perl.org/src/GAAS/illguts-0.09/index.html">illguts-0.09</a>.</i>
 
 <p>The first things to look at are the data structures that represent
 Perl data; scalars of various kinds, arrays and hashes.  Internally
@@ -361,20 +361,22 @@ respectively in their parameter list.  Likewise for the rest.
 <i>SvPV</i>.  In addition to the <i>SV</i> struct of SvNULL,
 an <i>xpv</i> struct is allocated and it contains 3 fields.
 <b>svu_pv</b> was formerly called <b>PVX</b> and before 5.10
-it was the first field of xpv. svu_pv/PVX is the pointer to an
-allocated char array.  CUR is an integer giving the current
-length of the string.  LEN is an integer giving the length
-of the allocated string.  The byte at (PVX + CUR) should
-always be '\0' in order to make sure that the string is
-NUL-terminated if passed to C library routines.  This
-requires that LEN is always at least 1 larger than CUR.
+it was the first field of xpv. svu_pv/PVX is the pointer to
+an allocated char array. All old field names <b>must</b> be
+accessed through the old macros, which is called SvPVX().  CUR
+is an integer giving the current length of the string.  LEN
+is an integer giving the length of the allocated string.
+The byte at (PVX + CUR) should always be '\0' in order to
+make sure that the string is NUL-terminated if passed to C
+library routines.  This requires that LEN is always at least
+1 larger than CUR.
 
 <p><center><img src="svpv.png"></center>
 
 <p>The POK flag indicates that the string pointed to by PVX
 contains an valid string value.  If the POK flag is off and
 the ROK flag is turned on, then the PVX field is used as a
-pointer to an SV (see <a href="#svrv">SvRV</a> below) and
+pointer to an RV (see <a href="#svrv">SvRV</a> below) and
 the struct xpv is unused.  An SvPV with both the POK and ROK flags
 turned off represents <i>undef</i>.  The PVX pointer can
 also be NULL when POK is off and no string storage has been
@@ -383,16 +385,16 @@ allocated.
 <h2><a name="svpviv">SvPVIV</a> and <a name="svpvnv">SvPVNV</a></h2>
 
 <p>The <i>SvPVIV</i> type is like <i>SvPV</i> but has an additional
-field to hold a single integer value called IVX.  The IOK flag
+field to hold a single integer value called IVX in xiv_u.  The IOK flag
 indicates if the IVX value is valid.  If both the IOK and POK flag is
 on, then the PVX will (usually) be a string representation of the same
 number found in IVX.
 
 <p><center><img src="svpviv.png"></center>
 
-<p>The <i>SvPVNV</i> type is like <i>SvPVIV</i> but has an additional
-field to hold a single <i>double</i> value called NVX.  The
-corresponding flag is called NOK.
+<p>The <i>SvPVNV</i> type is like <i>SvPVIV</i> but uses the 
+single <i>double</i> value called NVX in xnv_u.
+The corresponding flag is called NOK.
 
 <p><center><img src="svpvnv.png"></center>
 
@@ -408,13 +410,17 @@ LEN is adjusted to point within the allocated string instead.
 
 <h2><a name="sviv">SvIV</a> and <a name="svnv">SvNV</a></h2>
 
-<p>As a special case we also have <i>SvIV</i> and <i>SvNV</i> types
+<i>SvIVX</i> uses the xiv_u .xiv_iv slot in the xiv_u union 
+(don't be fooled by the convenience shortcut xiv_iv), 
+<i>SvNVX</i> uses the xnv_u.xnv_nv slot in the xnv_u union.
+
+<!-- <p>As a special case we also have <i>SvIV</i> and <i>SvNV</i> types
 that only have room for a single integer or a single double value.
 These are special in that the PVX/CUR/LEN fields are not present even
 if the ANY pointer actually points to the ghostual incarnation of
 them.  This arrangement makes it possible for code to always access
 the IVX/NVX fields at a fixed offset from where the SV field ANY
-points.
+points. -->
 
 <p><center><img src="sviv.png"></center>
 
@@ -537,6 +543,8 @@ They will return an SvPVLV value, which when assigned to use magic to
 affect the <i>target</i> object, which they keep a pointer to in the TARG
 field.
 
+The xiv_u union is used as the GvNAME field, pointing to a namehek.
+
 <p>The TYPE is a character variable.  It encodes the kind if LValue
 this is.  Interpretation of the other LValue fields depend on the TYPE.
 The SvPVLVs are (almost) always magical.  The magic type will match
@@ -591,19 +599,19 @@ update the TARG accordingly.
 
 <a name="av"><h2>AV</h2></a>
 
-<p>An array is in many ways represented similar to strings.  An AV
-contains all the fields of SvPVMG and adds the following tree fields:
-ALLOC is a pointer to the allocated array.  ARYLEN is a pointer to a
-magic SV (which is returned when <code>$#array</code> is requested)
-and is only created on demand. FLAGS contains some extra flag bits
-that are specific of the array subtype.
+<p>An array is in many ways represented similar to strings. 
+An AV contains all the fields of SvPVMG, but not more.
+Some fields of xpvav and sv have been renamed.
 
-<p>The first three fields of xpvav have been renamed even though they
-serve nearly the same function as the corresponding SvPV fields.  PVX
-has become ARRAY, CUR has become FILL and LEN has become MAX.  One
-difference is that the value of FILL/MAX is always one less than
-CUR/LEN would be in the same situation.  The IVX/NVX fields are
-unused.
+ARYLEN uses the MAGIC field, to point to a magic SV 
+(which is returned when <code>$#array</code> is requested) and is only created on demand. 
+IVX has become ALLOC, which is a pointer to the allocated array.
+PVX in the sv_u has become ARRAY, the direct pointer the the current array start, 
+CUR has become FILL and LEN has become MAX.
+One difference is that the value of FILL/MAX is always one
+less than CUR/LEN would be in a SVPV. 
+The NVX field is unused.
+<p>The previous extra FLAGS field in the xpvav has been merged into the sv_flags field.
 
 <p><center><img src="av.png"></center>
 
@@ -614,11 +622,11 @@ hack described above.  The shift operation can be implemented
 efficiently by just adjusting the ARRAY pointer (and FILL/MAX).
 Similarly, the pop just involves decrementing the FILL count.
 
-<p>The are only 3 array flags defined:
+<p>The are only 2 array flags defined:
 
 <blockquote><dl>
 
-  <dt> 0) <b>REAL</b>
+  <dt> <b>SVpav_REAL</b>
 
   <dd> It basically means that all
        SVs contained in this array is owned and must have their
@@ -627,25 +635,21 @@ Similarly, the pop just involves decrementing the FILL count.
        <code>stack</code> the REAL flag is turned off.
        For <code>@_</code> the REAL flag is initially turned off.
 
-  <dt> 1) <b>REIFY</b>
+  <dt> <b>SVpav_REIFY</b>
 
   <dd> The array is <i>not</i> REAL but should be made REAL if modified.
        The <code>@_</code> array will have the REIFY flag turned on.
-
-  <dt> 2) <b>REUSED</b>
-
-  <dd> This flag does not seem to be used for anything currently.
 
 </dl></blockquote>
 
 <a name="hv"><h2>HV</h2></a>
 
 <p>Hashes are the most complex of the Perl data types.  In addition to
-what we have seen above, HVs use <i>HE</i> structs to represent
+what we have seen above, the very last index in the HE*[] points to a 
+new xpvhv_aux struct. HVs use <i>HE</i> structs to represent
 key/value pairs and <i>HEK</i> structs to represent keys.
 
-<p>The HV type itself contains all the fields of SvPVMG and then adds
-four new fields:
+<p>New fields:
 
 <dl>
 <dt><b>RITER, EITER</b>:
@@ -658,12 +662,13 @@ element one would first look at EITER->next and if it turns out to be
 NULL, RITER is incremented until ARRAY[RITER] is non-NULL.  The
 iterator starts out with RITER = -1 and EITER = NULL.<p>
 
-<dt><b>RMROOT/NAME</b>:
+<dt><b>GvSTASH</b>:
+<dd>When the hash represents a name space (<a href="#stash"><i>stash</i></a>).  
+GvSTASH (formerly called PMROOT) points to a node in the Perl syntax
+tree. It is used to implement the reset() builtin for REs.<p>
 
-<dd>The last two fields are only used when the hash represents a name
-space (<a href="#stash"><i>stash</i></a>).  PMROOT points to a node in the Perl syntax
-tree.  It is used to implement the reset() builtin for REs.  NAME is a
-NUL-terminated string which denotes the fully qualified name of the
+<dt><b>NAME</b>:
+<dd>NAME is a NUL-terminated string which denotes the fully qualified name of the
 name space (aka <i>package</i>).  This is one of the few places where
 Perl does not allow strings with embedded NULs.<p>
 
@@ -680,7 +685,7 @@ value assigned by Perl.)
 
 The FILL is the number of elements in ARRAY which are not NULL.  The
 IVX field has been renamed KEYS and is the number of hash elements in
-the HASH.  The NVX field is unused.
+the HASH.
 
 <p>The <a name="he"><b>HE</b></a>s are simple structs containing 3 pointers.  A pointer to the
 next HE, a pointer to the key and a pointer to the value of the given hash
@@ -706,7 +711,7 @@ SvNULL flags:
 
 <blockquote><dl>
 
-  <dt> 0x20000000 <b>SVphv_SHAREKEYS</b>
+  <dt> 0x20000000 <b><a href="#SVphv_SHAREKEYS">SVphv_SHAREKEYS</a></b>
 
   <dd> When this flag is set, then the hash will share the HEK structures
        with a special hash pointed to by the <code>strtab</code> variable.
@@ -723,10 +728,9 @@ SvNULL flags:
        and decremented when the key is removed from the hashes.
        When the reference count reach 0, the HEK (and corresponding HE)
        is removed from <code>strtab</code> and the storage is freed.
-
        <p>
 
-  <dt> 22) <b>LAZYDEL</b>
+  <dt> 0x40000000 <b><a href="#SVphv_LAZYDEL">SVphv_LAZYDEL</a></b>
 
   <dd>This flag indicates that the hash element pointed to by EITER is
       really deleted.  When you delete the current hash element, perl
@@ -739,23 +743,23 @@ SvNULL flags:
 
 <a name="gv"><h2>GV</h2></a>
 
-<The <i>GV</i> ("glob value" aka "symbol") is like <i>SvPVMG</i> above,
-but has five additional fields; GP, NAME, NAMELEN, GvSTASH, FLAGS.
+<The <i>GV</i> ("glob value" aka "symbol") shares the same structure as the <i>SvPVMG</i>.
 
 <p>The GP is a pointer to structure that holds pointers to data of
 various kinds.  Perl use a pointer, instead of including the GP fields
 in the xpvgv, in order to implement the proper glob aliasing 
 behavior (i.e. different GVs can share the same GP).
 
-<p>The NAME/NAMELEN denotes the unqualified name of this symbol and
-GvSTASH points to the symbol table where this symbol belongs.  The
-fully qualified symbol name is obtained by taking the NAME of the
-GvSTASH (see <a href="#hv">HV</a> above) and appending "::" and NAME to it.  The hash
-pointed to by GvSTASH will usually contain an element with NAME as key
-and a pointer to this GV as value.  See description of <a href="#stash">stashes</a> below.
+<p>The NAMEHEK denotes the unqualified name of this symbol
+and GvSTASH points to the symbol table where this symbol
+belongs.  The fully qualified symbol name is obtained by
+taking the NAME of the GvSTASH (see <a href="#hv">HV</a>
+above) and appending "::" and NAME to it.  The hash pointed
+to by GvSTASH will usually contain an element with NAME as
+key and a pointer to this GV as value.  See description of
+<a href="#stash">stashes</a> below.
 
-<p>The FLAGS field contains space for 8 additional flag bits:
-
+<p>FLAGS:
 <blockquote><dl>
 
  <dt>0) <b>INTRO</b>
@@ -885,7 +889,7 @@ the CV was defined. (really ?)
 
 <p>See <a href="#pad">PAD</a>s and <a href="#op">OP</a>s below.
 
-<a name="svpmfm"><h2>SvPVFM</h2></a>
+<a name="svpvfm"><h2>SvPVFM</h2></a>
 
 The <i>SvPVFM</i> is like <i>CV</i> above, but adds a single field
 called LINES.
@@ -1061,7 +1065,7 @@ NOTYET
 
 NOTYET
 
-<h2>PerlInterpreter</h2>
+<h2>my_perl PerlInterpreter</h2>
 
 NOTYET
 
@@ -1074,13 +1078,12 @@ NOTYET
 </pre>
 
 <hr>
-<div align=right>
+<div align="right">
 <small>
-
 <i>&copy; 1998-1999 Gisle Aas. 2009 Reini Urban</i><br>
 <a href="mailto:gisle@aas.no">&lt;gisle@aas.no&gt;</a><br>
 <a href="mailto:rurban@cpan.org">&lt;rurban@cpan.org&gt;</a><br>
-$Date: 2009-11-18 17:37:01 $
+$Date: 2009-11-22 14:39:10 $
 </small>
 </div>
 
