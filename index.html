@@ -5,7 +5,7 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.15, for perl 5.11.2</small></h1>
+<small>Version 0.16, for perl 5.11.2</small></h1>
 
 <p>This document is meant to supplement the <i>perlguts(1)</i> manual
 page that comes with Perl.  It contains commented illustrations of all
@@ -654,23 +654,20 @@ what we have seen above, the very last index in the HE*[] points to a
 new xpvhv_aux struct. HVs use <i>HE</i> structs to represent
 key/value pairs and <i>HEK</i> structs to represent keys.
 
-<p>New fields:
-
 <dl>
-<dt><b>RITER, EITER</b>:
+<dt><b>GvSTASH</b>:
+<dd>When the hash represents a name space (<a href="#stash"><i>stash</i></a>).  
+GvSTASH (formerly called PMROOT) points to a node in the Perl syntax
+tree. It is used to implement the reset() builtin for REs.<p>
 
-<dd>The first two fields are used to implement a single iterator over the
+<dt><b>RITER, EITER</b>:
+<dd>Those two fields are used to implement a single iterator over the
 elements in the hash.
 RITER which is an integer index into the array referenced by ARRAY and
 EITER which is a pointer to an HE.  In order find the next hash
 element one would first look at EITER->next and if it turns out to be
 NULL, RITER is incremented until ARRAY[RITER] is non-NULL.  The
 iterator starts out with RITER = -1 and EITER = NULL.<p>
-
-<dt><b>GvSTASH</b>:
-<dd>When the hash represents a name space (<a href="#stash"><i>stash</i></a>).  
-GvSTASH (formerly called PMROOT) points to a node in the Perl syntax
-tree. It is used to implement the reset() builtin for REs.<p>
 
 <dt><b>NAME</b>:
 <dd>NAME is a NUL-terminated string which denotes the fully qualified name of the
@@ -680,17 +677,18 @@ Perl does not allow strings with embedded NULs.<p>
 </dl>
 
 <p>The first few fields of the xpvhv have been renamed in the same way
-as for AVs.  MAX is the number of elements in ARRAY minus one. (The
+as for AVs.  <b>MAX</b> is the number of elements in ARRAY minus one. (The
 size of the ARRAY is required to be a power of 2, since the code that
 deals with hashes just mask off the last few bits of the HASH value to
 locate the correct HE column for a key: <code>ARRAY[HASH &
 MAX]</code>).  Also note that ARRAY can be NULL when the hash is empty
 (but the MAX value will still be at least 7, which is the minimum
-value assigned by Perl.)
-
-The FILL is the number of elements in ARRAY which are not NULL.  The
-IVX field has been renamed KEYS and is the number of hash elements in
+value assigned by Perl.)<br>
+The <b>FILL</b> is the number of elements in ARRAY which are not NULL.  The
+IVX field has been renamed <b>KEYS</b> and is the number of hash elements in
 the HASH.
+
+<p><center><img src="hv.png"></center>
 
 <p>The <a name="he"><b>HE</b></a>s are simple structs containing 3 pointers.  A pointer to the
 next HE, a pointer to the key and a pointer to the value of the given hash
@@ -704,8 +702,6 @@ key string itself (including trailing NUL).
 As a special case, a <i>len</i> value of <code>HEf_SVKEY</code> (-2)
 indicate that a pointer to an SV is stored in the HEK instead of a
 string.  This hack is used for some magical hashes.
-
-<p><center><img src="hv.png"></center>
 
 <p>In a perfect hash both KEYS and FILL are the same value.  This
 means than all HEs can be located directly from the pointer in the
@@ -960,7 +956,8 @@ by name.
 
 <a name="op"><h2><a href="op.html">OP</a></h2></a>
 
-A Perl program/subroutine is represented internally by a syntax tree built from OP nodes. 
+A Perl program/subroutine is represented internally by a syntax tree built from OP nodes. This tree 
+really is just a linked list of ops in <i>exec</i> order.
 Perl 5.005 had 346 different OP-codes, Perl 5.11.2 has 365 OP-Codes, see <tt>opnames.h</tt>.
 Each op represents a <tt>pp_<i>opname</i>()</tt> function.
 In Perl there are 12 different OP classes, that are related like the following 
@@ -974,7 +971,7 @@ class hierarchy diagram shows:
 
 <p>A typical small optree for <code>$a = $b + $c</code> would be:
 
-<center><img src="opsample.png"></center>
+<center><img src="opsample.png"> <img src="opsamp2.png"></center>
 
 <table><tr valign="top"><td><pre>
 	$ perl-nonthreaded -MO=Concise -e '$a = $b + 42'
@@ -1001,7 +998,9 @@ class hierarchy diagram shows:
 </pre></td></tr></table>
 
 We have two BINOPs, SASSIGN and ADD as &lt;2&gt; 
-and three SVOPs, GVSV and CONST as &lt;$&gt;. <i>Note that for a threaded perl the GVSV OPs would have been PADOPs.</i><p>
+and three SVOPs, GVSV and CONST as &lt;$&gt;. <i>Note that for a threaded perl the GVSV OPs would have been PADOPs.</i>
+A SVOP pushes a SV onto the stack. A BINOP takes two args from the stack, and pushes a result.
+<p>
 
 <b>B::Concise Types</b>:<br>
 <table cellpadding="3"><tr valign="top"><td><pre>
@@ -1052,7 +1051,6 @@ I has corresponding int op
 d danger, unknown side effects
 u defaults to $_
 </pre></td></tr></table>
-
 
 <p><i>For syntax trees and OP codes also see 
 <a href="http://www.perlfoundation.org/perl5/index.cgi?optree_guts">http://www.perlfoundation.org/perl5/index.cgi?optree_guts</a> 

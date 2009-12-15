@@ -24,6 +24,7 @@ png=svhead.png \
    op1.png    \
    op2.png    \
    opsample.png\
+   opsamp2.png \
    stack.png  \
    scope.png  \
    pad.png
@@ -76,6 +77,8 @@ ook.png: ook.epsx common.ps sv.ps rect.ps ptr.ps box.ps break.ps
 op1.png: op1.epsx common.ps box.ps rect.ps mws.ps op.ps
 op2.png: op2.epsx common.ps box.ps rect.ps mws.ps op.ps
 optypes.png: optypes.epsx common.ps arrow.ps
+opsample.png: opsample.epsx common.ps ptr.ps
+opsamp2.png: opsamp2.epsx common.ps ptr.ps
 pad.png: pad.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps break.ps pad.ps
 scope.png: scope.epsx common.ps rect.ps ptr.ps break.ps dist.ps sv.ps
 stack.png: stack.epsx common.ps rect.ps ptr.ps break.ps dist.ps sv.ps box.ps mws.ps
