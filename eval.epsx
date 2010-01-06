@@ -1,0 +1,100 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: 15 73 305 305
+%%Creator: Reini Urban (Copyright 2010)
+
+%require "common.ps"
+%require "rect.ps"
+%require "ptr.ps"
+%require "break.ps"
+%require "dist.ps"
+
+/Courier 8 SF
+300 112 M  (PERL_CONTEXT) rshow
+
+/Helvetica-Bold 10 SF
+80  102 M (cxstack) rshow  85 105  100 105 ptrn
+
+165 290 M (top_env)  show
+225 290 M (jmpenv)   show
+80  290 M (block cx_blk)   rshow
+223 278 202 278 ptrn
+
+/Helvetica-Bold 8 SF
+50 204 M (blk_eval) rshow 53 207 65 207 ptrn
+
+% vertical PUSHBLOCK + PUSHEVAL
+gsave
+red
+/Courier-Bold 10 SF
+65 175 translate
+90 rotate
+0  6 M (PUSHEVAL) cshow
+0  70 add 6 M (PUSHBLOCK)   cshow
+grestore
+
+/Helvetica-Oblique 8 SF
+80 90 M (cxstack_ix) rshow
+/Helvetica 8 SF
+80 80 M (cxstack_max) rshow
+
+% cxstack
+gsave 0.8 setgray 200 100 300 110 rect fill grestore
+100 100 300 110 rect stroke
+100 20 300 { dup 100 M 110 L stroke } for
+230 112.5 break
+
+%require "sv.ps"
+%require "box.ps"
+%require "mws.ps"
+gsave 20 285 translate 0.8 dup scale
+  % draw the block cx
+  55 0 12 box
+  /Helvetica 11 SF
+  (type gimme) 60 -12 40 mws pop
+  (sp)         60 -27 40 mws pop
+  (cop)        60 -42 40 mws pop
+  (marksp)     60 -57 40 mws pop
+  (scopesp)    60 -72 40 mws pop
+  (oldpm)      60 -87 40 mws pop
+
+  /Helvetica-Bold 11 SF
+  (retop)      60 -102 40 mws pop % blk_sub
+  /Helvetica 11 SF
+  (namesv)     60 -117 40 mws pop
+  (eval_root)  60 -132 40 mws pop
+  (cur_text)   60 -147 40 mws pop
+  (cv)         60 -162 40 mws pop
+  (cur_top_env) 60 -177 40 mws pop
+  % 97.5 -112.5 120 -112.5 ptrn
+  % 97.5 -7.5 120 -7.5 120 -148 ptrn
+  1.5 setlinewidth 
+  55 -91.5 M 105 -91.5 L S
+grestore
+
+/y 207 60 sub def % 6*15*0.8=72
+% cur_top_env -> jmpenv (207-6*15/0.8)
+105 y 282 y 282 278 263 278 ptrn
+
+gsave 120 285 translate 0.8 dup scale
+  % draw the 1st jmpenv
+  55 0 4 box
+  /Helvetica 11 SF
+  (je_prev)      60 -12 40 mws pop
+  (je_buf)       60 -27 40 mws pop
+  (je_ret)       60 -42 40 mws pop
+  (je_mustcatch) 60 -57 40 mws pop
+grestore
+
+gsave 180 285 translate 0.8 dup scale
+  % draw the 2nd jmpenv
+  55 0 4 box
+  /Helvetica 11 SF
+  (je_prev)      60 -12 40 mws pop
+  (je_buf)       60 -27 40 mws pop
+  (je_ret)       60 -42 40 mws pop
+  (je_mustcatch) 60 -57 40 mws pop
+grestore
+
+red
+100  92  80 true  distance % cxstack_ix
+100  82 200 false distance % cxstack_max

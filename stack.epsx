@@ -1,6 +1,6 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: 15 23 305 330
-%%Creator: Gisle Aas (Copyright 1998)
+%%BoundingBox: 15 123 305 290
+%%Creator: Gisle Aas (Copyright 1998), Reini Urban 2010
 
 %require "common.ps"
 %require "rect.ps"
@@ -9,56 +9,29 @@
 %require "dist.ps"
 
 /Courier 8 SF
-300 62 M  (PERL_CONTEXT) rshow
-200 112 M (OP*) rshow
 200 162 M (I32) rshow
 300 212 M (SV*) rshow
 
 /Helvetica-Bold 10 SF
-80  52 M (cxstack)    rshow  85  55  100  55 ptrn
-80 102 M (retstack)   rshow  85 105  100 105 ptrn
-80 152 M (markstack)  rshow  85 155  100 155 ptrn
-80 202 M (stack_base) rshow  85 205  100 205 ptrn
-40 287 M (curstack) show %25 230 25 282.5 40 282.5 ptrn
+80  152 M (markstack)  rshow  85 155  100 155 ptrn
+80  202 M (stack_base) rshow  85 205  100 205 ptrn
+40  280 M (curstack) show %25 230 25 282.5 40 282.5 ptrn
+125 280 M ( @_) show
 
-%85 315 M (argarray) rshow
+% 85 315 M (argarray) rshow
 /Courier-Bold 10 SF
-85 315 M
-( @_) show
-
 85 142 120 142 120 152 ptrn  % markstack_ptr
 85 132 200 132 200 150 ptrn  % markstack_max
 
 85 192 150 192 150 202 ptrn  % stack_sp
 85 182 300 182 300 200 ptrn  % stack_max
 
-
-/Helvetica-Oblique 8 SF
-80 40 M (cxstack_ix) rshow
 /Helvetica 8 SF
-80 30 M (cxstack_max) rshow
-
-80 90 M (retstack_ix) rshow
-80 80 M (retstack_max) rshow
-
 80 140 M (markstack_ptr) rshow
 80 130 M (markstack_max) rshow
 
 80 190 M (stack_sp) rshow
 80 180 M (stack_max) rshow
-
-
-% cxstack
-gsave 0.8 setgray 200 50 300 60 rect fill grestore
-100 50 300 60 rect stroke
-100 20 300 { dup 50 M 60 L stroke } for
-230 62.5 break
-
-% retstack
-gsave 0.8 setgray 120 100 200 110 rect fill grestore
-100 100 200 110 rect stroke
-100 10 200 { dup 100 M 110 L stroke } for
-170 112.5 break
 
 % markstack
 gsave
@@ -80,27 +53,17 @@ grestore
 100 10 300 { dup 200 M 210 L stroke } for
 170 162.5 break
 
-
 %require "sv.ps"
 %require "box.ps"
 %require "mws.ps"
-gsave 40 285 translate 0.5 dup scale
-  % draw the curstack AV structs
-  0 0 sv
-  55 0 9 box
-  /Helvetica 11 SF
-  (ARRAY) 60 -12 30 mws pop
-  (ALLOC) 60 -117 30 mws pop
-  97.5 -112.5 120 -112.5 ptrn
-  97.5 -7.5 120 -7.5 120 -148 ptrn
+
+gsave 40 275 translate 0.5 dup scale
+  % draw the curstack AV w/o xpvav
+  0 0 sv2
+  /Helvetica 10 SF
+  2 -38 M (ARRAY) show
+  40 -35 120 -35 120 -132 ptrn
 grestore
-
-red
-100  42  80 true  distance % cxstack_ix
-100  32 200 false distance % cxstack_max
-
-100  92  20 false distance % retstack_ix
-100  82 100 false distance % retstack_max
 
 gsave
    % erase the stack_sp/stack_max lines where the arrows should be
@@ -110,7 +73,7 @@ gsave
    140 198 M 140 170 L stroke
 grestore
 
-% marskstack entries
+% markstack entries
 115 155 115 170 110 170 110 202 ptrn
 125 155 125 170 140 170 140 202 ptrn
 
@@ -139,14 +102,10 @@ gsave 0.5 setgray
   185 265 195 242 ptrn
 grestore
 
-% struct av and struct xpvav
-gsave 105 322 translate 0.5 dup scale
-  % draw the curstack AV structs
-  0 0 sv
-  55 0 9 box
-  /Helvetica 11 SF
-  (ARRAY) 60 -12 30 mws pop
-  (ALLOC) 60 -117 30 mws pop
-  97.5 -112.5 130 -112.5 ptrn
-  97.5 -7.5 120 -7.5 120 -112.5 ptrn
+% @_ struct av, no struct xpvav
+gsave 125 275 translate 0.5 dup scale
+  0 0 sv2
+  /Helvetica 10 SF
+  2 -38 M (ARRAY) show
+  40 -35 90 -20 ptrn %265
 grestore

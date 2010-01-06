@@ -1,0 +1,16 @@
+--- #YAML:1.0
+name:               illguts
+version:            0.19
+abstract:           illustrated perl guts
+author:
+    - Gisle Aas <gisle@aas.no>
+    - Reini Urban <rurban@cpan.org>
+license:            perl
+# there is only a module and script distribution_type
+distribution_type:  doc
+no_index:
+    directory:
+        - slides
+meta-spec:
+    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:  1.4

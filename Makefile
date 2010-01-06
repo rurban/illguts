@@ -20,14 +20,16 @@ png=svhead.png \
    sv_u.png   \
    flags.png  \
    svtypes.png\
+   scope.png  \
+   pad.png \
    optypes.png\
    op1.png    \
    op2.png    \
    opsample.png\
    opsamp2.png \
    stack.png  \
-   scope.png  \
-   pad.png
+   context.png  \
+   eval.png
 
 png: $(png)
 
@@ -48,6 +50,14 @@ illguts.chm: index.html illguts.hhp illguts.hhk $(png)
 slides/index.html: slides.pds index.html
 	./mk-slides slides.pds
 
+t/97_meta.t: META.yml
+
+test: t/97_meta.t
+	perl t/97_meta.t
+
+test_rel: t/97_meta.t
+	-#RELEASE_TESTING=1 perl t/97_meta.t
+
 eps:
 	for x in *.png; do s=$${x/.png/.eps}; make $s; done
 
@@ -63,7 +73,7 @@ eps:
 clean:
 	rm -f *.eps *~
 
-dist: all VERSION
+dist: all VERSION test_rel
 	./make_dist
 
 # deps
@@ -82,6 +92,8 @@ opsamp2.png: opsamp2.epsx common.ps ptr.ps
 pad.png: pad.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps break.ps pad.ps
 scope.png: scope.epsx common.ps rect.ps ptr.ps break.ps dist.ps sv.ps
 stack.png: stack.epsx common.ps rect.ps ptr.ps break.ps dist.ps sv.ps box.ps mws.ps
+context.png: context.epsx common.ps rect.ps ptr.ps break.ps dist.ps sv.ps box.ps mws.ps
+eval.png: eval.epsx common.ps rect.ps ptr.ps break.ps dist.ps sv.ps box.ps mws.ps
 stash.png: stash.epsx common.ps stash.ps rect.ps ptr.ps box.ps glob.ps mws.ps sv.ps
 strtab.png: strtab.epsx common.ps box.ps rect.ps mws.ps ptr.ps sv.ps
 sv_u.png: sv_u.epsx common.ps mws.ps rect.ps

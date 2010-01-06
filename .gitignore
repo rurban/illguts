@@ -3,7 +3,7 @@
 *~
 *.patch
 *.eps
-hhk.pl
+0.*
 up
 .cpan-*
 

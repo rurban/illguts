@@ -18,6 +18,9 @@
 80 102 M (savestack) rshow   85 105  100 105 ptrn
 80 152 M (tmps_stack) rshow  85 155  100 155 ptrn
 
+240 52 M (ENTER/) show
+240 40 M (LEAVE)  show
+
 /Helvetica 8 SF
 80 40 M (scopestack_ix) rshow
 80 30 M (scopestack_max) rshow
@@ -26,6 +29,7 @@
 80 80 M (savestack_max) rshow
 
 80 120 M (tmps_max) rshow
+
 /Helvetica-Oblique 8 SF
 80 140 M (tmps_floor) rshow
 80 130 M (tmps_ix) rshow

@@ -251,3 +251,43 @@ class hierarchy diagram shows:
 
 <p><img src="../scope.png">
 <p><img src="../stack.png">
+
+=slide Context + sub
+
+<p><img src="../context.png">
+
+<p>The context setup for a Perl or XS subroutine does at <b>entersub</b>:
+<xmp>
+	ENTER;
+	PUSHBLOCK(cx, CXt_SUB, SP);
+	PUSHSUB(cx);
+	cx->blk_sub.retop = PL_op->op_next;
+	CvDEPTH(cv)++;
+	SAVECOMPPAD();
+	PAD_SET_CUR_NOSAVE(CvPADLIST(cv), CvDEPTH(cv));
+        /* push args */
+        /* call sub */
+</xmp>
+and at <b>leavesub</b>
+<xmp>
+        /* pop return value(s) */
+	POPBLOCK(cx,newpm);
+	LEAVE;
+	cxstack_ix--;
+    	POPSUB(cx,sv);	        /* release CV and @_ ... */
+    	PL_curpm = newpm;	/* ... and pop $1 et al */
+	LEAVESUB(sv);
+    	return cx->blk_sub.retop;
+</xmp>
+
+=slide eval
+
+<p><img src="../eval.png">
+
+<p>Pack the op sequence into a simple try/catch switch between <code>JMPENV_PUSH</code> and
+<code>JMPENV_POP</code> calls.
+
+<p>The <b>struct jmpenv</b> packages the state required to perform a proper non-local jump, 
+<b>top_env</b> being the initial JMPENV record. In case of abnormal exceptions 
+(i.e. die) a <code>JMPENV_JUMP</code> must be done, a non-local jump out to 
+the previous JMPENV level with a proper <em>setjmp</em> record.

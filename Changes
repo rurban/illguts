@@ -1,3 +1,17 @@
+0.19 2010-01-06 rurban@cpan.org
+	* stack: removed retstack, removed xpvav blocks, 
+        use direct ARRAY ptr, smaller
+	* context: new with PUSHBLOCK/PUSHSUB and PUSHSUBST
+	* eval: new with PUSHBLOCK/PUSHEVAL and JMPENV
+	* index.html: removed retstack. Added cxstack.
+	Added sub and a eval chapter.
+	Noted pp_ macros.
+	* slides.pds: added 22) Context + sub, 23) eval
+        * scope: added ENTER/LEAVE text to scopestack
+	* hhk.pl: added
+	* META.yml: added for a cpan/pause name
+        * t/97_meta.t: added
+
 0.18 2009-12-19 rurban@cpan.org
 	* svpvgv: xnv_u => xbm_s, removed BmUSEFUL, BmPREVIOUS, BmRARE
 	* index.html: xnv_u => xbm_s

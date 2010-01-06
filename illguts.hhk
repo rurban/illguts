@@ -313,12 +313,52 @@
 		<param name="Local" value="index.html#stacks">
 		</OBJECT>
 	  <LI> <OBJECT type="text/sitemap">
-		<param name="Keyword" value="Scope">
-		<param name="Local" value="index.html#scope">
+		<param name="Keyword" value="scopestack">
+		<param name="Local" value="index.html#stacks">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="tmps_stack">
+		<param name="Local" value="index.html#stacks">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="curstack">
+		<param name="Local" value="index.html#curstack">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="markstack">
+		<param name="Local" value="index.html#markstack">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="cxstack">
+		<param name="Local" value="index.html#cxstack">
 		</OBJECT>
         </UL>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Keyword" value="Stashes">
 		<param name="Local" value="index.html#stash">
 		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="sub">
+		<param name="Local" value="index.html#sub">
+		</OBJECT>
+        <UL>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="entersub/leavesub">
+		<param name="Local" value="index.html#sub">
+		</OBJECT>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="enterblock/leaveblock">
+		<param name="Local" value="index.html#sub">
+		</OBJECT>
+        </UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="eval">
+		<param name="Local" value="index.html#eval">
+		</OBJECT>
+        <UL>
+	  <LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="jmpenv">
+		<param name="Local" value="index.html#eval">
+		</OBJECT>
+        </UL>
 </UL></HTML>

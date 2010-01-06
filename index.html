@@ -5,7 +5,7 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.18, for perl 5.11.2</small></h1>
+<small>Version 0.19, for perl 5.11.3</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl.  It contains commented illustrations of all
@@ -962,7 +962,8 @@ by name.
 A Perl program/subroutine is represented internally by a syntax tree built from OP nodes. This tree 
 really is just a linked list of ops in <i>exec</i> order.
 Perl 5.005 had 346 different OP-codes, Perl 5.11.2 has 365 OP-Codes, see <tt>opnames.h</tt>.
-Each op represents a <tt>pp_<i>opname</i>()</tt> function.
+Each op represents a <tt>pp_<i>opname</i>()</tt> function. Note that some <tt>pp_</tt> functions 
+are just macros, several opcodes share the same function.<br>
 In Perl there are 12 different OP classes, that are related like the following 
 class hierarchy diagram shows: 
 
@@ -1064,19 +1065,22 @@ and
 
 <h2><a name="stacks">Stacks</a></h2>
 
-During compilation and runtime Perl use several stacks to manage
-itself and the program running.  The first three described here
-implements <a name="scope"><b>scopes</b></a>, 
-including variables and values which are restored (or
-actions to be performed) when the scope is left.
+During compilation and runtime Perl use various stacks to manage itself and the
+program running. Several data stacks (variable scope and subroutine arguments),
+and also code context stacks (block context).<br>
 
-<p>The <code>scopestack</code> pushes the <code>savestack_ix</code>
+<h3><a name="scope">Scope</a></h3>
+
+The first three data stacks implement <b>scopes</b>, including variables and
+values which are restored (or actions to be performed) when the scope is left.
+
+<p>The <b><code>scopestack</code></b> pushes the <code>savestack_ix</code>
 when <code>ENTER</code> is executed.  On <code>LEAVE</code> the top
 <code>savestack_ix</code> entry is popped and all things saved on the
 <code>savestack</code> since this is restored.  This means that a
 <code>ENTER/LEAVE</code> pairs represents dynamic nestable scopes.
 
-<p>The <code>savestack</code> contains records of things saved in
+<p>The <b><code>savestack</code></b> contains records of things saved in
 order to be restored when the scopes are left.  Each record consist of
 2-4 ANY elements.  The first one is a type code, which is used to
 decide how long the record is and how to interpret the other elements.
@@ -1084,7 +1088,7 @@ decide how long the record is and how to interpret the other elements.
 restoring involves updating memory locations of various types as well
 as more general callbacks (destructors).
 
-<p>The <code>tmps_stack</code> implement mortal SVs.  Each time a new
+<p>The <b><code>tmps_stack</code></b> implement mortal SVs.  Each time a new
 mortal is made, then <code>tmps_ix</code> is incremented and the
 corresponding entry in <code>tmps_stack</code> made to point to it.
 When <code>SAVETMPS</code> is executed, then the old
@@ -1099,53 +1103,116 @@ both start out as -1 when the stack is empty.
 
 <p><center><img src="scope.png"></center>
 
-<p>The next fours stacks manage subroutine calls, evals, and
-loops.
+<h3>The @_ stack</h3>
 
-<p>The first one is simply denoted as <em>the stack</em> and is really
-an AV.  The variable <code>curstack</code> points to this AV.  To
+<p>The next two stacks handle the arguments passed to subroutines, also the return values.
+
+<p><a name="curstack">The first one</a> is simply denoted as <b>the stack</b>
+and is really an AV.  The variable <b><code>curstack</code></b> points to this AV.  To
 speed up access Perl also maintain direct pointers to the start
-(<code>stack_base</code>) and the end (<code>stack_max</code>) of the
-allocated ARRAY of this AV.  The AV so special that it is marked as
-not REAL and the FILL field is not updated.  Instead we use a
-dedicated pointed called <code>stack_sp</code>, the stack pointer.
-The stack is used to pass arguments to PP operations and subroutines
-and is also the place where the result of these operations as well as
-subroutine return values are placed.
+(<code>stack_base</code>) and the end (<code>stack_max</code>) of the allocated
+ARRAY of this AV. This AV is so special that it is marked as not REAL and the FILL
+field is not updated. Instead we use a dedicated pointed called
+<code>stack_sp</code>, the stack pointer. The stack is used to pass arguments
+to PP operations and subroutines and is also the place where the result of these
+operations as well as subroutine return values are placed.
 
-<p>The <code>markstack</code> is used to indicate the extent of the
-stack to be passed as @_ to Perl subroutines.  When a subroutine is to
-be called, then first the start of the arguments are marked by pushing
-the <code>stack_sp</code> offset onto <code>markstack</code>, then the
-arguments themselves are calculated and pushed on the stack.  Then the
-<code>@_</code> array is set up with pointers the SV* on the stack
-between the <code>MARK</code> and <code>stack_sp</code> and the
-subroutine starts running.  For XSUB routines, the creation of
-<code>@_</code> is suppressed, and the routine will use the
+<p>The <a name="markstack"><b><code>markstack</code></b></a> is used to indicate the
+extent of the stack to be passed as @_ to Perl subroutines.  When a subroutine
+is to be called, then first the start of the arguments are marked by pushing the
+<code>stack_sp</code> offset onto <code>markstack</code>, then the arguments
+themselves are calculated and pushed on the stack.  Then the <code>@_</code>
+array is set up with pointers the SV* on the stack between the <code>MARK</code>
+and <code>stack_sp</code> and the subroutine starts running.  For XSUB routines,
+the creation of <code>@_</code> is suppressed, and the routine will use the
 <code>MARK</code> directly to find it's arguments.
 
-<p>The <code>retstack</code> contains pointers to the operation to go
+<!--<p>pre-5.10: <i>The <code>retstack</code> contains pointers to the operation to go
 to after subroutines return.  Each time a subroutine is called a new
 OP* is pushed on this stack.  When a subroutine returns, Perl pops the
 top OP* from <code>retstack</code> and continues execution from this
-place.
-
-<p>The <code>cxstack</code> (context stack) contains records that
-describe the current context.  Each time a subroutine, an eval or a
-loop is entered, then a new PERL_CONTEXT record is pushed on the
-<code>cxstack</code>.  When subroutine/eval/loop finished then the
-record top record is pop'ed and the corresponding values restored.  The
-PERL_CONTEXT record will eventually be described below.
+place.</i>-->
 
 <p><center><img src="stack.png"></center>
+
+<h3><a name="context">Context</a></h3>
+
+<p>The <a name="cxstack"><b><code>cxstack</code></b></a> for <em>context stack</em>
+contains <code>cx</code> records that describe the current block context.  Each time a
+subroutine, an eval, a loop, a format block or given/when block is entered, then
+a new PERL_CONTEXT cx record is pushed on the <code>cxstack</code>.  When the
+context block finished at any LEAVE* op, then the top record is pop'ed and the
+corresponding values restored.<p> A cxstack record, the cx, is either
+a block context or subst context. A block context has a common header of size 6
+and shares then structs for sub, format, eval, loop or given/when contexts also
+of size 6. The subst context is of size 12.
+
+<p><center><img src="context.png"></center>
+
+<h2><a name="sub">sub</a></h2>
+
+The context setup for a Perl or XS subroutine does at <b>entersub</b>:
+<pre>
+	ENTER;
+	PUSHBLOCK(cx, CXt_SUB, SP);
+	PUSHSUB(cx);
+	cx->blk_sub.retop = PL_op->op_next;
+	CvDEPTH(cv)++;
+	SAVECOMPPAD();
+	PAD_SET_CUR_NOSAVE(CvPADLIST(cv), CvDEPTH(cv));
+        /* push args */
+        /* call sub */
+</pre>
+and at <b>leavesub</b>
+<pre>
+        /* pop return value(s) */
+	POPBLOCK(cx,newpm);
+	LEAVE;
+	cxstack_ix--;
+    	POPSUB(cx,sv);	        /* release CV and @_ ... */
+    	PL_curpm = newpm;	/* ... and pop $1 et al */
+	LEAVESUB(sv);
+    	return cx->blk_sub.retop;
+</pre>
+
+The <em>ENTER/LEAVE</em> pair handles the scope- and savestack.<p>
+
+The <em>PUSHBLOCK/POPBLOCK</em> pair handles the cxstack header of the current
+context, the special <code>blk_sub</code> values are handled in the subsequent
+SUB calls.<br> PUSHBLOCK arguments are the type and stack, the
+<code>POPBLOCK</code> return value <code>newpm</code> is the
+<code>cx->blk_oldpm</code>, which was <code>PL_curpm</code> at
+entry. <code>PUSHBLOCK</code> increments <code>cxstack_ix</code>, <code>POPBLOCK</code> does
+decrement it.<p>
+
+The <em>PUSHSUB/POPSUB</em> pair handles the <code>cx->blk_sub</code> record
+from the very same <code>cxstack</code>, the <code>POPSUB</code> return value
+<code>sv</code> is the <code>blk_sub.cv</code> which was the <code>cv</code>
+from <code>PUSHSUB</code>. <code>POPSUB</code> also releases <code>@_</code>,
+the <code>blk_sub.argarray</code>.</p>
+
+<h2><a name="eval">eval</a></h2>
+
+<p><center><img src="eval.png"></center>
+
+<p>An eval call is similar to a sub call. The <b>evaltry</b> and <b>eval</b> op for
+<code>eval{}</code> and <code>eval ""</code> just pack the op sequence into a
+simple try/catch switch between <code>JMPENV_PUSH</code> and
+<code>JMPENV_POP</code> calls. 
+
+<p>The <b>struct jmpenv</b> packages the state
+required to perform a proper non-local jump, <b>top_env</b> being the initial
+JMPENV record. In case of abnormal exceptions (i.e. die) a
+<code>JMPENV_JUMP</code> must be done, a non-local jump out to the previous
+JMPENV level with a proper <em>setjmp</em> record.
 
 <hr>
 <div align="right">
 <small>
-<i>&copy; 1998-1999 Gisle Aas. 2009 Reini Urban</i><br>
+<i>&copy; 1998-1999 Gisle Aas. 2009,2010 Reini Urban</i><br>
 <a href="mailto:gisle@aas.no">&lt;gisle@aas.no&gt;</a><br>
-<a href="mailto:rurban@cpan.org">&lt;rurban@cpan.org&gt;</a><br>
-$Date: 2009-12-15 22:39:59 rurban $
+<a href="mailto:rurban@x-ray.at">&lt;rurban@x-ray.at&gt;</a><br>
+$Date: 2010-01-04 16:49:29 rurban $
 </small>
 </div>
 

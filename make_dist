@@ -6,6 +6,7 @@ die "Bad version number" unless $VERSION =~ /^\d+\.\d\d$/;
 
 sh("grep 'Version $VERSION' index.html");
 sh("grep 'Title=illguts-$VERSION' illguts.hhp");
+sh("grep -E 'version: +$VERSION' META.yml");
 sh('find . -type f -exec chmod 0644 "{}" ";"');
 sh('find . -type d -exec chmod 0755 "{}" ";"');
 my @exe = qw(mk-slides eps2png eps2ppm epsx2eps make_dist);
@@ -18,11 +19,14 @@ mkdir($VNAME, 0755) || die "Can't create $VNAME: $!";
 sh("cp *.html $VNAME");
 sh("cp *.ps *.epsx $VNAME");
 sh("cp *.png $VNAME");
-sh("cp Changes illguts.pdf illguts.chm illguts.hhp illguts.hhk Makefile README VERSION"
+sh("cp META.yml $VNAME");
+sh("cp Changes illguts.pdf illguts.chm illguts.hhp illguts.hhk hhk.pl Makefile README VERSION"
    ." slides.pds ".join(" ", @exe)." $VNAME");
 sh("cp -r img $VNAME/");
 sh("mkdir $VNAME/slides");
 sh("cp slides/*.html $VNAME/slides/");
+sh("mkdir $VNAME/t");
+sh("cp t/* $VNAME/t/");
 sh("find $VNAME -type f -exec chmod 0444 \"{}\" \";\"");
 chdir $VNAME;
 print "cd $VNAME; chmod 0754, @exe; cd ..\n";
