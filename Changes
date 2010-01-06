@@ -1,6 +1,11 @@
-0.17 2009-12-?? rurban@cpan.org
+0.18 2009-12-19 rurban@cpan.org
+	* svpvgv: xnv_u => xbm_s, removed BmUSEFUL, BmPREVIOUS, BmRARE
+	* index.html: xnv_u => xbm_s
+
+0.17 2009-12-15 rurban@cpan.org
 	* index.html: more links.
-	  RV is not the exact same as a IV
+	  RV is not the exact same as a IV.
+ 	  PVBM changed to PVGV with VALID.
 
 0.16 2009-12-01 rurban@cpan.org
 	* opsamp2: added

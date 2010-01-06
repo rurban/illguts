@@ -5,7 +5,7 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.17pre, for perl 5.11.2</small></h1>
+<small>Version 0.18, for perl 5.11.2</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl.  It contains commented illustrations of all
@@ -507,13 +507,16 @@ destructor.
 
 <a name="svpvbm"><h2>SvPVBM (old)</h2></a>
 
-<p>The <i>SvPVBM</i> is like <i>SvPVMG</i> above, but has three
-additional fields; BmUSEFUL, BmPREVIOUS, BmRARE.  The SvPVBM value
-types are used internally to implement very fast lookup of the string
-in PVX using the Boyer-Moore algorithm.  They are used by the Perl
-index() builtin when the search string is a constant, as well as in
-the RE engine.  The fbm_compile() function turns normal SvPVs into
-this value type.
+Since 5.10 <i>SvPVBM</i> are really <i>PVGV</i>s, with the <b>VALID</b> flag set, 
+and "B" magic attached. Before <i>SvPVBM</i> where <i>SV</i> objects by their own.<p>
+
+<p>The <i>SvPVBM</i> is like <i>SvPVMG</i> above. I uses the xnv_u
+union for three additional values in xbm_s; U32 BmPREVIOUS, U8 BmUSEFUL,
+U8 BmRARE. The SvPVBM value types are used internally to implement very
+fast lookup of the string in PVX using the Boyer-Moore algorithm.
+They are used by the Perl index() builtin when the search string is a
+constant, as well as in the RE engine.  The <tt>fbm_compile()</tt>
+function turns normal SvPVs into this value type.<p>
 
 <p>A table of 256 elements is appended to the PVX.  This table
 contains the distance from the end of string of the last occurrence of
@@ -521,8 +524,8 @@ each character in the original string. (In recent Perls, the table is
 not built for strings shorter than 3 character.)  In addition
 fbm_compile() locates the rarest character in the string (using
 builtin letter frequency tables) and stores this character in the
-BmRARE field.  The BmPREVIOUS field is set to the location of the
-first occurrence of the rare character. BmUSEFUL is incremented
+<i>BmRARE</i> field.  The <i>BmPREVIOUS</i> field is set to the location of the
+first occurrence of the rare character. <i>BmUSEFUL</i> is incremented
 (decremented) by the RE engine when this constant substring (does not)
 help in optimizing RE engine access away.  If it goes below 0, then
 the corresponding substring is forgotten and freed;
@@ -1142,7 +1145,7 @@ PERL_CONTEXT record will eventually be described below.
 <i>&copy; 1998-1999 Gisle Aas. 2009 Reini Urban</i><br>
 <a href="mailto:gisle@aas.no">&lt;gisle@aas.no&gt;</a><br>
 <a href="mailto:rurban@cpan.org">&lt;rurban@cpan.org&gt;</a><br>
-$Date: 2009-12-13 14:27:43 rurban $
+$Date: 2009-12-15 22:39:59 rurban $
 </small>
 </div>
 

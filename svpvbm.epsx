@@ -25,15 +25,15 @@
 /Courier-Bold 6 SF
 15 274 M (POK,VALID) cshow
 
-% unused xnv_u and ivx
-gsave 0.8 setgray 55 285 105 300 rect F grestore
+% unused ivx
+% gsave 0.8 setgray 55 285 105 300 rect F grestore
 gsave 0.8 setgray 55 240 105 255 rect F grestore
-55 300 7 9 newbox
-55 300 9 box
+% 55 300 7 7 newbox
+55 300 6 box
 
 /Helvetica 11 SF
 60 303 15 sub M
-[(xnv_u) (cur) (len) (xiv_u) (MAGIC) (STASH) (BmUSEFUL) (BmPREVIOUS) (BmRARE)] {
+[(xbm_s) (cur) (len) (xiv_u) (MAGIC) (STASH)] {
     gsave
     currentpoint 30 mws pop
     grestore
