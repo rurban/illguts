@@ -5,7 +5,7 @@ text="#000000" link="#000055" vlink="#550000" alink="#000000"
 topmargin=0>
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.19, for perl 5.11.3</small></h1>
+<small>Version 0.20, for perl 5.12</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl.  It contains commented illustrations of all
@@ -459,7 +459,7 @@ STASH which might be confusing.)</i></small>
 <p><center><img src="svpvmg.png"></center>
 
 <p>The field MAGIC points to an instance of <code>struct magic</code>
-(typedefed as <code>MAGIC</code>).  This struct has 8 fields:
+(typedef'ed as <code>MAGIC</code>).  This struct has 8 fields:
 <ol>
 
 <li>
@@ -479,12 +479,13 @@ on the <i>type</i> (actually it is the callbacks attached to
 correspondence between the <i>type</i> field and the <i>virtual</i>
 field.
 
-<li><i>flags</i> contains 8 flag bits, where 2 of them are generally used.
-Bit 2 is the <b>REFCOUNTED</b> flag.  It indicates that the <i>obj</i>
-is assumed to be an SV and that it's reference count must be
-decremented when this magic is freed.  The <b>GSKIP</b> flag indicate
-that invocation of the magical GET method should be suppressed. 
-Other flag bits are used depending of the kind of magic.
+<li><i>flags</i> contains 8 flag bits, where 2 of them are generally used.  Bit
+2 is the <b>REFCOUNTED</b> flag.  It indicates that the <i>obj</i> is assumed to
+be an SV and that it's reference count must be decremented when this magic is
+freed. Self-referenced magic obj &lt;=&gt; sv have the REFCOUNTED flag not set,
+so that on destruction no self-ref'ed loops can appear. The <b>GSKIP</b> flag
+indicate that invocation of the magical GET method should be suppressed. Other
+flag bits are used depending of the kind of magic.
 
 <li><i>obj</i> is usually a pointer to some SV, <i>SvTIED_obj</i>.
 How it is used depends on the kind of magic this is.
@@ -1212,7 +1213,7 @@ JMPENV level with a proper <em>setjmp</em> record.
 <i>&copy; 1998-1999 Gisle Aas. 2009,2010 Reini Urban</i><br>
 <a href="mailto:gisle@aas.no">&lt;gisle@aas.no&gt;</a><br>
 <a href="mailto:rurban@x-ray.at">&lt;rurban@x-ray.at&gt;</a><br>
-$Date: 2010-01-04 16:49:29 rurban $
+$Date: 2010-02-11 11:06:15 rurban $
 </small>
 </div>
 
