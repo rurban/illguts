@@ -22,7 +22,7 @@ function Toggle(id) {
 <body bgcolor="#FFFFFF" text="#000000" link="#000055" vlink="#550000" alink="#000000" topmargin="0">
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.30, for perl 5.14 and older</small></h1>
+<small>Version 0.31, for perl 5.14 and older</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl.  It contains commented illustrations of all
@@ -489,7 +489,7 @@ STASH which might be confusing.)</i></small>
 <i>moremagic</i> is a pointer to another MAGIC and is used to form a
 single linked list of the MAGICs attached to an SV.
 
-<li><i>virtual</i> is a pointer to a struct containing 5 function
+<li><i>virtual</i> is a pointer to a struct containing 5-8 function
 pointers.  The functions (if set) are invoked when the corresponding
 action happens to the SV.
 

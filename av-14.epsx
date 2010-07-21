@@ -1,5 +1,5 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 145 255 315
+%%BoundingBox: -5 195 255 318
 %%Creator: Gisle Aas (Copyright 1998), Reini Urban (Copyright 2009)
 
 %require "common.ps"
@@ -15,8 +15,8 @@
 /Courier 8 SF
 40  302 M (av) rshow
 105 302 M (xpvav) rshow
-170 179.5 25 add M (sv) rshow
-/Helvetica 7 SF ( (with '#' magic)) show
+% 170 179.5 25 add M (sv) rshow
+% /Helvetica 7 SF ( (with '#' magic)) show
 
 55 300 5 box
 
@@ -41,65 +41,62 @@
 %97.5 202.5 130 ptr1 % STASH
 
 % MAGIC/ARYLEN
-97.5 247 15 sub 130 192.5 15 add ptrn
-130 177.5 25 add sv2
+% 97.5 247 15 sub 130 192.5 15 add ptrn
+% 130 177.5 25 add sv2
 
 % ARRAY
 % arrow from sv_u.pvx
 /Helvetica-Bold 9 SF
 4 262 M (ARRAY) show
-42 265 47 265 47 312 140 312 160 255 ptrn
+42 265 46.5 265 46.5 312 140 312 160 240 ptrn
 
 % ALLOC
-97.5 247 130 247.5 ptrn
+97.5 232 130 232 ptrn
 
 % SV*[] box
 gsave
    0.8 setgray
-   130 240 160 255 rect fill
-   230 240 250 255 rect fill
+   130 225 160 240 rect fill
+   230 225 250 240 rect fill
 grestore
 
 0.5 setlinewidth
-140 10 240 {
-   dup 240 M 255 L stroke
+140 10 225 {
+   dup 225 M 240 L stroke
 } for
 1 setlinewidth
-130 240 250 255 rect stroke
+130 225 250 240 rect stroke
 
 /Courier findfont 8 scalefont setfont
-130 257 M (SV*[]) show
 2   272 M (FLAGS) show
+130 242 M (SV*[]) show
 
-192 255 break
+192 240 break
 
 gsave
 
 red
 % FILL length
 0.5 setlinewidth
-160 275 M 160 280 L
-160 277.5 M 220 277.5 L
-220 275 M 220 280 L
+160 275 15 sub M 160 280 15 sub L
+160 277.5 15 sub M 220 277.5 15 sub L
+220 275 15 sub M 220 280 15 sub L
 stroke
-220 277.5 M 216 279 L 216 276 L closepath fill
+220 277.5 15 sub M 216 279 15 sub L 216 276 15 sub L closepath fill
 
 % MAX length
-160 265 M 160 260 L
-160 262.5 M 240 262.5 L
-240 265 M 240 260 L
+160 265 15 sub M 160 260 15 sub L
+160 262.5 15 sub M 240 262.5 15 sub L
+240 265 15 sub M 240 260 15 sub L
 stroke
-240 262.5 M 236 264 L 236 261 L closepath fill
+240 262.5 15 sub M 236 264 15 sub L 236 261 15 sub L closepath fill
 grestore
 
 1 dict begin
-/y 225 def
+/y 210 def
 [165 175 185 205 215 225]
 {
-   %dup 205 eq { /y 225 def } if
    gsave dup 3 sub y translate 0.20 dup scale 0 0 sv2 grestore
-   dup 247.5 3 2 roll y ptrn
-   %/y y 5 sub def
+   dup y 22.5 add 3 2 roll y ptrn
 } forall
 end
-
