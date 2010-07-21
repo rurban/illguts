@@ -1,0 +1,34 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -5 235 225 315
+%%Creator: Gisle Aas (Copyright 1998), Reini Urban (Copyright 2009, 2010)
+
+%require "common.ps"
+%require "sv.ps"
+%require "box.ps"
+%require "rect.ps"
+
+0 300 sv
+% arrow from sv_u.pvx
+/Helvetica-Bold 9 SF
+5 262 M (svu_pv) show
+42 265 47 265 47 312 112 312 112 292.5 120 292.5 ptrn
+
+/Courier 8 SF
+40  302 M (sv) rshow
+105 302 M (xpv) rshow
+
+55 300 4 box
+% unused xnv_u
+% gsave 0.8 setgray 55 285 105 300 rect F grestore
+
+/Helvetica 11 SF
+60 303 15 sub M
+[(STASH) (MAGIC) (cur) (len)] {
+    gsave
+    show
+    grestore
+    0 -15 rmoveto
+} forall
+
+0 -45 rmoveto
+%include "str-14.ps"

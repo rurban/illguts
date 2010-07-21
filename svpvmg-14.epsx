@@ -1,0 +1,91 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -15 135 367 345
+%%Creator: Gisle Aas (Copyright 1998), Reini Urban (Copyright 2009, 2010)
+
+%require "common.ps"
+%require "sv.ps"
+%require "box.ps"
+%require "rect.ps"
+%require "ptr.ps"
+%require "mws.ps"
+%require "magic-10.ps"
+%require "chararray.ps"
+
+0 300 sv
+
+/Courier 8 SF
+40  302 M (sv) rshow
+105 302 M (xpvmg) rshow
+160 182 M (hv) rshow
+350 302 90 sub M (magic_state) rshow
+
+55 300 1 2 newbox
+55 300 6 box
+% unused xnv_u + xiv_u
+gsave 0.8 setgray 55 211 105 224 rect F grestore
+gsave 0.8 setgray 55 226 105 239 rect F grestore
+
+/Helvetica 11 SF
+60 303 15 sub M
+[(STASH) (MAGIC) (cur) (len) (xiv_u) (xnv_u)] {
+    gsave
+    currentpoint 30 mws pop
+    grestore
+    0 -15 rmoveto
+} forall
+
+%%include "str.ps"
+% 97.5 292.5 120 ptr1  % PVX arrow
+
+% stash arrow
+97.5 202.5 90 add
+110  202.5 90 add
+110  175 
+120  175 ptrn
+
+% stash HV
+120 180 sv
+
+% MAGIC ptr arrow
+97.5 277.5 120 277.5 ptrn
+
+% magic
+120 285 magic
+162.5 277.5 180 277.5 180 327 190 327 ptrn  % moremagic
+
+% virtual
+162.5 262.5 190 262.5 ptrn
+190 270 [() () () () () (&magic_len)(&magic_set)(&magic_get)] mgvtbl
+
+% obj
+162.5 232.5 15 sub 180 232.5 15 sub 180 202 190 202 ptrn
+gsave
+   190 205 translate 0.7 dup scale
+   0 0 sv2
+grestore
+
+%ptr
+162.5 217.5 15 sub ptrn
+
+% struct magic_state
+300 300 90 sub 3 box
+/Helvetica 11 SF
+302 288 90 sub M
+[(mgs_sv) (mgs_flags) (mgs_ss_ix)] {
+    gsave
+    currentpoint 30 mws pop
+    grestore
+    0 -15 rmoveto
+} forall
+%mgs_sv to sv
+345 292.5 90 sub 360 292.5 90 sub 360 340 -10 340 -10 295 0 295 ptrn
+
+% two additional magic structures, scaled down
+gsave
+  190 330 translate
+  0.5 dup scale
+  0 0 magic
+  80 0 magic
+  42.5 -7.5 80 -7.5 ptrn  % moremagic 1
+  122.5 -7.5 ptrn         % moremagic 2 (=NULL)
+grestore

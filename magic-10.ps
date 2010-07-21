@@ -1,0 +1,128 @@
+%require "common.ps"
+%require "rect.ps"
+%require "box.ps"
+%require "mws.ps"
+%require "ptr.ps"
+
+
+/magic {                                       % <x> <y> magic -
+   4 dict begin
+     /y exch def /x exch def
+     /x2 x 50 add 7.5 sub def
+
+     gsave
+        palered
+        x 25 add y 45 sub x 37.5 add y 30 sub rect F
+     grestore
+
+     /Courier 8 SF
+     x 50 add y 2 add M (magic) rshow
+
+     /Helvtica 10 SF
+     x 25   add dup y 30 sub M y 45 sub L S
+     x 37.5 add dup y 30 sub M y 45 sub L S
+     (private) x 2.5 add y 42 sub 20 mws pop
+     (type) x 26.25 add y 42 sub 10 mws pop
+     (flags) x 38.75 add y 42 sub 10 mws pop
+
+     x y 6 box
+     x 5 add y 12 sub M
+     [(moremagic) (virtual) () (len) (obj) (ptr)] {
+        gsave
+        currentpoint 30 mws pop
+        grestore
+        0 -15 RM
+     } forall
+
+     %x2 y  7.5 sub x 70 add ptr1
+     %x2 y 22.5 sub x 60 add ptr1
+     %x2 y 52.5 sub x 60 add ptr1
+     %x2 y 67.5 sub x 60 add ptr1
+
+   end
+} def
+
+/smagic {                                    % <x> <y> <type> smagic -
+   5 dict begin
+     /type exch def
+     /y exch def /x exch def
+     /x2 x 50 add 7.5 sub def
+
+     gsave
+        palered
+        x 25 add y 45 sub x 37.5 add y 30 sub rect F
+     grestore
+
+     x 25   add dup y 30 sub M y 45 sub L S
+     x 37.5 add dup y 30 sub M y 45 sub L S
+     %(private) x 2.5 add y 42 sub 20 mws pop
+     /Courier-Bold 10 SF
+     type x 26.25 add y 41 sub 10 mws pop
+     %(flags) x 38.75 add y 42 sub 10 mws pop
+
+     /Helvtica 10 SF
+     x y 6 box
+     x 5 add y 12 sub M
+     [() (virtual) () () () ()] {
+        gsave
+        currentpoint 30 mws pop
+        grestore
+        0 -15 RM
+     } forall
+
+     %x2 y  7.5 sub x 70 add ptr1
+     x2 y 22.5 sub x 65 add ptr1
+     %x2 y 52.5 sub x 60 add ptr1
+     %x2 y 67.5 sub x 60 add ptr1
+
+   end
+} def
+
+% Note: reverse funclist
+/mgvtbl {                        % <x> <y> [() () () () () () (&magic_set) ()] mgvtbl
+   10 dict begin
+     /funcs exch def
+     /y exch def
+     /x exch def
+     /w 18 def
+     /x2 x 8 w mul add def
+     /y2 y 15 sub def
+
+     gsave
+     /Courier 8 SF
+     x2 y 2 add M (mgvtbl) rshow
+
+     1 LW
+     x y x2 y2 rect S
+     0.5 LW
+     x y2 M
+     /Helvetica 5 SF
+     % since 5.10 three more, internally for threading only
+     [(GET) (SET) (LEN) (CLEAR) (FREE) (COPY) (DUP) (LOCAL)]  {
+        gsave w 2 div 9 rmoveto cshow grestore
+        gsave w 0 RM 0 15 RL S grestore
+        w 0 RM
+     } forall
+
+     /y  y2 5 add def
+     /x2 x2 w 2 div sub def
+     /y2 y2 10 sub def
+
+     /Courier-Bold 8 SF
+     funcs {
+        dup length 0 eq { %ifelse
+           % no func
+           pop
+           newpath x2 y 2 0 360 arc fill
+        } {
+           % func to displa
+           x2 6 sub y2 8 sub M show
+           x2 y x2 y2 ptrn
+           /y2 y2 9 sub def
+        } ifelse
+        /x2 x2 w sub def
+     } forall
+
+     grestore
+   end
+} def

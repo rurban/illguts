@@ -2,7 +2,7 @@
 
 ./eps2ppm $1 > _err 
 if $(grep "Error:" _err >/dev/null); then
-    cat _err; rm _err; rm $1
+    rm $1
     exit
 fi
 cat _err | (rm _err; pnmscale 0.4) | ppmquant 32 | pnmtopng -compression 9

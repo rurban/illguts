@@ -1,0 +1,41 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -5 -20 110 310
+%%Creator: Gisle Aas (Copyright 1998)
+
+%require "common.ps"
+%require "sv.ps"
+%require "box.ps"
+%require "rect.ps"
+%require "ptr.ps"
+%require "mws.ps"
+%require "magic.ps"
+
+0 300 sv
+
+/Courier 8 SF
+40  302 M (io) rshow
+105 302 M (xpvio) rshow
+
+55 300 8 21 newbox
+55 300 21 box
+
+/Helvetica 11 SF
+60 303 15 sub M
+
+[(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (IFP) (OFP) (DIRP) (LINES) (PAGE) (PAGE_LEN) (LINES_LEFT) (TOP_NAME) (TOP_GV) (FMT_NAME) (FMT_GV) (BOTTOM_NAME) (BOTTOM_GV)] {
+    gsave
+    currentpoint 30 mws pop
+    grestore
+    0 -15 rmoveto
+} forall
+
+% Setup names for the last field
+(SUBPROCESS) 57   -12 21   mws pop
+(TYPE)       81   -12 10.5 mws pop
+(FLAGS)      93.5 -12 10.5 mws pop
+
+% Separators in last field
+80   0 M 80   -15 L
+92.5 0 M 92.5 -15 L S
+
+97.5 217.5 ptrn %MAGIC

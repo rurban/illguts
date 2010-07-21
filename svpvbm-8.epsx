@@ -1,0 +1,96 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -5 130 280 325
+%%Creator: Gisle Aas (Copyright 1998)
+
+%require "common.ps"
+%require "sv.ps"
+%require "box.ps"
+%require "rect.ps"
+%require "ptr.ps"
+%require "mws.ps"
+%require "magic.ps"
+%require "break.ps"
+
+0 300 sv
+
+/Courier 8 SF
+40  302 M (sv) rshow
+105 302 M (xpvbm) rshow
+170 227 M (magic) rshow
+
+/Courier-Bold 6 SF
+15 264 M (POK,VALID) cshow
+
+55 300 8 10 newbox
+55 300 10 box
+
+/Helvetica 11 SF
+60 303 15 sub M
+
+[(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (BmUSEFUL) (BmPREVIOUS) (BmRARE)] {
+    gsave
+    currentpoint 30 mws pop
+    grestore
+    0 -15 rmoveto
+} forall
+
+% arrow from PVX
+97.5 292.5 120 ptr1
+
+% char* box
+gsave
+   0.8 setgray
+   160 285 250 300 rect fill
+grestore
+
+0.5 setlinewidth
+130 10 240 {
+   dup 300 M 285 L stroke
+} for
+1 setlinewidth
+120 285 250 300 rect stroke
+
+/Courier 8 SF
+250 302 M (char[]) rshow
+
+125 290 M
+[(a) (b) (c) (d) (\\0) (\\4) (\\4) (\\4) (\\4) (\\4) (\\4) (\\4)] {
+   gsave
+     dup stringwidth pop 2 div neg 0 RM show
+   grestore
+   10 0 RM
+} forall
+
+
+203 300 break
+
+gsave
+red
+
+% CUR length
+0.5 setlinewidth
+120 275 M 120 280 L
+120 277.5 M 160 277.5 L
+160 275 M 160 280 L
+stroke
+120 277.5 M 124 279 L 124 276 L closepath fill
+160 277.5 M 156 279 L 156 276 L closepath fill
+
+% LEN length
+120 265 M 120 260 L
+120 262.5 M 250 262.5 L
+250 265 M 250 260 L
+stroke
+120 262.5 M 124 264 L 124 261 L closepath fill
+250 262.5 M 246 264 L 246 261 L closepath fill
+
+170 310 240 313 rect fill
+/Courier-Bold findfont 8 scalefont setfont
+205 317 M (U8 table[256]) cshow
+
+grestore
+
+% Magic
+97.5 217.5 120 ptr1
+120 225 ('B') smagic
+185 210 [() () () (&magic_setbm) ()] mgvtbl

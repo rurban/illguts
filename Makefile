@@ -1,22 +1,7 @@
 png=svhead.png \
    svrv.png   \
-   sviv.png   \
-   svnv.png   \
-   svpv.png   \
-   svpviv.png \
-   svpvnv.png \
-   svpvmg.png \
-   svpvbm.png \
-   svpvlv.png \
-   av.png     \
-   hv.png     \
    strtab.png \
-   gv.png     \
    stash.png  \
-   cv.png     \
-   svpvfm.png \
-   io.png     \
-   ook.png    \
    sv_u.png   \
    flags.png  \
    svtypes.png\
@@ -31,16 +16,92 @@ png=svhead.png \
    context.png  \
    eval.png
 
-png: $(png)
+png-8=av-8.png \
+  cv-8.png \
+  flags-8.png \
+  gv-8.png \
+  hv-8.png \
+  io-8.png \
+  op1-8.png \
+  op2-8.png \
+  ook-8.png \
+  sviv-8.png \
+  svnv-8.png \
+  svpv-8.png \
+  svpvbm-8.png \
+  svpvfm-8.png \
+  svpviv-8.png \
+  svpvlv-8.png \
+  svpvmg-8.png \
+  svpvnv-8.png \
+  svpvrv-8.png \
+  svrv-8.png \
+  svtypes-8.png \
+  svhead-8.png
 
-all: $(png) chm pdf slides
+png-10=av-10.png \
+  hv-10.png \
+  io-10.png \
+  cv-10.png \
+  gv-10.png \
+  ook-10.png \
+  sviv-10.png \
+  svnv-10.png \
+  svpv-10.png \
+  svpvbm-10.png \
+  svpvfm-10.png \
+  svpviv-10.png \
+  svpvlv-10.png \
+  svpvmg-10.png \
+  svpvnv-10.png
+
+png-14=av-14.png \
+  hv-14.png \
+  gv-14.png \
+  cv-14.png \
+  io-14.png \
+  ook-14.png \
+  sviv-14.png \
+  svnv-14.png \
+  svpv-14.png \
+  svpvbm-14.png \
+  svpvfm-14.png \
+  svpviv-14.png \
+  svpvlv-14.png \
+  svpvmg-14.png \
+  svpvnv-14.png
+
+png: $(png) $(png-8) $(png-10) $(png-14) index.html
+
+all: $(png) index.html chm pdf slides
 
 chm: illguts.chm
 
-pdf: illguts.pdf
+index.html: htmlprep.pl index-work.html
+	./htmlprep.pl
+
+index-8.html: htmlprep.pl index-work.html
+	./htmlprep.pl
+
+index-10.html: htmlprep.pl index-work.html
+	./htmlprep.pl
+
+index-14.html: htmlprep.pl index-work.html
+	./htmlprep.pl
+
+pdf: illguts-8.pdf illguts-10.pdf illguts-14.pdf illguts.pdf
 
 illguts.pdf: index.html $(png)
-	htmldoc --quiet --webpage --format pdf14 index.html -f $@
+	-htmldoc --quiet --webpage --format pdf14 index.html -f $@
+
+illguts-8.pdf: index-8.html $(png)
+	-htmldoc --quiet --webpage --format pdf14 index-8.html -f $@
+
+illguts-10.pdf: index-10.html $(png)
+	-htmldoc --quiet --webpage --format pdf14 index-10.html -f $@
+
+illguts-14.pdf: index-14.html $(png)
+	-htmldoc --quiet --webpage --format pdf14 index-14.html -f $@
 
 slides: slides/index.html
 
@@ -66,8 +127,9 @@ eps:
 
 %.png: %.epsx
 	./epsx2eps $< >$@.eps
-	./eps2png $@.eps >$@
-	test -s $@ || rm $@
+	./eps2png $@.eps >$@.tmp
+	@test -s $@.tmp || rm $@.tmp
+	@test -s $@.tmp && mv $@.tmp $@
 	rm $@.eps
 
 clean:
@@ -77,19 +139,32 @@ dist: all VERSION test_rel
 	./make_dist
 
 # deps
-av.png: av.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps break.ps
-cv.png: cv.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps magic.ps pad.ps
+av-8.png:  av-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps mws.ps break.ps
+av-10.png: av-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps break.ps
+av-14.png: av-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps break.ps
+cv-8.png:  cv-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps mws.ps magic.ps pad.ps
+cv-10.png: cv-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps magic-10.ps pad.ps
+cv-14.png: cv-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps magic-10.ps pad.ps
+flags-8.png: flags-8.epsx common.ps mws.ps rect.ps
 flags.png: flags.epsx common.ps mws.ps rect.ps
-gv.png: gv.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps gp.ps chararray.ps
-hv.png: hv.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps he.ps chararray.ps break.ps
-io.png: io.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps magic.ps
-ook.png: ook.epsx common.ps sv.ps rect.ps ptr.ps box.ps break.ps
+gv-8.png:  gv-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps mws.ps gp-8.ps chararray.ps
+gv-10.png: gv-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps gp.ps chararray.ps
+gv-14.png: gv-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps gp.ps chararray.ps
+hv-8.png:  hv-8.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps he.ps chararray.ps break.ps
+hv-10.png: hv-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps he.ps chararray.ps break.ps
+hv-14.png: hv-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps he.ps chararray.ps break.ps
+io-8.png: io-8.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps magic.ps
+io-10.png: io-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps magic-10.ps
+io-14.png: io-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps magic-10.ps
+ook.png: ook.epsx sv.ps common.ps rect.ps ptr.ps box.ps break.ps
 op1.png: op1.epsx common.ps box.ps rect.ps mws.ps op.ps
+op1-8.png: op1-8.epsx common.ps box.ps rect.ps mws.ps op-8.ps
 op2.png: op2.epsx common.ps box.ps rect.ps mws.ps op.ps
+op2-8.png: op2-8.epsx common.ps box.ps rect.ps mws.ps op-8.ps
 optypes.png: optypes.epsx common.ps arrow.ps
 opsample.png: opsample.epsx common.ps ptr.ps
 opsamp2.png: opsamp2.epsx common.ps ptr.ps
-pad.png: pad.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps break.ps pad.ps
+pad.png: pad.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps break.ps pad.ps
 scope.png: scope.epsx common.ps rect.ps ptr.ps break.ps dist.ps sv.ps
 stack.png: stack.epsx common.ps rect.ps ptr.ps break.ps dist.ps sv.ps box.ps mws.ps
 context.png: context.epsx common.ps rect.ps ptr.ps break.ps dist.ps sv.ps box.ps mws.ps
@@ -98,15 +173,37 @@ stash.png: stash.epsx common.ps stash.ps rect.ps ptr.ps box.ps glob.ps mws.ps sv
 strtab.png: strtab.epsx common.ps box.ps rect.ps mws.ps ptr.ps sv.ps
 sv_u.png: sv_u.epsx common.ps mws.ps rect.ps
 svhead.png: svhead.epsx common.ps mws.ps rect.ps
-sviv.png: sviv.epsx common.ps sv.ps rect.ps ptr.ps box.ps
-svnull.png: svnull.epsx common.ps mws.ps rect.ps
-svnv.png: svnv.epsx common.ps sv.ps rect.ps ptr.ps box.ps
-svpv.png: svpv.epsx common.ps sv.ps rect.ps ptr.ps box.ps str.ps break.ps
-svpvbm.png: svpvbm.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps magic.ps break.ps
-svpvfm.png: svpvfm.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps break.ps
-svpviv.png: svpviv.epsx common.ps sv.ps rect.ps ptr.ps box.ps str.ps break.ps
-svpvlv.png: svpvlv.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps magic.ps
-svpvmg.png: svpvmg.epsx common.ps sv.ps rect.ps ptr.ps box.ps mws.ps magic.ps chararray.ps
-svpvnv.png: svpvnv.epsx common.ps sv.ps rect.ps ptr.ps box.ps str.ps break.ps
-svrv.png: svrv.epsx common.ps sv.ps rect.ps ptr.ps box.ps
+svnull-8.png: svnull-8.epsx common.ps mws.ps rect.ps
+#svhead-8.png: svhead-8.epsx common.ps mws.ps rect.ps
+#svnull.png: svnull.epsx common.ps mws.ps rect.ps
+sviv-8.png: sviv-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps
+sviv-10.png: sviv-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps
+sviv-14.png: sviv-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps
+svnv-8.png: svnv-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps
+svnv-10.png: svnv-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps
+svnv-14.png: svnv-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps
+svpv-8.png: svpv-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps str.ps break.ps
+svpv-10.png: svpv-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps str.ps break.ps
+svpv-14.png: svpv-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps str-14.ps break.ps
+svpvbm-8.png: svpvbm-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps mws.ps magic.ps break.ps
+svpvbm-10.png: svpvbm-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps magic-10.ps break.ps
+svpvbm-14.png: svpvbm-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps magic-10.ps break.ps
+svpvfm-8.png: svpvfm-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps mws.ps break.ps
+svpvfm-10.png: svpvfm-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps break.ps
+svpvfm-14.png: svpvfm-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps break.ps
+svpviv-8.png: svpviv-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps str.ps break.ps
+svpviv-10.png: svpviv-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps str.ps break.ps
+svpviv-14.png: svpviv-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps str-14.ps break.ps
+svpvlv-8.png: svpvlv-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps mws.ps magic.ps
+svpvlv-10.png: svpvlv-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps magic-10.ps
+svpvlv-14.png: svpvlv-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps magic-10.ps
+svpvmg-8.png: svpvmg-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps mws.ps magic.ps chararray.ps
+svpvmg-10.png: svpvmg-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps magic-10.ps chararray.ps
+svpvmg-14.png: svpvmg-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps magic-10.ps chararray.ps
+svpvnv-8.png: svpvnv-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps str.ps break.ps
+svpvnv-10.png: svpvnv-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps str.ps break.ps
+svpvnv-14.png: svpvnv-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps str-14.ps break.ps
+svrv-8.png: svrv-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps
+svrv.png: svrv.epsx sv.ps common.ps rect.ps ptr.ps box.ps
+svtypes-8.png: svtypes-8.epsx common.ps arrow.ps
 svtypes.png: svtypes.epsx common.ps arrow.ps

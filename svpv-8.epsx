@@ -1,0 +1,32 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -5 250 225 310
+%%Creator: Gisle Aas (Copyright 1998)
+
+%require "common.ps"
+%require "sv.ps"
+%require "box.ps"
+%require "rect.ps"
+
+0 300 sv
+
+/Courier 8 SF
+40  302 M (sv) rshow
+105 302 M (xpv) rshow
+
+55 300 1 3 newbox
+55 300 3 box
+
+
+
+/Helvetica 11 SF
+60 303 15 sub M
+
+[(PVX) (CUR) (LEN)] {
+    gsave
+    show
+    grestore
+    0 -15 rmoveto
+} forall
+
+%include "str.ps"
+

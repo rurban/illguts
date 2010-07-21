@@ -1,0 +1,107 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: 56 74 196 217
+%%Creator: Gisle Aas (Copyright 1998)
+
+%require "common.ps"
+%require "box.ps"
+%require "rect.ps"
+%require "mws.ps"
+%require "ptr.ps"
+%require "sv.ps"
+
+/myhe {
+   1 dict begin
+     /strtab exch def
+     M
+     strtab { currentpoint 3 3 newbox } if
+     gsave currentpoint 3 box grestore
+     /Courier 8 SF
+     gsave 50 2 rmoveto (he) rshow grestore
+     5 -13 rmoveto
+     /Helvetica 11 SF
+     [(next) (hek) (val)]
+     strtab { dup 2 (refcnt) put } if
+     {
+       gsave
+       show
+       grestore
+       0 -15 rmoveto
+     } forall
+     strtab not {
+        -5 13 rmoveto
+        gsave
+        42.5 7.5 rmoveto
+        currentpoint 165 ptr1
+        grestore
+        gsave
+        65 10 rmoveto currentpoint translate 0.5 dup scale
+        0 0 sv
+        grestore
+     } if
+   end
+} def
+
+/myhek {
+   10 dict begin
+     /str exch def /y exch def  /x exch def
+     /len str length def
+     /cw 8 def           % hek char width
+     /x2 x 40 add len 1 add cw mul add def
+
+     0.8 setlinewidth
+     gsave 0.8 setgray x2 cw sub y 27 sub x2 y 15 sub rect fill grestore
+     x y 27 sub x2 y 15 sub rect stroke         % box
+     x 20 add dup y 27 sub M y 15 sub L stroke  % sep between HASH/LEN
+     x 40 add dup y 27 sub M y 15 sub L stroke  % sep between HASH/LEN
+
+     % sep between characters
+     gsave 0.3 setlinewidth
+     x 40 add cw x2 cw sub {
+         dup y 27 sub M
+         y 15 sub L stroke
+     } for
+     grestore
+
+     /Helvetica 8 SF
+     (hash) x 2 add y 25 sub 16 mws pop
+     x 30 add y 25 sub M (len) cshow
+     /Courier 6 SF
+     x 40 add cw 2 div add y 24 sub M
+     str {
+       gsave 1 string dup 3 2 roll 0 exch put cshow grestore
+       cw 0 rmoveto
+     } forall
+     (\\0) cshow
+
+     % anotate boxes
+     /Courier 10 SF
+     x2 y 13 sub M (hek) rshow
+
+   end
+} def
+
+0.7 dup scale
+
+100 300 false myhe
+100 230 true myhe
+100 160 false myhe
+
+180 230 (foobar) myhek
+
+% pointers
+142.5 207.5 180 207.5 ptrn
+142.5 277.5 200 277.5 200 240 180 240 180 216 ptrn
+142.5 137.5 180 137.5 180 202 ptrn
+
+/Helvetica 10 SF
+154 187 M (2) show
+
+gsave
+red
+/Courier-Bold 10 SF
+100 115 translate
+90 rotate
+22.5         6 M (%hash2) cshow
+22.5  70 add 6 M (strtab) cshow
+22.5 140 add 6 M (%hash1) cshow
+grestore

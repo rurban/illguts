@@ -1,0 +1,32 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -5 235 110 305
+%%Creator: Gisle Aas (Copyright 1998)
+
+%require "common.ps"
+%require "sv.ps"
+%require "box.ps"
+
+0 300 sv
+
+gsave
+  0.7 setgray
+  [3 2] 0 setdash
+  55 300 4 box
+grestore
+
+55 300 45 sub 1 box
+
+/Helvetica 11 SF
+60 303 15 sub M
+
+0.7 setgray
+[(PVX) (CUR) (LEN)] {
+    gsave
+    show
+    grestore
+    0 -15 rmoveto
+} forall
+0 setgray
+
+(IVX)show
+

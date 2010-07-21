@@ -1,3 +1,9 @@
+0.30 2010-07-21 rurban@cpan.org
+        * new 5.14 structs
+	* added old and new versions: -8, -10 and -14 suffices
+        * improved eps2png logic
+        * moved index.html to index-work.html, create index*.html by htmlprep.pl
+
 0.21 2010-03-30 rurban@cpan.org
         * index.html: C SvNULL typo.
         Added basic P5RX info.

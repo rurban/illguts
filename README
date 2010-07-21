@@ -3,10 +3,11 @@ PerlGuts Illustrated
 
 A collection of EPS illustrations that show the internal data
 structures used by Perl. This stuff should also be available from
-<URL:http://search.cpan.org/dist/illguts/>.
+<URL:http://search.cpan.org/dist/illguts/> as 
+combined and extra html, extra pdf and combined chm.
 
-Adapted to the big refactoring around perl 5.9.5.
+Adapted to the two big refactoring around perl 5.9.5 and 5.13.2
 
 -------------------------------------------------------------------
-Copyright 1998-1999 Gisle Aas.  All rights reserved.
-Copyright 2009 Reini Urban.  All rights reserved.
+Copyright 1998-1999 Gisle Aas.    All rights reserved.
+Copyright 2009,2010 Reini Urban.  All rights reserved.

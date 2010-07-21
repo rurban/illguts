@@ -1,0 +1,41 @@
+%require "common.ps"
+%require "rect.ps"
+%require "ptr.ps"
+
+/sv {
+   2 dict begin
+      /y exch def
+      /x exch def
+      x y sv2
+     %35 25 55 ptr1
+      x 35 add y 5 sub x 55 add ptr1
+   end
+} def
+
+/sv2 {                            % <x> <y> sv -
+   gsave
+      30 sub translate
+
+      % flags
+      0.5 setgray
+      0.1 LW
+      0 30 12 div 30 {
+         dup 10 M 6 L S
+      } for
+
+      paleblue  0 20 40 30 rect fill  % ANY background
+      palered  30  0 40 10 rect fill  % TYPE background
+
+      % box
+      0 setgray
+      0.8 LW
+      0 0 40 30 rect S
+
+      % separators
+      0.7 LW
+      0 10 M 40 10 L S
+      0 20 M 40 20 L S
+      30 0 M 30 10 L S
+
+     grestore
+} def

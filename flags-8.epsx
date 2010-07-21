@@ -1,0 +1,123 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -5 47 245 168
+%%Creator: Gisle Aas (Copyright 1998)
+
+%require "common.ps"
+%require "mws.ps"
+%require "rect.ps"
+
+
+/flags {
+   10 dict begin
+      /fl exch def
+      /y exch def
+      /x exch def
+      /w 10 def
+
+      gsave
+      x fl length w mul y translate
+      90 rotate
+
+      0 0 M
+      /Helvetica 8 SF
+      0.5 LW
+      /no 0 def
+      fl {
+         gsave
+            40 0 rlineto stroke
+         grestore
+         gsave
+            3 2 rmoveto currentpoint 34 mws pop
+         grestore
+         gsave            
+            42 w 2 div RM currentpoint translate -90 rotate
+            /Helvetica 5 SF
+            no 2 string cvs cshow
+         grestore
+         0 w rmoveto
+         /no no 1 add def
+      } forall
+
+      1 LW
+      0 0 40 fl length w mul rect S
+      grestore
+
+   end
+} def
+
+gsave
+  % some backgrounds
+  paleblue
+  % emphasis of the XOK flags
+  120 100 160 140 rect fill
+  50  100  80 140 rect fill
+
+  % MAGIC flags
+  yellow
+  160 100 190 140 rect fill
+grestore
+
+0 100 [
+  (PADBUSY)
+  (PADTMP)
+  (PADMY)
+  (TEMP)
+  (OBJECT)
+  (GMAGICAL)
+  (SMAGICAL)
+  (RMAGICAL)
+  (IOK)
+  (NOK)
+  (POK)
+  (ROK)
+  (FAKE)
+  (OOK)
+  (BREAK)
+  (READONLY)
+  (IOKp)
+  (NOKp)
+  (POKp)
+  (SCREAM)
+  (AMAGIC)
+  (SHAREKEYS)
+  (LAZYDEL/TAIL)
+  (VALID/COMPILED)
+] flags
+
+0.5 setlinewidth
+/Helvetica findfont 8 scalefont setfont
+red
+
+% Combined flags
+
+[55 65 75 125 135 145 155] {
+   dup 147 M 153 L
+} forall
+55 153 M 155 153 L
+105 153 M 105 158 L
+S
+gsave 0 setgray 105 159 M (OK) cshow grestore
+
+
+145 100 M 145 90 L 155 90 L 155 100 L  150 90 M 150 85 L stroke
+gsave 0 setgray 150 77 M (NIOK) cshow grestore
+
+85 100 M 85 90 L 125 90 L 125 100 L 105 90 M 105 85 L stroke
+gsave 0 setgray 105 77 M (THINKFIRST) cshow grestore
+
+165 100 M 165 90 L 185 90 L 185 100 L 175 100 M 175 85 L stroke
+gsave 0 setgray 165 77 M (MAGICAL) show grestore
+
+% PRIVSHIFT
+80 57 M 80 63 L
+80 60 M 160 60 L S
+160 60 M 155 58 L 155 62 L CP F
+
+gsave
+  paleblue
+  50  66  80 69 rect F
+  130 66 160 69 rect F
+grestore
+
+gsave 0 setgray 120 52 M (PRIVSHIFT) cshow grestore
+
