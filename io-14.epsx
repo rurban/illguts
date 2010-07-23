@@ -1,5 +1,5 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 5 110 310
+%%BoundingBox: -5 20 110 310
 %%Creator: Gisle Aas (Copyright 1998), Reini Urban (Copyright 2009, 2010)
 
 %require "common.ps"
@@ -16,15 +16,15 @@
 40  302 M (io) rshow
 105 302 M (xpvio) rshow
 
-55 300 5 19 newbox
-55 300 19 box
+55 300 5 18 newbox
+55 300 18 box
 % unused xnv_u + xiv_u
 % gsave 0.8 setgray 55 285 105 300 rect F grestore
 % gsave 0.8 setgray 55 240 105 255 rect F grestore
 
 /Helvetica 11 SF
 60 303 15 sub M
-[(STASH) (MAGIC) (cur) (len) (IFP) (OFP) (dirp_u) (LINES) (PAGE) (PAGE_LEN) (LINES_LEFT) (TOP_NAME) (TOP_GV) (FMT_NAME) (FMT_GV) (BOTTOM_NAME) (BOTTOM_GV) (IoTYPE) (IoFLAGS)] {
+[(STASH) (MAGIC) (cur) (len) (LINES) (OFP) (dirp_u) (PAGE) (PAGE_LEN) (LINES_LEFT) (TOP_NAME) (TOP_GV) (FMT_NAME) (FMT_GV) (BOTTOM_NAME) (BOTTOM_GV) (IoTYPE) (IoFLAGS)] {
     gsave
     currentpoint 30 mws pop
     grestore

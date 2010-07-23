@@ -1,3 +1,6 @@
+0.32 2010-07-22 rurban@cpan.org
+        * io-14: LINES as IVX, no IFP
+
 0.31 2010-07-21 rurban@cpan.org
         * av-14: fixed, removed # magic
 
