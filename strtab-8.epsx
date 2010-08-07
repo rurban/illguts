@@ -7,7 +7,7 @@
 %require "rect.ps"
 %require "mws.ps"
 %require "ptr.ps"
-%require "sv.ps"
+%require "sv-8.ps"
 
 /myhe {
    1 dict begin

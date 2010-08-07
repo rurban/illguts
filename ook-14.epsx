@@ -18,13 +18,12 @@
 /Courier-Bold 6 SF
 15 271 M (POK,OOK) cshow
 
-55 300 5 box
-55 300 5 5 newbox
+55 300 4 box
 
 /Helvetica 11 SF
 60 303 15 sub M
 
-[(STASH) (MAGIC) (cur) (len) (xiv_u)] {
+[(STASH) (MAGIC) (cur) (len)] {
     gsave
     show
     grestore
@@ -55,7 +54,7 @@ grestore
 220 302 M (char[]) rshow
 
 125 290 M
-[() () (c) (?) (x) (y) (z) (\\0)] {
+[(2) () (c) (?) (x) (y) (z) (\\0)] {
    gsave
      dup stringwidth pop 2 div neg 0 rmoveto show
    grestore
@@ -69,29 +68,26 @@ red
 
 % CUR length
 0.5 setlinewidth
-120 260 M 120 265 L
-120 262.5 M 190 262.5 L
+140 260 M 140 265 L
+140 262.5 M 190 262.5 L
 190 260 M 190 265 L
 stroke
-120 262.5 M 124 264 L 124 261 L closepath fill
+140 262.5 M 144 264 L 144 261 L closepath fill
 190 262.5 M 186 264 L 186 261 L closepath fill
 
 % LEN length
-120 250 M 120 245 L
-120 247.5 M 220 247.5 L
+140 250 M 140 245 L
+140 247.5 M 220 247.5 L
 220 250 M 220 245 L
 stroke
-120 247.5 M 124 249 L 124 244 L closepath fill
-220 247.5 M 216 249 L 216 244 L closepath fill
+140 247.5 M 144 249 L 144 246 L closepath fill
+220 247.5 M 216 249 L 216 246 L closepath fill
 
-% IVX/OOB length
+% OOK_offset
 0.5 setlinewidth
-120 230 M 120 235 L
-120 232.5 M 140 232.5 L
-140 230 M 140 235 L
+125 287.5 M 125 277.5 L 140 277.5 L
 stroke
-120 232.5 M 124 234 L 124 231 L closepath fill
-140 232.5 M 136 234 L 136 231 L closepath fill
+140 277.5 M 136 279 L 136 276 L closepath fill
 
 grestore
 

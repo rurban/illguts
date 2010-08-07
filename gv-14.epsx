@@ -1,5 +1,5 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 40 190 315
+%%BoundingBox: -5 130 270 315
 %%Creator: Gisle Aas (Copyright 1998), Reini Urban (Copyright 2009)
 %%         Reini Urban (Copyright 2010) 
 
@@ -10,12 +10,13 @@
 %require "ptr.ps"
 %require "mws.ps"
 %require "gp.ps"
-%require "chararray.ps"
+%require "he.ps"
 
 0 300 sv
 /Helvetica-Bold 9 SF
 20 262 M (svu_gp) cshow
-42 265 47 265 47 312 112 312 112 292.5 130 292.5 ptrn
+%42 265 47 265 47 312 112 312 112 292.5 130 292.5 ptrn
+42 265 47 265 47 312 198 312 198 292.5 210 292.5 ptrn
 
 /Courier 8 SF
 40  302 M (gv) rshow
@@ -25,15 +26,16 @@
 % gsave 0.8 setgray 55 240 105 255 rect F grestore
 % 55 300 8 12 newbox
 % gsave 1 setgray 70 120 105 135 rect F grestore
-55 300 5 6 newbox
-55 300 6 box
+/gvx 55 def
+gvx 300 5 6 newbox
+gvx 300 6 box
 % 55 120 70 135 rect S 
 
 /Helvetica 11 SF
-60 303 15 sub M
+gvx 5 add 303 15 sub M
 [(STASH) (MAGIC) (GvFLAGS) (ASSIGN_GEN) (NAME_HEK) (GvSTASH)] {
     gsave
-    currentpoint 30 mws pop
+    currentpoint 40 mws pop
     grestore
     0 -15 rmoveto
 } forall
@@ -41,14 +43,17 @@
 
 % The GP struct
 % 97.5 187.5 117.5 187.5 117.5 292.5 130 292.5 ptrn
-130 300 gp
+% x + 80
+210 300 gp
 
 % NAME
-97.5 172.5 75 add 120 172.5 75 add 120 110 130 110 ptrn
-130 115 [(f)(o)(o)(b)(a)(r)(\\0)] chararray
+/ny 172.5 75 add def
+gvx 50 add ny 130 ny ptrn
+130 ny 5 add (pv) hek
 
 % GvSTASH
 /Courier 8 SF
-170 77 15 add M (hv) rshow
-97.5 142.5 75 add 112 142.5 75 add 112 85 130 85 ptrn
-130 90 sv2
+/hvy 142.5 75 add def 
+170 hvy 7 add M (hv) rshow
+gvx 50 add hvy 130 hvy ptrn
+130 hvy 5 add sv2

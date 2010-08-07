@@ -22,7 +22,7 @@ function Toggle(id) {
 <body bgcolor="#FFFFFF" text="#000000" link="#000055" vlink="#550000" alink="#000000" topmargin="0">
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.32, for perl 5.14 and older</small></h1>
+<small>Version 0.33, for perl 5.14 and older</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl.  It contains commented illustrations of all
@@ -30,11 +30,12 @@ major internal Perl data structures.
 Having this document handy hopefully makes reading the Perl source code easier.
 It might also help you interpret the <i><a href="http://perldoc.perl.org/Devel/Peek.html">Devel::Peek</a></i> dumps.
 
-<p>Most of the internal perl structures had been refactored twice, with 5.10, and 5.14. The comparison links and illustrations for 5.8, 5.10 and 5.14 are now included in this single document, but also available as extra files:
+<p>Most of the internal perl structures had been refactored twice, with 5.10, and 5.14. The comparison links and illustrations for 5.8, 5.10 and 5.14 are now included in this single document, but also available as extra files. 5.10 to 5.12 changes: only ook.
 
 <ul>
 <li><a href="index-8.html">illguts for 5.8 and older</a>
-<li><a href="index-10.html">illguts for 5.10 to 5.12</a>
+<li><a href="index-10.html">illguts for 5.10</a>
+<li><a href="index-12.html">illguts for 5.12</a>
 <li><a href="index-14.html">illguts for 5.14</a>
 </ul>
 
@@ -307,8 +308,8 @@ of pointers just to find that the information is not there.
 
   <dt> 0x02000000 <b><a name="SVf_OOK">SVf_OOK</a></b>  (Offset OK)
         <dd> For a PVHV this means that a hv_aux struct is present after the main array.
-          This flag indicates that the IVX value is to be interpreted as
-          a string offset.  This flag can only be set for value type SvPVIV
+          This flag indicates that the string has an offset at the beginning. 
+          This flag can only be set for value type SvPVIV
           or subtypes of it. It also follows that the IOK (and IOKp) flag must
           be off when OOK is on. Take a look at the <a href="#SvOOK"><i>SvOOK</i></a> figure
           below.
@@ -426,10 +427,10 @@ The corresponding flag is called NOK.
 <h2><a name="SvOOK">SvOOK</a></h2>
 
 As a special hack, in order to improve the speed of removing characters
-from the beginning of a string, the <a href="#SVf_OOK"><i>OOK flag</i></a> is used. 
-When this flag is on, then the IVX value is not interpreted as an integer value, but
-is instead used as an <i>offset</i> into the string.  The PVX, CUR,
-LEN is adjusted to point within the allocated string instead.
+from the beginning of a string, the <a href="#SVf_OOK"><i>OOK flag</i></a> is used.
+<i>SvOOK_offset</i> used to be stored in SvIVX, but is since 5.12 
+stored within the first 8 bit (one char) of the buffer.
+The PVX, CUR, LEN is adjusted to point within the allocated string instead.
 
 <p><center><img src="ook.png"></center>
 

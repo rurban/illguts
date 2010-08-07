@@ -24,7 +24,7 @@
 
 [(STASH) (MAGIC) (CUR) (LEN) (CvSTASH) (start_u) (root_u) (GV) (FILE) (PADLIST) (OUTSIDE) (OUTSIDE_SEQ) (FLAGS) (DEPTH)] {
     gsave
-    currentpoint 30 mws pop
+    currentpoint 40 mws pop
     grestore
     0 -15 rmoveto
 } forall

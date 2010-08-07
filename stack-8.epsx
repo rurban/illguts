@@ -81,7 +81,7 @@ grestore
 170 162.5 break
 
 
-%require "sv.ps"
+%require "sv-8.ps"
 %require "box.ps"
 %require "mws.ps"
 gsave 40 285 translate 0.5 dup scale
@@ -115,7 +115,7 @@ grestore
 125 155 125 170 140 170 140 202 ptrn
 
 % draw some SVs pointed to by the stack
-%require "sv.ps"
+%require "sv-8.ps"
 
 2 dict begin
   /x 115 def

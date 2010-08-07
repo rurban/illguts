@@ -3,7 +3,7 @@
 %%Creator: Gisle Aas (Copyright 1998)
 
 %require "common.ps"
-%require "sv.ps"
+%require "sv-8.ps"
 %require "box.ps"
 %require "rect.ps"
 

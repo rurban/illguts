@@ -1,9 +1,9 @@
 %!PS-Adobe-2.0 EPSF-1.2
 %%BoundingBox: -5 235 225 315
-%%Creator: Gisle Aas (Copyright 1998)
+%%Creator: Gisle Aas (Copyright 1998), Reini Urban (Copyright 2009, 2010)
 
 %require "common.ps"
-%require "sv-8.ps"
+%require "sv.ps"
 %require "box.ps"
 %require "rect.ps"
 %require "ptr.ps"
@@ -16,14 +16,15 @@
 105 302 M (xpviv) rshow
 
 /Courier-Bold 6 SF
-15 264 M (POK,OOK) cshow
+15 271 M (POK,OOK) cshow
 
-55 300 4 box
+55 300 3 box
+% gsave 0.8 setgray 55 285 105 300 rect F grestore
 
 /Helvetica 11 SF
 60 303 15 sub M
 
-[(PVX) (CUR) (LEN) (IVX)] {
+[(xnv_u) (cur) (len)] {
     gsave
     show
     grestore
@@ -31,11 +32,15 @@
 } forall
 
 % arrow from PVX
-%newpath 97.5 292.5 2 0 360 arc fill
-%97.5 292.5 M 113 292.5 L stroke
-%113 290 M 120 292.5 L 113 295 L closepath fill
+% newpath 97.5 292.5 2 0 360 arc fill
+% 97.5 292.5 M 113 292.5 L stroke
+% 113 290 M 120 292.5 L 113 295 L closepath fill
 
-97.5 292.5 110 292.5 110 310 140 310 140 300 ptrn
+% arrow from sv_u.pvx
+/Helvetica-Bold 9 SF
+5 262 M (svu_pv) show
+42 265 47 265 47 310 140 310 140 300 ptrn
+% 97.5 292.5 110 292.5 110 310 140 310 140 300 ptrn
 
 % char* box
 gsave
@@ -55,7 +60,7 @@ grestore
 220 302 M (char[]) rshow
 
 125 290 M
-[() () (c) (?) (x) (y) (z) (\\0)] {
+[(2) () (c) (?) (x) (y) (z) (\\0)] {
    gsave
      dup stringwidth pop 2 div neg 0 rmoveto show
    grestore
@@ -84,14 +89,11 @@ stroke
 140 262.5 M 144 264 L 144 261 L closepath fill
 220 262.5 M 216 264 L 216 261 L closepath fill
 
-% IVX/OOB length
+% OOK_offset
 0.5 setlinewidth
-120 245 M 120 250 L
-120 247.5 M 140 247.5 L
-140 245 M 140 250 L
+125 287.5 M 125 277.5 L 140 277.5 L
 stroke
-120 247.5 M 124 249 L 124 246 L closepath fill
-140 247.5 M 136 249 L 136 246 L closepath fill
+140 277.5 M 136 279 L 136 276 L closepath fill
 
 grestore
 

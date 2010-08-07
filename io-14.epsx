@@ -26,7 +26,7 @@
 60 303 15 sub M
 [(STASH) (MAGIC) (cur) (len) (LINES) (OFP) (dirp_u) (PAGE) (PAGE_LEN) (LINES_LEFT) (TOP_NAME) (TOP_GV) (FMT_NAME) (FMT_GV) (BOTTOM_NAME) (BOTTOM_GV) (IoTYPE) (IoFLAGS)] {
     gsave
-    currentpoint 30 mws pop
+    currentpoint 40 mws pop
     grestore
     0 -15 rmoveto
 } forall

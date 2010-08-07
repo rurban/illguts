@@ -9,7 +9,6 @@
 %require "ptr.ps"
 %require "mws.ps"
 %require "magic-10.ps"
-%require "chararray.ps"
 
 0 300 sv
 

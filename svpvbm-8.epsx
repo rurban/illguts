@@ -3,7 +3,7 @@
 %%Creator: Gisle Aas (Copyright 1998)
 
 %require "common.ps"
-%require "sv.ps"
+%require "sv-8.ps"
 %require "box.ps"
 %require "rect.ps"
 %require "ptr.ps"
@@ -27,15 +27,15 @@
 /Helvetica 11 SF
 60 303 15 sub M
 
-[(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (BmUSEFUL) (BmPREVIOUS) (BmRARE)] {
+[(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (USEFUL) (PREVIOUS) (RARE)] {
     gsave
-    currentpoint 30 mws pop
+    currentpoint 40 mws pop
     grestore
     0 -15 rmoveto
 } forall
 
 % arrow from PVX
-97.5 292.5 120 ptr1
+105 292.5 120 ptr1
 
 % char* box
 gsave
@@ -91,6 +91,6 @@ stroke
 grestore
 
 % Magic
-97.5 217.5 120 ptr1
+105 217.5 120 ptr1
 120 225 ('B') smagic
 185 210 [() () () (&magic_setbm) ()] mgvtbl

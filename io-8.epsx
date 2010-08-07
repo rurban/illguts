@@ -3,7 +3,7 @@
 %%Creator: Gisle Aas (Copyright 1998)
 
 %require "common.ps"
-%require "sv.ps"
+%require "sv-8.ps"
 %require "box.ps"
 %require "rect.ps"
 %require "ptr.ps"
@@ -24,7 +24,7 @@
 
 [(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (IFP) (OFP) (DIRP) (LINES) (PAGE) (PAGE_LEN) (LINES_LEFT) (TOP_NAME) (TOP_GV) (FMT_NAME) (FMT_GV) (BOTTOM_NAME) (BOTTOM_GV)] {
     gsave
-    currentpoint 30 mws pop
+    currentpoint 40 mws pop
     grestore
     0 -15 rmoveto
 } forall

@@ -78,7 +78,7 @@ grestore
 280 303 15 sub M
 [(NAME)(BACKREFS)(EITER)(RITER)(MROMETA)] {
     gsave
-    currentpoint 30 mws pop
+    currentpoint 40 mws pop
     grestore
     0 -15 RM
 } forall

@@ -3,7 +3,7 @@
 %%Creator: Gisle Aas (Copyright 1998)
 
 %require "common.ps"
-%require "sv.ps"
+%require "sv-8.ps"
 %require "box.ps"
 %require "rect.ps"
 %require "ptr.ps"
@@ -24,16 +24,16 @@
 
 [(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (TARGOFF) (TARGLEN) (TARG) (TYPE)] {
     gsave
-    currentpoint 30 mws pop
+    currentpoint 40 mws pop
     grestore
     0 -15 rmoveto
 } forall
 
-97.5 157.5 130 ptr1
+105 157.5 130 ptr1
 130 165 sv
 
 
-97.5 217.5 130 245 ptrn
+105 217.5 130 245 ptrn
 
 gsave
 130 250 translate 0.7 dup scale

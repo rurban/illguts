@@ -3,7 +3,7 @@
 %%Creator: Gisle Aas (Copyright 1998)
 
 %require "common.ps"
-%require "sv.ps"
+%require "sv-8.ps"
 %require "box.ps"
 %require "rect.ps"
 %require "mws.ps"
@@ -26,7 +26,7 @@ grestore
 55 300 9 box
 
 % flags box
-55 150 55 18 add 165 rect
+55 150 55 25 add 165 rect
 gsave yellow F grestore
 stroke
 
@@ -41,7 +41,7 @@ stroke
     0 -15 RM
 } forall
 
--3 0 RM (FLAGS) currentpoint 14 mws pop
+-3 0 RM (FLAGS) currentpoint 20 mws pop
 
 %97.5 217.5 130 ptr1 % MAGIC
 %97.5 202.5 130 ptr1 % STASH
