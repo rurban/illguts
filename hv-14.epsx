@@ -76,7 +76,7 @@ grestore
 
 /Helvetica 11 SF
 280 303 15 sub M
-[(NAME)(BACKREFS)(EITER)(RITER)(MROMETA)] {
+[(NAME)(BACKREFS)(EITER)(RITER)(name_count)(MROMETA)] {
     gsave
     currentpoint 40 mws pop
     grestore

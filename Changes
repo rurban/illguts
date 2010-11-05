@@ -1,3 +1,6 @@
+0.34 2010-11-05 rurban@cpan.org
+        * hv-14: add name_count
+
 0.33 2010-08-03 rurban@cpan.org
         enhanced the width of sv/xpv strings
 
