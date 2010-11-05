@@ -1,5 +1,5 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 90 342 315
+%%BoundingBox: -5 75 342 315
 %%Creator: Gisle Aas (Copyright 1998), Reini Urban (Copyright 2009, 2010)
 
 %require "common.ps"
@@ -23,7 +23,7 @@
 105 302 M (xpvhv) rshow
 
 % gsave 0.8 setgray 55 285 105 300 rect F grestore
-% 55 300 2 4 newbox
+55 300 3 4 newbox
 55 300 4 box
 
 /Helvetica 11 SF
@@ -70,8 +70,8 @@ grestore
 % HvAUX at HE* max+1
 % (RITER)(EITER)(PMROOT)(NAME)
 % xpvhv_aux box
-275 300 1 5 newbox
-275 300 5 box
+275 300 1 6 newbox
+275 300 6 box
 325 302 M (xpvhv_aux) rshow
 
 /Helvetica 11 SF
@@ -82,26 +82,26 @@ grestore
     grestore
     0 -15 RM
 } forall
-% Pointer to aux
+% Pointer from HE max+1 to aux
 245 292.5 275 292.5 ptrn
 
 gsave 0.3 setgray [4 3] 2 setdash
-  325 262.5 340 262.5 340 92
-  115 92 115 245 130 245 ptrn  % EITER
+  325 262.5 340 262.5 340 77
+  115 77 115 230 130 230 ptrn  % EITER
 grestore
 
-325 292.5 330 292.5 330 210 277 210 277 200 ptrn % NAME
+325 292.5 332 292.5 332 195 277 195 277 185 ptrn % NAME
 % NAME string
 gsave
-   275 200 translate 0.8 dup scale
+   275 185 translate 0.8 dup scale
    0 0 [(F)(o)(o)(:)(:)(B)(a)(r)(\\0)] chararray
 grestore
 
 % Pointer to first HE column
-145 292.5 145 250 ptrn
+145 292.5 145 235 ptrn
 
 gsave
-  130 250 translate
+  130 235 translate
   0.7 dup scale
 
   0 0 (abc) true he
@@ -124,27 +124,23 @@ gsave
 
 % white background for the red arrow
 1 setgray
-130 276 230 279 rect fill  %FILL
-130 261 240 264 rect fill  %MAX
+130 261 230 264 rect fill  %FILL
+130 246 240 249 rect fill  %MAX
 
 red
 0.5 setlinewidth
 
 % FILL stuff
-140 275 M 140 280 L
-140 277.5 M 150 277.5 L
-150 275 M 150 280 L
-
-%220 275 M 220 280 L
-%220 277.5 M 230 277.5 L
-%230 275 M 230 280 L
+%140 260 M 140 265 L
+%140 262.5 M 150 262.5 L
+%150 265 M 150 265 L
 
 % MAX length
-130 265 M 130 260 L
-130 262.5 M 240 262.5 L
-240 265 M 240 260 L
+130 250 M 130 245 L
+130 247.5 M 240 247.5 L
+240 250 M 240 245 L
 stroke
-240 262.5 M 236 264 L 236 261 L closepath fill
+240 247.5 M 236 249 L 236 246 L closepath fill
 %130 262.5 M 134 264 L 134 261 L closepath fill
 grestore
 
