@@ -2,6 +2,8 @@
 use strict;
 # split into version specific parts, and create expandable images for older versions
 open I, "<", "index-work.html" or die;
+my @HTML = qw(index.html index-8.html index-10.html index-12.html index-14.html);
+chmod 0644, @HTML;
 open O, ">", "index.html" or die;
 open O8, ">", "index-8.html" or die;
 open O10, ">", "index-10.html" or die;
@@ -36,6 +38,9 @@ while (<I>) {
     $s =~ s/for perl 5.12/for perl 5.14/;
     print O14 $s;
     next;
+  }
+  if (m|<title>PerlGuts Illustrated</title>|) {
+    s|<title>PerlGuts Illustrated</title>|<title>PerlGuts Illustrated</title>\n<!-- Generated, do not edit! Edit index-work.html instead -->|;
   }
   if (m/ are now included in this single document, but also available/) {
     print O;
@@ -100,3 +105,4 @@ while (<I>) {
   print O;
 }
 close I;
+chmod 0444, @HTML;

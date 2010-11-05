@@ -1,5 +1,10 @@
-0.34 2010-11-05 rurban@cpan.org
+0.35 2010-11-05 rurban@cpan.org
         * hv-14: add name_count
+
+0.34 2010-09-11 rurban@cpan.org
+        * svpvfm-14: do not crop LINES
+	* added he-8.ps
+	* mark index*.html files as read-only, generated.
 
 0.33 2010-08-03 rurban@cpan.org
         enhanced the width of sv/xpv strings
