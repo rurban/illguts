@@ -1,6 +1,6 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 -5 110 310
-%%Creator: Gisle Aas (Copyright 1998)
+%%BoundingBox: -5 -20 400 310
+%%Creator: Gisle Aas (Copyright 1998), Reini Urban (Copyright 2011)
 
 %require "common.ps"
 %require "sv-8.ps"
@@ -16,15 +16,31 @@
 40  302 M (cv) rshow
 105 302 M (xpvcv) rshow
 
-55 300 8 20 newbox
-55 300 20 box
+55 300 8 21 newbox
+55 300 21 box
+gsave 0.7 setgray 55 30 105 45 rect F grestore
+gsave 0.7 setgray 55 15 105 30 rect F grestore
 
 /Helvetica 11 SF
 60 303 15 sub M
 
-[(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (CvSTASH) (START) (ROOT) (XSUB) (XSUBANY) (GV) (FILEGV) (DEPTH) (PADLIST) (OUTSIDE) (MUTEXP) (OWNER) (FLAGS)] {
+[(PVX) (CUR) (LEN) (IVX) (NVX) (MAGIC) (STASH) (CvSTASH) (START) (ROOT) (XSUB) (XSUBANY) (GV) (FILEGV) (DEPTH) (PADLIST) (OUTSIDE) (MUTEXP) (OWNER) (CvFLAGS) (OUTSIDE_SEQ)] {
     gsave
     currentpoint 40 mws pop
     grestore
     0 -15 rmoveto
 } forall
+
+% PADLIST
+105 127.5 60 sub 135 202.5 115 sub ptrn
+% DEPTH (no room)
+/Courier 8 SF
+% /y -3 15 mul 127.5 add def
+% 115 y 16 add M (depth=0) show
+%105 y 120 y 120 202.5 15 sub 135 202.5 15 sub ptrn
+
+% unused 2 5005 threads fields: MUTEXP OWNER
+115 30 M (5005 threads) show
+
+80 -155 translate
+%include "pad.ps"

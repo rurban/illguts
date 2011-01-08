@@ -1,5 +1,6 @@
 0.37 2011-xx-xx rurban@cpan.org
         * index: REGEXP use just newSVpv
+        * cv-8: add PADLIST
 
 0.36 2011-01-08 rurban@cpan.org
         * index: REGEXP re_dup does regexp cloning
