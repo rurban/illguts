@@ -590,7 +590,7 @@ Nobody so far did a successful freeze/thaw of those internal structures,
 but we have Abhijit's <code>re_dup()</code> to clone a regexp, 
 and we can simply recompile along
 <pre>
-  PM_SETRE(&pm, CALLREGCOMP(newSVpvn($restring, $relen), $op->pmflags));
+  PM_SETRE(&pm, CALLREGCOMP(newSVpv($restring), $op->pmflags));
   RX_EXTFLAGS(PM_GETRE(&pm)) = $op->reflags;
 </pre>
 <br>
