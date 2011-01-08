@@ -22,7 +22,7 @@ function Toggle(id) {
 <body bgcolor="#FFFFFF" text="#000000" link="#000055" vlink="#550000" alink="#000000" topmargin="0">
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.35, for perl 5.14 and older</small></h1>
+<small>Version 0.36, for perl 5.14 and older</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl.  It contains commented illustrations of all
@@ -570,7 +570,7 @@ at the end of the string (or before newline at the end of the string).
 
 <h2><a name="p5rx">REGEXP (P5RX)</a></h2>
 
-<p>The structures behind the P5RX, the struct regexp, store the compiled and
+<p>The structures behind the P5RX, the <i>struct regexp</i>, store the compiled and
 optimized state of a perl regular expression. Internally the new attached struct
 regexp is called <i>ORANGE</i> (since 5.10). New here is support for pluggable
 regex engines - the original engine was <a
@@ -578,21 +578,23 @@ href="http://swtch.com/~rsc/regexp/regexp1.html">critized</a> <i>("Thompson NFA
 for abnormal expressions would be linear, but does not support backtracking")</i>, 
 non-recursive execution, and faster trie-structures for alternations.</p>
 
-<p>The struct regexp contains the compiled bytecode of the expression,
+<p>The <i>struct regexp</i> contains the compiled bytecode of the expression,
 some meta-information about the regex, 
 such as the used engine, the precomp and the number of pairs of backreference parentheses.
-reg_data contains code and pad pointers for EXEC items in the bytecode.</p>
+<i>reg_data</i> contains code and pad pointers for EXEC items in the bytecode.</p>
 
-<i>basic graph todo</i><p>
+<p align="center"><img src="mjd-regexp.gif"><br>
+<i>Marc Jason Dominus - http://perl.plover.com/Rx/paper/</i></p>
 
-Nobody so far did a successful freeze/thaw or clone of those internal structures.
-A simple recompilation along 
+Nobody so far did a successful freeze/thaw of those internal structures, 
+but we have Abhijit's <code>re_dup()</code> to clone a regexp, 
+and we can simply recompile along
 <pre>
   PM_SETRE(&pm, CALLREGCOMP(newSVpvn($restring, $relen), $op->pmflags));
   RX_EXTFLAGS(PM_GETRE(&pm)) = $op->reflags;
 </pre>
-is easier and sufficient.<br>
-However, Marc-Jason Dominus implemented a debugger for the 
+<br>
+Marc-Jason Dominus implemented a debugger for the 
 compiled Rx bytecode <a href="http://perl.plover.com/Rx/paper/">http://perl.plover.com/Rx/paper/</a>.<p>
 
 See <b>perlreguts</b> for some details.

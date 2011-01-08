@@ -1,3 +1,7 @@
+0.36 2011-01-08 rurban@cpan.org
+        * index: REGEXP re_dup does regexp cloning
+        add mjd gif from http://perl.plover.com/Rx/paper/
+
 0.35 2010-11-05 rurban@cpan.org
         * hv-14: add name_count, remove FILL ptr
 
