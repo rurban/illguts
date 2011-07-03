@@ -1,4 +1,4 @@
-#!perl -w
+#!/usr/bin/perl -w
 use strict;
 # split into version specific parts, and create expandable images for older versions
 open I, "<", "index-work.html" or die;
