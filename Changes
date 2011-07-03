@@ -1,6 +1,9 @@
-0.37 2011-xx-xx rurban@cpan.org
+0.37 2011-07-03 rurban@cpan.org
         * index: REGEXP use just newSVpv
+        * he.ps: yellow key in hek
         * cv-8: add PADLIST
+	* hv-typed.ps, he-typed.ps, sviv-new.epsx, av-typed.epsx: 
+	  added but yet unused
 
 0.36 2011-01-08 rurban@cpan.org
         * index: REGEXP re_dup does regexp cloning
