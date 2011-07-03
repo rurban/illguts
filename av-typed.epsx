@@ -1,0 +1,103 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -5 195 255 318
+%%Creator: Reini Urban (Copyright 2009, 2011)
+
+%require "common.ps"
+%require "sv.ps"
+%require "box.ps"
+%require "rect.ps"
+%require "mws.ps"
+%require "ptr.ps"
+%require "break.ps"
+
+0 300 sv
+
+/Courier 8 SF
+40  302 M (av) rshow
+105 302 M (xpvav) rshow
+% 170 179.5 25 add M (sv) rshow
+% /Helvetica 7 SF ( (with '#' magic)) show
+
+55 300 5 box
+
+% flags box
+% 55 165 55 18 add 180 rect
+% gsave yellow F grestore
+% stroke
+
+/Helvetica 11 SF
+60 303 15 sub M
+% ARYLEN = MAGIC
+[(STASH) (MAGIC) (FILL) (MAX) (ALLOC)] {
+    gsave
+    currentpoint 30 mws pop
+    grestore
+    0 -15 RM
+} forall
+
+% -3 0 RM (FLAGS) currentpoint 14 mws pop
+
+%97.5 217.5 130 ptr1 % MAGIC
+%97.5 202.5 130 ptr1 % STASH
+
+% MAGIC/ARYLEN
+% 97.5 247 15 sub 130 192.5 15 add ptrn
+% 130 177.5 25 add sv2
+
+% ARRAY
+% arrow from sv_u.pvx
+/Helvetica-Bold 9 SF
+4 262 M (ARRAY) show
+42 265 46.5 265 46.5 312 140 312 160 240 ptrn
+
+% ALLOC
+97.5 232 130 232 ptrn
+
+% SV*[] box
+gsave
+   0.8 setgray
+   130 225 160 240 rect fill
+   230 225 250 240 rect fill
+grestore
+
+0.5 setlinewidth
+140 10 225 {
+   dup 225 M 240 L stroke
+} for
+1 setlinewidth
+130 225 250 240 rect stroke
+
+% /Helvetica-Bold 9 SF
+% /Courier findfont 8 scalefont setfont
+2   272 M (AvTYPED) show
+130 242 M (int[]) show
+
+192 240 break
+
+gsave
+
+red
+% FILL length
+0.5 setlinewidth
+160 275 15 sub M 160 280 15 sub L
+160 277.5 15 sub M 220 277.5 15 sub L
+220 275 15 sub M 220 280 15 sub L
+stroke
+220 277.5 15 sub M 216 279 15 sub L 216 276 15 sub L closepath fill
+
+% MAX length
+160 265 15 sub M 160 260 15 sub L
+160 262.5 15 sub M 240 262.5 15 sub L
+240 265 15 sub M 240 260 15 sub L
+stroke
+240 262.5 15 sub M 236 264 15 sub L 236 261 15 sub L closepath fill
+grestore
+
+% 1 dict begin
+% /y 210 def
+% [165 175 185 205 215 225]
+% {
+%    gsave dup 3 sub y translate 0.20 dup scale 0 0 sv2 grestore
+%    dup y 22.5 add 3 2 roll y ptrn
+% } forall
+% end

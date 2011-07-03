@@ -26,7 +26,8 @@
         * ook-12: added
         * ook-14: fixed offset, cur and len
         * io-8, hv-8: svpv-8, svpvmg-8, stack-8, strtab-8, sviv-8, svnv-8, svpvbm-8,
-          svpviv-8, svpvlv-8, svpvnv-8, svpvrv-8, av-8, cv-8, gv-8: use sv-8.ps not sv.ps
+          svpviv-8, svpvlv-8, svpvnv-8, svpvrv-8, av-8, cv-8, gv-8: use sv-8.ps 
+	  not sv.ps
         * scope-8, stack-8, he-8.ps: added
         * index-12.html: added for ook only
         * htmlprep.pl: add index-12.html for ook only
