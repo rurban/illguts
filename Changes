@@ -1,3 +1,8 @@
+0.38 2011-07-xx rurban@cpan.org
+        * index: SvTYPE versions, lexical access
+        * epsx2png: added
+        * sviv-new.epsx: renamed to iv-typed.epsx
+
 0.37 2011-07-03 rurban@cpan.org
         * index: REGEXP use just newSVpv
         * he.ps: yellow key in hek

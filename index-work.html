@@ -65,28 +65,27 @@ this can only work reliably for some comparisons.  All Perl data value
 objects are tagged with their type, so you can always ask an object
 what its type is and act according to this information.
 
-<p>The symbolic <b>SvTYPE</b> names (and associated value) are:
+<p>The symbolic <b>SvTYPE</b> names (and associated value) are with <a name="SvTYPE">5.14</a>:
 
-<blockquote><dl>
-	<dt>0) <b>SVt_NULL</b>
-	<dt>1) <b>SVt_BIND</b>
-	<dt>2) <b>SVt_IV</b>
-	<dt>3) <b>SVt_NV</b>
-	<dt>4) <b>SVt_PV</b>
-	<dt>5) <b>SVt_PVIV</b>
-	<dt>6) <b>SVt_PVNV</b>
-	<dt>7) <b>SVt_PVMG</b>
-	<dt>8) <b>SVt_PVREGEXP</b> (P5RX)
-	<dt>9) <b>SVt_PVGV</b>
-	<dt>10) <b>SVt_PVLV</b>
-	<dt>11) <b>SVt_PVAV</b>
-	<dt>12) <b>SVt_PVHV</b>
-	<dt>13) <b>SVt_PVCV</b>
-	<dt>14) <b>SVt_PVFM</b>
-	<dt>15) <b>SVt_PVIO</b>
-</dl></blockquote>
-
-
+<table>
+  <tr><th>svtype</th>   <th>5.14</th>            <th>5.10</th>     <th>5.6 + 5.8</th></tr>
+  <tr><td><b>0</b></td> <td><b>SVt_NULL</b></td> <td>SVt_NULL</td> <td>SVt_NULL</td></tr>
+  <tr><td><b>1</b></td> <td><b>SVt_BIND</b></td> <td>SVt_BIND</td> <td>SVt_IV</td>  </tr>
+  <tr><td><b>2</b></td> <td><b>SVt_IV</b></td>   <td>SVt_IV</td>   <td>SVt_NV</td>  </tr>
+  <tr><td><b>3</b></td> <td><b>SVt_NV</b></td>   <td>SVt_NV</td>   <td>SVt_RV</td>  </tr>
+  <tr><td><b>4</b></td> <td><b>SVt_PV</b></td>   <td>SVt_RV</td>   <td>SVt_PV</td>  </tr>
+  <tr><td><b>5</b></td> <td><b>SVt_PVIV</b></td> <td>SVt_PV</td>   <td>SVt_PVIV</td> </tr>
+  <tr><td><b>6</b></td> <td><b>SVt_PVNV</b></td> <td>SVt_PVIV</td> <td>SVt_PVNV</td> </tr>
+  <tr><td><b>7</b></td> <td><b>SVt_PVMG</b></td> <td>SVt_PVNV</td> <td>SVt_PVMG</td> </tr>
+  <tr><td><b>8</b></td> <td><b>SVt_REGEXP</b></td><td>SVt_PVMG</td><td>SVt_PVBM</td> </tr>
+  <tr><td><b>9</b></td> <td><b>SVt_PVGV</b></td>  <td>SVt_PVGV</td><td>SVt_PVLV</td> </tr>
+  <tr><td><b>10</b></td><td><b>SVt_PVLV</b></td> <td>SVt_PVLV</td> <td>SVt_PVAV</td> </tr>
+  <tr><td><b>11</b></td><td><b>SVt_PVAV</b></td> <td>SVt_PVAV</td> <td>SVt_PVHV</td> </tr>
+  <tr><td><b>12</b></td><td><b>SVt_PVHV</b></td> <td>SVt_PVHV</td> <td>SVt_PVCV</td> </tr>
+  <tr><td><b>13</b></td><td><b>SVt_PVCV</b></td> <td>SVt_PVCV</td> <td>SVt_PVGV</td> </tr>
+  <tr><td><b>14</b></td><td><b>SVt_PVFM</b></td> <td>SVt_PVFM</td> <td>SVt_PVFM</td> </tr>
+  <tr><td><b>15</b></td><td><b>SVt_PVIO</b></td> <td>SVt_PVIO</td> <td>SVt_PVIO</td> </tr>
+</table>
 
 <p>In addition to the simple type names already mentioned, the
 following names are found in the hierarchy figure: An <i>PVIV</i> value can
@@ -101,8 +100,9 @@ function/subroutine/closure or contains a pointer to an XSUB.
 files and directories and various state information about these.  The
 <i>PVFM</i> is used to hold information on forms.
 <i>P5RX</i> was formerly called <i>PVBM</i> for Boyer-Moore 
-(match information), but contains now more information. Internally it is called <i>ORANGE</i>.
-<i>BIND</i> is a placeholder for aliases, and implemented as <i>RV</i> for now. (#29544, #29642)
+(match information), but contains now more information.
+<i>BIND</i> is a placeholder for read-only aliases or VIEW, 
+and implemented as <i>RV</i> for now. (#29544, #29642)
 
 <p>A Perl data object can change type as the value is modified.  The SV is
 said to be upgraded in this case.  Type changes only go down the
@@ -940,10 +940,9 @@ The <code>CvSTASH</code> is a pointer to the <a href="#stash">stash</a> in which
 
 <code>START</code> and <code>ROOT</code> point to the start and the root of the compiled op tree for this function.<p>
 
-DEPTH and <a href="#pad">PADLIST</a> are needed to access and check the current scratchpad.
-
-Lexicals are accessed by looking up the name under GV, the glob in which
-the CV was defined. (really ?)
+DEPTH and <a href="#pad">PADLIST</a> are needed to access and check the 
+current scratchpad.
+Lexicals are accessed by the OP->targ index into the PADLIST.
 
 <p>See <a href="#pad">PAD</a>s and <a href="#op">OP</a>s below.
 
@@ -1002,9 +1001,10 @@ variables directly, without indirection which is needed for run-time
 recursion and threading.
 
 During compilation: <code>PL_comppad_name</code> is set to the names
-AV. <code>PL_comppad</code> is set to the frame AV for the frame
-<code>CvDEPTH == 1</code>. <code>PL_curpad</code> is set to the body
-of the frame AV (i.e. <code>AvARRAY(PL_comppad)</code>).<br> During
+AV, the declared type information. <code>PL_comppad</code> is set to 
+the frame AV for the frame <code>CvDEPTH == 1</code>. 
+<code>PL_curpad</code> is set to the body of the frame AV 
+(i.e. <code>AvARRAY(PL_comppad)</code>).<br> During
 execution, PL_<code>comppad</code> and <code>PL_curpad</code> refer to
 the live frame of the currently executing sub.<p>
 
