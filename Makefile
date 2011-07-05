@@ -1,3 +1,5 @@
+# sed -i -e's,0.37,0.38,' META.yml VERSION illguts.hhp index-work.html
+
 png=svhead.png \
    svrv.png   \
    strtab.png \
