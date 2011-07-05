@@ -69,7 +69,7 @@ grestore
 
 % /Helvetica-Bold 9 SF
 % /Courier findfont 8 scalefont setfont
-2   272 M (AvTYPED) show
+2   272 M (TYPED) show
 130 242 M (int[]) show
 
 192 240 break
