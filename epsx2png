@@ -1,0 +1,3 @@
+#!/bin/sh
+base=$(basename $1 .epsx)
+./epsx2eps $1 > $base.eps && ./eps2png $base.eps > $base.png
