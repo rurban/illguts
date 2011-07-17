@@ -1,4 +1,4 @@
-0.38 2011-07-05 rurban@cpan.org
+0.38 2011-07-17 rurban@cpan.org
         * index: SvTYPE versions, lexical access
         * epsx2png: added
         * sviv-new.epsx: renamed to iv-typed.epsx
