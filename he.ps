@@ -47,9 +47,11 @@
      gsave 0.8 setgray x3 cw sub y 27 sub x3 y 15 sub rect fill grestore
      x2 y 27 sub x3 y 15 sub rect S              % box
      gsave yellow x2 40 add y 27 sub x3 cw sub y 15 sub rect F grestore % key yellow
+     x3 y 27 sub x3 20 add y 15 sub rect S       % flags
+     % gsave yellow x3 20 add y 27 sub x3 y 15 sub rect F grestore % flags yellow
  
      x2 20 add dup y 27 sub M y 15 sub L S       % sep between HASH/LEN
-     x2 40 add dup y 27 sub M y 15 sub L S       % sep between HASH/LEN
+     x2 40 add dup y 27 sub M y 15 sub L S       % sep after LEN
 
      % sep between characters
      gsave 0.3 LW
@@ -62,6 +64,7 @@
      /Helvetica 8 SF
      (hash) x2 2 add y 25 sub 16 mws pop
      x2 30 add y 25 sub M (len) cshow
+     x3 cw add 2 add y 25 sub M (flag) cshow
      /Courier 7 SF
      x2 40 add cw 2 div add y 24 sub M
      str {

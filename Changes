@@ -1,3 +1,6 @@
+0.39 2012-xx rurban@cpan.org
+        * he, index: add HEK_FLAGS byte
+
 0.38 2011-07-17 rurban@cpan.org
         * index: SvTYPE versions, lexical access
         * epsx2png: added

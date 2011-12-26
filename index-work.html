@@ -22,15 +22,14 @@ function Toggle(id) {
 <body bgcolor="#FFFFFF" text="#000000" link="#000055" vlink="#550000" alink="#000000" topmargin="0">
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.38, for perl 5.14 and older</small></h1>
+<small>Version 0.39, for perl 5.15 and older</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
-page that comes with Perl.  It contains commented illustrations of all
-major internal Perl data structures.  
+page that comes with Perl. It contains commented illustrations of all major internal Perl data structures.  
 Having this document handy hopefully makes reading the Perl source code easier.
 It might also help you interpret the <i><a href="http://perldoc.perl.org/Devel/Peek.html">Devel::Peek</a></i> dumps.
 
-<p>Most of the internal perl structures had been refactored twice, with 5.10, and 5.14. The comparison links and illustrations for 5.8, 5.10 and 5.14 are now included in this single document, but also available as extra files. 5.10 to 5.12 changes: only ook.
+<p>Most of the internal perl structures had been refactored twice, with 5.10, and 5.14. The comparison links and illustrations for 5.8, 5.10 and 5.14 are now included in this single document, but also available as extra files. 5.10 to 5.12 changes: only <a href="#SvOOK"><i>OOK</i></a>.
 
 <ul>
 <li><a href="index-8.html">illguts for 5.8 and older</a>
@@ -290,7 +289,7 @@ of pointers just to find that the information is not there.
 
   <dt> 0x01000000 <b><a name="SVf_FAKE">SVf_FAKE</a></b>
         <dd>0: glob or lexical is just a copy<br>
-          1: SV head arena wasn't malloc()ed
+          1: SV head arena wasn't malloc()ed<br>
           2: in conjunction with <a href="#SVf_READONLY">SVf_READONLY</a>
           marks a shared hash key scalar
           (SvLEN == 0) or a copy on write
@@ -713,7 +712,8 @@ Similarly, the pop just involves decrementing the FILL count.
 <p>Hashes are the most complex of the Perl data types.  In addition to
 what we have seen above, the very last index in the HE*[] points to a 
 new xpvhv_aux struct. HVs use <i>HE</i> structs to represent
-key/value pairs and <i>HEK</i> structs to represent keys.
+"hash element" key/value pairs and <i>HEK</i> structs to represent
+"hash element keys".
 
 <dl>
 <dt><b>GvSTASH</b>:
@@ -756,9 +756,10 @@ next HE, a pointer to the key and a pointer to the value of the given hash
 element.
 
 <p>The <a name="hek"><b>HEK</b></a>s are special variable sized structures that store the hash
-keys.  They contain 3 fields.  The computed <i>hash</i> value of the string,
-the <i>len</i>gth of the string, and <i>len</i>+1 bytes for the
-key string itself (including trailing NUL).
+keys.  They contain 4 fields.  The computed <i>hash</i> value of the string,
+the <i>len</i>gth of the string, <i>len</i>+1 bytes for the
+key string itself (including trailing NUL), and a trailing byte for
+HEK_FLAGS <i>(since 5.8)</i>.
 
 As a special case, a <i>len</i> value of <code>HEf_SVKEY</code> (-2)
 indicate that a pointer to an SV is stored in the HEK instead of a
@@ -1011,15 +1012,14 @@ the live frame of the currently executing sub.<p>
 Lexicals (my and our variables) have <code>SVs_PADMY</code> /
 <code>SVs_PADOUR</code> set, and targets have <code>SVs_PADTMP</code>
 set. A <code>SVs_PADTMP</code> (targets/GVs/constants) has a
-<code>&PL_sv_undef</code> name, as they are looked by the TARG index,
-only <code>SVs_PADMY</code> get valid slot names, as they are looked
-by name.
+<code>&PL_sv_undef</code> name, as they are looked up by the TARG index,
+only <code>SVs_PADMY</code> / <code>SVs_PADOUR</code> get valid names.
 
 <h2><a name="op" href="op.html">OP</a></h2>
 
 A Perl program/subroutine is represented internally by a syntax tree built from OP nodes. This tree 
 really is just a linked list of ops in <i>exec</i> order.
-Perl 5.005 had 346 different OP-codes, Perl 5.11.2 has 365 OP-Codes, see <tt>opnames.h</tt>.
+Perl 5.005 had 346 different OP-codes, Perl 5.16 has 372 OP-Codes, see <tt>opnames.h</tt>.
 Each op represents a <tt>pp_<i>opname</i>()</tt> function. Note that some <tt>pp_</tt> functions 
 are just macros, several opcodes share the same function.<br>
 In Perl there are 12 different OP classes, that are related like the following 
