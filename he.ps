@@ -9,8 +9,8 @@
    10 dict begin
      /cont exch def /str exch def /y exch def  /x exch def
      /len str length def
-     /x2 x 70 add def
      /cw 8 def           % hek char width
+     /x2 x 70 add def
      /x3 x2 40 add len 1 add cw mul add def
 
      1 LW
@@ -73,7 +73,7 @@
      } forall
      (\\0) currentpoint cw 1 sub mwcs
 
-     % anotate boxes
+     % annotate boxes
      /Courier 10 SF
      x 50 add y 2 add M (he) rshow
      x3 y 13 sub M (hek) rshow
@@ -93,11 +93,14 @@
      /len str length def
      /cw 8 def           % hek char width
      /x2 x 40 add len 1 add cw mul add def
+     /x3 x2 20 add def
      /y y 15 add def
 
      0.8 setlinewidth
-     gsave 0.8 setgray x2 cw sub y 27 sub x2 y 15 sub rect fill grestore
-     x y 27 sub x2 y 15 sub rect stroke         % box
+     gsave 0.8 setgray x2 cw sub y 27 sub x2 y 15 sub rect fill grestore % \0
+     gsave yellow x 40 add y 27 sub x2 cw sub y 15 sub rect F grestore % key yellow
+     x y 27 sub x3 y 15 sub rect stroke         % box
+     x2 y 27 sub x3 y 15 sub rect S      % flags
      x 20 add dup y 27 sub M y 15 sub L stroke  % sep between HASH/LEN
      x 40 add dup y 27 sub M y 15 sub L stroke  % sep between HASH/LEN
 
@@ -112,6 +115,7 @@
      /Helvetica 8 SF
      (hash) x 2 add y 25 sub 16 mws pop
      x 30 add y 25 sub M (len) cshow
+     x2 10 add y 25 sub M (flag) cshow
      /Courier 6 SF
      x 40 add cw 2 div add y 24 sub M
      str {

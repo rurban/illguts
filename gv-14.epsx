@@ -15,7 +15,6 @@
 0 300 sv
 /Helvetica-Bold 9 SF
 20 262 M (svu_gp) cshow
-%42 265 47 265 47 312 112 312 112 292.5 130 292.5 ptrn
 42 265 47 265 47 312 198 312 198 292.5 210 292.5 ptrn
 
 /Courier 8 SF
@@ -48,8 +47,8 @@ gvx 5 add 303 15 sub M
 
 % NAME
 /ny 172.5 75 add def
-gvx 50 add ny 130 ny ptrn
-130 ny 5 add (pv) hek
+gvx 50 add ny 120 ny ptrn
+120 ny 5 add (pv) hek
 
 % GvSTASH
 /Courier 8 SF

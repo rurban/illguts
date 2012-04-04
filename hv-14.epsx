@@ -1,6 +1,6 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 75 342 315
-%%Creator: Gisle Aas (Copyright 1998), Reini Urban (Copyright 2009, 2010)
+%%BoundingBox: -5 75 392 315
+%%Creator: Gisle Aas (Copyright 1998), Reini Urban (Copyright 2009, 2010, 2012)
 
 %require "common.ps"
 %require "sv.ps"
@@ -94,7 +94,10 @@ grestore
 % NAME string
 gsave
    275 185 translate 0.8 dup scale
-   0 0 [(F)(o)(o)(:)(:)(B)(a)(r)(\\0)] chararray
+   8 2 M
+   /Courier 7 SF
+   (HvENAME_HEK) show
+   0 -2 (Foo::Bar) hek
 grestore
 
 % Pointer to first HE column

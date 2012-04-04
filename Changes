@@ -1,4 +1,12 @@
-0.39 2012-xx rurban@cpan.org
+0.40 2012-04-04 rurban@cpan.org
+        * index: finalize 5.16
+	* hv-14: replace NAME chararray by hek
+	* he: add flag to hek
+	* gv-10,14: adjust for flag
+	* strtab: use hek, remove myhek
+	* eps2png: added sleep 0.01 for faster machines
+
+0.39 2011-12-27 rurban@cpan.org
         * he, index: add HEK_FLAGS byte
 
 0.38 2011-07-17 rurban@cpan.org

@@ -22,20 +22,20 @@ function Toggle(id) {
 <body bgcolor="#FFFFFF" text="#000000" link="#000055" vlink="#550000" alink="#000000" topmargin="0">
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.39, for perl 5.15 and older</small></h1>
+<small>Version 0.40, for perl 5.16 and older</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl. It contains commented illustrations of all major internal Perl data structures.  
 Having this document handy hopefully makes reading the Perl source code easier.
 It might also help you interpret the <i><a href="http://perldoc.perl.org/Devel/Peek.html">Devel::Peek</a></i> dumps.
 
-<p>Most of the internal perl structures had been refactored twice, with 5.10, and 5.14. The comparison links and illustrations for 5.8, 5.10 and 5.14 are now included in this single document, but also available as extra files. 5.10 to 5.12 changes: only <a href="#SvOOK"><i>OOK</i></a>.
+<p>Most of the internal perl structures had been refactored twice, with 5.10, and 5.14. The comparison links and illustrations for 5.8, 5.10, 5.14 and 5.16 are now included in this single document, but also available as extra files. 5.10 to 5.12 changes: only <a href="#SvOOK"><i>OOK</i></a>.
 
 <ul>
 <li><a href="index-8.html">illguts for 5.8 and older</a>
 <li><a href="index-10.html">illguts for 5.10</a>
 <li><a href="index-12.html">illguts for 5.12</a>
-<li><a href="index-14.html">illguts for 5.14</a>
+<li><a href="index-14.html">illguts for 5.14 + 5.16</a>
 </ul>
 
 <p>The first things to look at are the data structures that represent
@@ -67,7 +67,7 @@ what its type is and act according to this information.
 <p>The symbolic <b>SvTYPE</b> names (and associated value) are with <a name="SvTYPE">5.14</a>:
 
 <table>
-  <tr><th>svtype</th>   <th>5.14</th>            <th>5.10</th>     <th>5.6 + 5.8</th></tr>
+  <tr><th>svtype</th>   <th>5.14 + 5.16</th>     <th>5.10</th>     <th>5.6 + 5.8</th></tr>
   <tr><td><b>0</b></td> <td><b>SVt_NULL</b></td> <td>SVt_NULL</td> <td>SVt_NULL</td></tr>
   <tr><td><b>1</b></td> <td><b>SVt_BIND</b></td> <td>SVt_BIND</td> <td>SVt_IV</td>  </tr>
   <tr><td><b>2</b></td> <td><b>SVt_IV</b></td>   <td>SVt_IV</td>   <td>SVt_NV</td>  </tr>
@@ -382,7 +382,7 @@ respectively in their parameter list.  Likewise for the rest.
 
 <p>A scalar that can hold a string value is called an
 <i>SvPV</i>.  In addition to the <i>SV</i> struct of SvNULL,
-an <i>xpv</i> struct is allocated and it contains 3 fields.
+an <i>xpv</i> struct is allocated and it contains 3-4 fields.
 <b>svu_pv</b> was formerly called <b>PVX</b> and before 5.10
 it was the first field of xpv. svu_pv/PVX is the pointer to
 an allocated char array. All old field names <b>must</b> be
@@ -570,12 +570,13 @@ at the end of the string (or before newline at the end of the string).
 <h2><a name="p5rx">REGEXP (P5RX)</a></h2>
 
 <p>The structures behind the P5RX, the <i>struct regexp</i>, store the compiled and
-optimized state of a perl regular expression. Internally the new attached struct
-regexp is called <i>ORANGE</i> (since 5.10). New here is support for pluggable
+optimized state of a perl regular expression. New here is support for pluggable
 regex engines - the original engine was <a
 href="http://swtch.com/~rsc/regexp/regexp1.html">critized</a> <i>("Thompson NFA
 for abnormal expressions would be linear, but does not support backtracking")</i>, 
-non-recursive execution, and faster trie-structures for alternations.</p>
+non-recursive execution, and faster trie-structures for alternations.
+See <a href="http://search.cpan.org/dist/re-engine-RE2/">re::engine::RE2</a>
+for the fast DFA implementation without backrefs.</p>
 
 <p>The <i>struct regexp</i> contains the compiled bytecode of the expression,
 some meta-information about the regex, 
@@ -716,11 +717,6 @@ new xpvhv_aux struct. HVs use <i>HE</i> structs to represent
 "hash element keys".
 
 <dl>
-<dt><b>GvSTASH</b>:
-<dd>When the hash represents a name space (<a href="#stash"><i>stash</i></a>).  
-GvSTASH (formerly called PMROOT) points to a node in the Perl syntax
-tree. It is used to implement the reset() builtin for REs.<p>
-
 <dt><b>RITER, EITER</b>:
 <dd>Those two fields are used to implement a single iterator over the
 elements in the hash.
@@ -731,10 +727,18 @@ NULL, RITER is incremented until ARRAY[RITER] is non-NULL.  The
 iterator starts out with RITER = -1 and EITER = NULL.<p>
 
 <dt><b>NAME</b>:
-<dd>NAME is a NUL-terminated string which denotes the fully qualified name of the
-name space (aka <i>package</i>).  This is one of the few places where
-Perl does not allow strings with embedded NULs.<p>
+<dd>Until 5.14 NAME was a NUL-terminated string which denotes the fully qualified name of the
+name space (aka <i>package</i>). This was one of the few places where
+Perl does not allow strings with embedded NULs.
+Since 5.14 the value of NAME points to a HEK if name_count == 0,
+or to two HEKs, where HEK[0] is the effective stash name (HvENAME_HEK_NN)
+if name_count > 0 or HEK[1] if name_count < 0.
+<p>
 
+<dt><b>GvSTASH</b> (until 5.8):
+<dd>When the hash represented a name space (<a href="#stash"><i>stash</i></a>)
+GvSTASH (formerly called PMROOT) pointed to a node in the Perl syntax
+tree. It was used to implement the reset() builtin for REs.<p>
 </dl>
 
 <p>The first few fields of the xpvhv have been renamed in the same way
@@ -1017,8 +1021,8 @@ only <code>SVs_PADMY</code> / <code>SVs_PADOUR</code> get valid names.
 
 <h2><a name="op" href="op.html">OP</a></h2>
 
-A Perl program/subroutine is represented internally by a syntax tree built from OP nodes. This tree 
-really is just a linked list of ops in <i>exec</i> order.
+A Perl program/subroutine is represented internally by a syntax tree built from OP nodes.
+This tree really is just a linked list of ops in <i>exec</i> order.
 Perl 5.005 had 346 different OP-codes, Perl 5.16 has 372 OP-Codes, see <tt>opnames.h</tt>.
 Each op represents a <tt>pp_<i>opname</i>()</tt> function. Note that some <tt>pp_</tt> functions 
 are just macros, several opcodes share the same function.<br>
@@ -1267,10 +1271,10 @@ JMPENV level with a proper <em>setjmp</em> record.
 <hr>
 <div align="right">
 <small>
-<i>&copy; 1998-1999 Gisle Aas. 2009,2010 Reini Urban</i><br>
+<i>&copy; 1998-1999 Gisle Aas. 2009,2010,2012 Reini Urban</i><br>
 <a href="mailto:gisle@aas.no">&lt;gisle@aas.no&gt;</a><br>
 <a href="mailto:rurban@x-ray.at">&lt;rurban@x-ray.at&gt;</a><br>
-$Date: 2010-02-11 11:06:15 rurban $
+$Date: 2012-04-04 01:01:53 rurban $
 </small>
 </div>
 

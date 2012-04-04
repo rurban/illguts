@@ -1,6 +1,7 @@
 #!/bin/sh
 
-./eps2ppm $1 > _err 
+./eps2ppm $1 > _err
+sleep 0.01
 if $(grep "Error:" _err >/dev/null); then
     rm $1
     exit
