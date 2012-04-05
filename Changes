@@ -1,3 +1,8 @@
+0.41 2012-04-05 rurban@cpan.org
+        * index: update IV,NV >= 5.10,
+	  added arena
+	* iv-10,14: updated
+
 0.40 2012-04-04 rurban@cpan.org
         * index: finalize 5.16
 	* hv-14: replace NAME chararray by hek

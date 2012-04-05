@@ -250,6 +250,10 @@
 		</OBJECT>
         </UL>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Keyword" value="Arena">
+		<param name="Local" value="index.html#arena">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Keyword" value="RV">
 		<param name="Local" value="index.html#svrv">
 		</OBJECT>

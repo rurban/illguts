@@ -16,7 +16,8 @@ png=svhead.png \
    opsamp2.png \
    stack.png  \
    context.png  \
-   eval.png
+   eval.png \
+   arena.png
 
 png-8=av-8.png \
   cv-8.png \
@@ -152,6 +153,7 @@ dist: all VERSION test_rel
 	./make_dist
 
 # deps
+arena.png: sv.ps box.ps
 av-8.png:  av-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps mws.ps break.ps
 av-10.png: av-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps break.ps
 av-14.png: av-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps break.ps

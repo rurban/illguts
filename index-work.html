@@ -22,7 +22,7 @@ function Toggle(id) {
 <body bgcolor="#FFFFFF" text="#000000" link="#000055" vlink="#550000" alink="#000000" topmargin="0">
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.40, for perl 5.16 and older</small></h1>
+<small>Version 0.41, for perl 5.16 and older</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl. It contains commented illustrations of all major internal Perl data structures.  
@@ -150,10 +150,10 @@ value.  When the reference count reaches zero the object is freed.
 <p>The third word contains a <b>FLAGS</b> field and a <b>TYPE</b> field as 32 bit
 unsigned integer.
 
-<p>Since 5.10 the forth and last word contains the <b>sv_u union</b>, which
-contains a pointer to another SV (a RV), the <a href="#svpv">PV</a>
-string, the <a href="#av">AV</a> svu_array, a <a href="#he">HE</a>
-hash or a <a href="#gp">GP</a> struct.
+<p>Since 5.10 the forth and last HEAD word contains the <b>sv_u union</b>, which
+contains a pointer to another SV (a RV), the <a href="#sviv">IV</a>
+value, the <a href="#svpv">PV</a> string, the <a href="#av">AV</a> svu_array,
+a <a href="#he">HE</a> hash or a <a href="#gp">GP</a> struct.
 
 <a name="flags">The TYPE field contains a small number (0-127, mask <code>0xff</code>) that
 represents one of the <code>SVt_</code> types shown in the type hierarchy figure
@@ -378,15 +378,33 @@ will have <code>SV*</code> as parameter.  Routines that only work with
 arrays or hashes have <code>AV*</code> or <code>HV*</code>
 respectively in their parameter list.  Likewise for the rest.
 
+<h2><a name="arena">Arena</a></h2>
+
+<p>Since 5.10 SV heads and bodies are allocated in 4K arenas chunks.
+Heads need 4 fields, bodies are kept in uneequal sized arena sets.
+Some types need no body (<i>NULL, IV, RV</i>), and some allocate
+only partial bodies with <i>"ghost"</i> fields.</p>
+
+<p><b>PL_sv_arenaroot</b> points to the first reserved SV arena head with
+some private arena data, a link to the next arena, some flags,
+number of frees slots.<br>
+<b>PL_sv_root</b> points to the chained list of free SV head slots.
+When this becomes empty a new arena is allocated.</p>
+
+<b>PL_body_arenas</b> is the head of the uneven sized linked-list of body arenas.<br>
+<b>PL_body_roots[]</b> contains pointers to the list of free SV bodies per svtype.
+
+<p><center><img src="arena.png"></center>
+
 <h2><a name="svpv">SvPV</a></h2>
 
 <p>A scalar that can hold a string value is called an
 <i>SvPV</i>.  In addition to the <i>SV</i> struct of SvNULL,
-an <i>xpv</i> struct is allocated and it contains 3-4 fields.
+an <i>xpv</i> struct ("body") is allocated and it contains 3-4 fields.
 <b>svu_pv</b> was formerly called <b>PVX</b> and before 5.10
 it was the first field of xpv. svu_pv/PVX is the pointer to
 an allocated char array. All old field names <b>must</b> be
-accessed through the old macros, which is called SvPVX(). 
+accessed through the old macros, which is called SvPVX().
 
 <b>CUR</b> is an integer giving the current length of the string.  
 
@@ -433,28 +451,29 @@ The PVX, CUR, LEN is adjusted to point within the allocated string instead.
 
 <p><center><img src="ook.png"></center>
 
-<h2><a name="sviv">SvIV</a> and <a name="svnv">SvNV</a></h2>
+<h2><a name="sviv">SvIV</a></h2>
 
-<i>SvIVX</i> uses the xiv_u .xiv_iv slot in the xiv_u union 
-(don't be fooled by the convenience shortcut xiv_iv), 
-<i>SvNVX</i> uses the xnv_u.xnv_nv slot in the xnv_u union.
+Since 5.10 for a raw IV (without PV) the IVX slot is in the HEAD,
+there is no xpviv struct ("body") allocated.
 
-<!-- <p>As a special case we also have <i>SvIV</i> and <i>SvNV</i> types
-that only have room for a single integer or a single double value.
-These are special in that the PVX/CUR/LEN fields are not present even
-if the ANY pointer actually points to the ghostual incarnation of
-them.  This arrangement makes it possible for code to always access
-the IVX/NVX fields at a fixed offset from where the SV field ANY
-points. -->
+The <i>SvIVX</i> macro abuses sv_any pointer arithmethic to point
+to a compile-time calculated negative offset from HEAD->sv_u.svu_iv
+to SvANY(xiv_u.xivu_iv), so that PVIV and IV can use the same SvIVX
+macro.
 
 <p><center><img src="sviv.png"></center>
+
+<h2><a name="svnv">SvNV</a></h2>
+
+Since 5.10 for a raw NV (without PV) the xpvnv struct is not fully allocated,
+only the needed body size.
 
 <p><center><img src="svnv.png"></center>
 
 <h2><a name="svrv">SvRV</a></h2>
 
-<p>The <i>SvRV</i> type uses the fourth word sv_u.svu_rv as pointer to an SV 
-(which can be any of the SvNULL subtypes), AV or HV. 
+<p>The <i>SvRV</i> type uses the fourth HEAD word sv_u.svu_rv as pointer to an SV
+(which can be any of the SvNULL subtypes), AV or HV.
 A SvRV object with ROK flag off represents an undefined value.
 
 <p><center><img src="svrv.png"></center>

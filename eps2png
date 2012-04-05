@@ -1,9 +1,9 @@
 #!/bin/sh
 
-./eps2ppm $1 > _err
-sleep 0.01
-if $(grep "Error:" _err >/dev/null); then
+./eps2ppm $1 > _err$$
+sleep 0.3
+if $(grep "Error:" _err$$ >/dev/null); then
     rm $1
     exit
 fi
-cat _err | (rm _err; pnmscale 0.4) | ppmquant 32 | pnmtopng -compression 9
+cat _err$$ | (rm _err$$; pnmscale 0.4) | ppmquant 32 | pnmtopng -compression 9

@@ -1,34 +1,44 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 220 110 305
-%%Creator: Gisle Aas (Copyright 1998), Reini Urban (Copyright 2009, 2010)
+%%BoundingBox: -15 -80 150 20
+%%Creator: Gisle Aas (Copyright 1998), Reini Urban (Copyright 2009,2010,2012)
 
 %require "common.ps"
 %require "sv.ps"
 %require "box.ps"
 
-0 300 sv
+55 7.5 70 7.5 70 -52.5 60 -52.5 ptrn % *ANY -> IVX
 
-/Helvetica 9 SF
-20 262 M (svu_pv) cshow
+gsave
+  1.5 dup scale
+  0 0 sv2
+  /Helvetica 9 SF
+  20 -38 M (IVX) cshow
+  20 2 M (*ANY) cshow
+  20 -8 M (ANY) cshow
+  
+  0.7 setgray
+  [3 2] 0 setdash
+  0 11 40 1 rect S % ANY
+grestore
+0 setgray
+[1 0] 0 setdash
+5 -7.5 -10 -7.5 -10 7.5 0 7.5 ptrn      % ANY -> *ANY
 
 gsave
   0.7 setgray
   [3 2] 0 setdash
-  55 300 5 box
+  85 0 5 box
+  130 -7.5 145 -7.5 145 -67.5 135 -67.5 ptrn % -> xiv_iv
 grestore
 
-55 300 60 sub 1 box
+%85 0 60 sub 1 box
 
 /Helvetica 11 SF
-60 303 15 sub M
-
+90 3 15 sub M
 0.7 setgray
-[(STASH) (MAGIC) (cur) (len)] {
+[(STASH) (MAGIC) (cur) (len) (xiv_iv)] {
     gsave
     show
     grestore
     0 -15 rmoveto
 } forall
-0 setgray
-/Helvetica 12 SF
-(xiv_iv) show
