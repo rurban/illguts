@@ -1,0 +1,33 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%BoundingBox: -10 -205 170 15
+%%Creator: Reini Urban (Copyright 2012)
+
+%include "sv.ps"
+%include "box.ps"
+
+/x 120 def
+
+/Courier findfont 8 scalefont setfont
+0 3 M (PL_sv_arenaroot) show
+0 0 4 boxs
+/Helvetica 9 SF
+20 -8 M (next) cshow
+20 -18 M (num) cshow
+20 -28 M (flags) cshow
+0 -40 sv2
+0 -80 sv2
+
+/Courier findfont 8 scalefont setfont
+55 -123 M (PL_sv_root) show
+52 -125 40 -125 ptrn
+0 -120 sv2
+0 -160 sv2
+35 -155 50 -155 50 -165 40 -165 ptrn
+
+x 40 add 3  M (PL_body_arenas) rshow
+x   0 4 boxs
+x -45 5 boxs
+
+x 40 add -137 M (PL_body_roots) rshow
+x -140 4 boxs
+
