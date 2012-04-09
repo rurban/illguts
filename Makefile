@@ -135,7 +135,7 @@ test: t/97_meta.t
 	perl t/97_meta.t
 
 test_rel: t/97_meta.t
-	-#RELEASE_TESTING=1 perl t/97_meta.t
+	-RELEASE_TESTING=1 perl t/97_meta.t
 
 eps:
 	for x in *.png; do s=$${x/.png/.eps}; make $s; done

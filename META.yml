@@ -6,6 +6,7 @@ author:
     - Gisle Aas <gisle@aas.no>
     - Reini Urban <rurban@cpan.org>
 license:            perl
+generated_by:       hand
 # there is only a module and script distribution_type
 distribution_type:  doc
 no_index:
