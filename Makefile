@@ -1,5 +1,7 @@
 # sed -i -e's,0.37,0.38,' META.yml VERSION illguts.hhp index-work.html
+.PHONY: test clean dist watch
 
+SRC=$(wildcard *.epsx *.ps) index-work.html
 png=svhead.png \
    svrv.png   \
    strtab.png \
@@ -102,6 +104,7 @@ index-14.html: htmlprep.pl index-work.html  $(png-14)
 
 pdf: index.html illguts-8.pdf illguts-10.pdf illguts-12.pdf illguts-14.pdf illguts.pdf
 
+# sudo apt-get install htmldoc
 illguts.pdf: index.html $(png)
 	-htmldoc --quiet --webpage --format pdf14 index.html -f $@
 
@@ -119,6 +122,7 @@ illguts-14.pdf: index-14.html $(png)
 
 slides: slides/index.html
 
+# Help Compiler: windows or cygwin only
 illguts.chm: index.html illguts.hhp illguts.hhk $(png)
 	-hhc illguts.hhp
 
@@ -139,6 +143,7 @@ eps:
 %.eps: %.epsx epsx2eps sv.ps common.ps mws.ps box.ps str.ps ptr.ps magic.ps arrow.ps chararray.ps gp.ps stash.ps glob.ps op.ps dist.ps
 	./epsx2eps $< >$@
 
+# sudo apt-get install ghostscript netpbm 
 %.png: %.epsx
 	./epsx2eps $< >$@.eps
 	./eps2png $@.eps >$@.tmp
@@ -151,6 +156,10 @@ clean:
 
 dist: all VERSION test_rel
 	./make_dist
+
+# sudo apt-get install inotify-tools
+watch:
+	$(SHELL) -c 'while sleep 1 ; inotifywait -emodify -ecreate -emove $(SRC) ; true ; do make ; done'
 
 # deps
 arena.png: sv.ps box.ps

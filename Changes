@@ -1,3 +1,7 @@
+0.42 2012-04-09 rurban@cpan.org
+        * index: spelling fixes
+	* Makefile: added watch target (inotify)
+
 0.41 2012-04-05 rurban@cpan.org
         * index: update IV,NV >= 5.10,
 	  added arena

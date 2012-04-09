@@ -22,7 +22,7 @@ function Toggle(id) {
 <body bgcolor="#FFFFFF" text="#000000" link="#000055" vlink="#550000" alink="#000000" topmargin="0">
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.41, for perl 5.16 and older</small></h1>
+<small>Version 0.42, for perl 5.16 and older</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl. It contains commented illustrations of all major internal Perl data structures.  
@@ -99,7 +99,7 @@ function/subroutine/closure or contains a pointer to an XSUB.
 files and directories and various state information about these.  The
 <i>PVFM</i> is used to hold information on forms.
 <i>P5RX</i> was formerly called <i>PVBM</i> for Boyer-Moore 
-(match information), but contains now more information.
+(match information), but contains now regex information.
 <i>BIND</i> is a placeholder for read-only aliases or VIEW, 
 and implemented as <i>RV</i> for now. (#29544, #29642)
 
@@ -150,7 +150,7 @@ value.  When the reference count reaches zero the object is freed.
 <p>The third word contains a <b>FLAGS</b> field and a <b>TYPE</b> field as 32 bit
 unsigned integer.
 
-<p>Since 5.10 the forth and last HEAD word contains the <b>sv_u union</b>, which
+<p>Since 5.10 the fourth and last HEAD word contains the <b>sv_u union</b>, which
 contains a pointer to another SV (a RV), the <a href="#sviv">IV</a>
 value, the <a href="#svpv">PV</a> string, the <a href="#av">AV</a> svu_array,
 a <a href="#he">HE</a> hash or a <a href="#gp">GP</a> struct.
@@ -381,7 +381,7 @@ respectively in their parameter list.  Likewise for the rest.
 <h2><a name="arena">Arena</a></h2>
 
 <p>Since 5.10 SV heads and bodies are allocated in 4K arenas chunks.
-Heads need 4 fields, bodies are kept in uneequal sized arena sets.
+Heads need 4 fields, bodies are kept in unequally sized arena sets.
 Some types need no body (<i>NULL, IV, RV</i>), and some allocate
 only partial bodies with <i>"ghost"</i> fields.</p>
 
@@ -456,10 +456,9 @@ The PVX, CUR, LEN is adjusted to point within the allocated string instead.
 Since 5.10 for a raw IV (without PV) the IVX slot is in the HEAD,
 there is no xpviv struct ("body") allocated.
 
-The <i>SvIVX</i> macro abuses sv_any pointer arithmethic to point
-to a compile-time calculated negative offset from HEAD->sv_u.svu_iv
-to SvANY(xiv_u.xivu_iv), so that PVIV and IV can use the same SvIVX
-macro.
+The <i>SvIVX</i> macro abuses SvANY pointer arithmethic to point
+to a compile-time calculated negative offset from HEAD-1 to sv_u.svu_iv, 
+so that PVIV and IV can use the same SvIVX macro.
 
 <p><center><img src="sviv.png"></center>
 
@@ -1293,7 +1292,7 @@ JMPENV level with a proper <em>setjmp</em> record.
 <i>&copy; 1998-1999 Gisle Aas. 2009,2010,2012 Reini Urban</i><br>
 <a href="mailto:gisle@aas.no">&lt;gisle@aas.no&gt;</a><br>
 <a href="mailto:rurban@x-ray.at">&lt;rurban@x-ray.at&gt;</a><br>
-$Date: 2012-04-04 01:01:53 rurban $
+$Date: 2012-04-09 01:01:53 rurban $
 </small>
 </div>
 
