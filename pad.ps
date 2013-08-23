@@ -17,7 +17,7 @@ stroke
 
 /Helvetica 11 SF
 60 253 15 sub M
-[(@_) (PAD 1) (PAD 2)] {
+[(NAMES) (PAD 1) (PAD 2)] {
     gsave
     currentpoint 30 mws pop
     grestore
@@ -56,10 +56,10 @@ gsave
 130 220 250 205 rect stroke
 /Courier findfont 8 scalefont setfont
 130 257 M (@_ AV*[]) show
-130 222 M (AV*[targ]) show
+130 222 M (@_ AV*[targ]) show
 /Helvetica 8 SF
-132 243 M ($a) show
-147 243 M ($b) show
+147 243 M ($a) show
+162 243 M ($b) show
 
 192 255 break
 192 220 break
@@ -67,7 +67,7 @@ gsave
 gsave
 1 dict begin
 /y 200 def
-[137.5 212.5] {
+[152.5 212.5] {
    gsave dup 3 sub y translate 0.40 dup scale 0 0 sv2 grestore
    dup 212.5 3 2 roll y ptrn
 } forall

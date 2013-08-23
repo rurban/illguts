@@ -1,3 +1,7 @@
+0.43 2013-08-23 rurban
+        * index: update to 5.18 (no structural changes done, refcounted PADLIST ignored so far)
+        * pad.ps: fix @_ and NAMES confusion, thanks to LeoNerd
+
 0.42 2012-04-09 rurban@cpan.org
         * index: spelling fixes
 	* Makefile: added watch target (inotify)

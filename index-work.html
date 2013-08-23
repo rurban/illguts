@@ -22,20 +22,20 @@ function Toggle(id) {
 <body bgcolor="#FFFFFF" text="#000000" link="#000055" vlink="#550000" alink="#000000" topmargin="0">
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.42, for perl 5.16 and older</small></h1>
+<small>Version 0.42, for perl 5.18 and older</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl. It contains commented illustrations of all major internal Perl data structures.  
 Having this document handy hopefully makes reading the Perl source code easier.
 It might also help you interpret the <i><a href="http://perldoc.perl.org/Devel/Peek.html">Devel::Peek</a></i> dumps.
 
-<p>Most of the internal perl structures had been refactored twice, with 5.10, and 5.14. The comparison links and illustrations for 5.8, 5.10, 5.14 and 5.16 are now included in this single document, but also available as extra files. 5.10 to 5.12 changes: only <a href="#SvOOK"><i>OOK</i></a>.
+<p>Most of the internal perl structures had been refactored twice, with 5.10, and 5.14. The comparison links and illustrations for 5.8 - 5.18 are now included in this single document, but also available as extra files. 5.10 to 5.12 changes: only <a href="#SvOOK"><i>OOK</i></a>.
 
 <ul>
 <li><a href="index-8.html">illguts for 5.8 and older</a>
 <li><a href="index-10.html">illguts for 5.10</a>
 <li><a href="index-12.html">illguts for 5.12</a>
-<li><a href="index-14.html">illguts for 5.14 + 5.16</a>
+<li><a href="index-14.html">illguts for 5.14 - 5.18</a>
 </ul>
 
 <p>The first things to look at are the data structures that represent
@@ -67,7 +67,7 @@ what its type is and act according to this information.
 <p>The symbolic <b>SvTYPE</b> names (and associated value) are with <a name="SvTYPE">5.14</a>:
 
 <table>
-  <tr><th>svtype</th>   <th>5.14 + 5.16</th>     <th>5.10</th>     <th>5.6 + 5.8</th></tr>
+  <tr><th>svtype</th>   <th>5.14 - 5.18</th>     <th>5.10</th>     <th>5.6 + 5.8</th></tr>
   <tr><td><b>0</b></td> <td><b>SVt_NULL</b></td> <td>SVt_NULL</td> <td>SVt_NULL</td></tr>
   <tr><td><b>1</b></td> <td><b>SVt_BIND</b></td> <td>SVt_BIND</td> <td>SVt_IV</td>  </tr>
   <tr><td><b>2</b></td> <td><b>SVt_IV</b></td>   <td>SVt_IV</td>   <td>SVt_NV</td>  </tr>
@@ -998,44 +998,47 @@ additional fields.
 
 <a name="pad"><h2>PAD</h2></a>
 
-A <code>PAD</code> is a list (AV) of elements for Perl variables for
+<p>A <code>PAD</code> is a list (AV) of elements for Perl variables for
 each subroutine. PADs ("Scratchpads") are used by Perl to store
 lexical variables, op targets and constants. Every <code>TARG</code>
 argument for on OP (see below) is a index into the <code>PAD</code>,
-and each recursion level has its own <code>PAD</code>.<p>
+and each recursion level has its own <code>PAD</code>.</p>
 
-<p><center><img src="pad.png"></center>
+<p><center><img src="pad.png"></center></p>
 
-Each new sub creates a <code>PADLIST</code> of length 1, which points
+<p>Each new sub creates a <code>PADLIST</code> of length 1, which points
 to current PAD, the <code>PL_curpad</code>, indexed by
 <code>TARG</code>. The 0'th entry of the <code>CvPADLIST</code> is an
 AV which represents the "names" or rather the "static type
-information" for lexicals.
+information" for lexicals.</p>
 
-The <code>CvDEPTH</code>'th entry of <code>CvPADLIST</code> AV is an
+<p>The <code>CvDEPTH</code>'th entry of <code>CvPADLIST</code> AV is an
 AV which is the stack frame at that depth of recursion into the
 CV. The 0'th slot of a frame AV is an AV which is
 <code>@_</code>. Other entries are storage for variables and op
-targets, the scratchpads.
+targets, the scratchpads.</p>
 
-During compilation is simplified scratchpad is used. The current
+<p>During compilation is simplified scratchpad is used. The current
 <code>PL_comppad</code> is just a PAD which holds the <code>TARG</code>
 variables directly, without indirection which is needed for run-time
 recursion and threading.
 
-During compilation: <code>PL_comppad_name</code> is set to the names
+<p>During compilation: <code>PL_comppad_name</code> is set to the names
 AV, the declared type information. <code>PL_comppad</code> is set to 
 the frame AV for the frame <code>CvDEPTH == 1</code>. 
 <code>PL_curpad</code> is set to the body of the frame AV 
 (i.e. <code>AvARRAY(PL_comppad)</code>).<br> During
 execution, PL_<code>comppad</code> and <code>PL_curpad</code> refer to
-the live frame of the currently executing sub.<p>
+the live frame of the currently executing sub.</p>
 
-Lexicals (my and our variables) have <code>SVs_PADMY</code> /
+<p>Since 5.18 PADLISTs are refcounted, with a seperate <code>struct padlist</code>,
+not depictured here yet.</p>
+
+<p>Lexicals (my and our variables) have <code>SVs_PADMY</code> /
 <code>SVs_PADOUR</code> set, and targets have <code>SVs_PADTMP</code>
 set. A <code>SVs_PADTMP</code> (targets/GVs/constants) has a
 <code>&PL_sv_undef</code> name, as they are looked up by the TARG index,
-only <code>SVs_PADMY</code> / <code>SVs_PADOUR</code> get valid names.
+only <code>SVs_PADMY</code> / <code>SVs_PADOUR</code> get valid names.</p>
 
 <h2><a name="op" href="op.html">OP</a></h2>
 
@@ -1289,10 +1292,10 @@ JMPENV level with a proper <em>setjmp</em> record.
 <hr>
 <div align="right">
 <small>
-<i>&copy; 1998-1999 Gisle Aas. 2009,2010,2012 Reini Urban</i><br>
+<i>&copy; 1998-1999 Gisle Aas. 2009,2010,2012,2013 Reini Urban</i><br>
 <a href="mailto:gisle@aas.no">&lt;gisle@aas.no&gt;</a><br>
 <a href="mailto:rurban@x-ray.at">&lt;rurban@x-ray.at&gt;</a><br>
-$Date: 2012-04-09 01:01:53 rurban $
+$Date: 2013-08-23 11:47:48 rurban $
 </small>
 </div>
 
