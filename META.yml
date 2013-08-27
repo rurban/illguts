@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               illguts
-version:            0.43
+version:            0.44
 abstract:           illustrated perl guts
 author:
     - Gisle Aas <gisle@aas.no>

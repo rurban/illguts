@@ -22,20 +22,20 @@ function Toggle(id) {
 <body bgcolor="#FFFFFF" text="#000000" link="#000055" vlink="#550000" alink="#000000" topmargin="0">
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.43, for perl 5.18 and older</small></h1>
+<small>Version 0.44, for perl 5.20 and older</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl. It contains commented illustrations of all major internal Perl data structures.  
 Having this document handy hopefully makes reading the Perl source code easier.
 It might also help you interpret the <i><a href="http://perldoc.perl.org/Devel/Peek.html">Devel::Peek</a></i> dumps.
 
-<p>Most of the internal perl structures had been refactored twice, with 5.10, and 5.14. The comparison links and illustrations for 5.8 - 5.18 are now included in this single document, but also available as extra files. 5.10 to 5.12 changes: only <a href="#SvOOK"><i>OOK</i></a>.
+<p>Most of the internal perl structures had been refactored twice, with 5.10, and 5.14. The comparison links and illustrations for 5.8 - 5.20 are now included in this single document, but also available as extra files. 5.10 to 5.12 changes: only <a href="#SvOOK"><i>OOK</i></a>.
 
 <ul>
 <li><a href="index-8.html">illguts for 5.8 and older</a>
 <li><a href="index-10.html">illguts for 5.10</a>
 <li><a href="index-12.html">illguts for 5.12</a>
-<li><a href="index-14.html">illguts for 5.14 - 5.18</a>
+<li><a href="index-14.html">illguts for 5.14 - 5.20</a>
 </ul>
 
 <p>The first things to look at are the data structures that represent
@@ -67,23 +67,23 @@ what its type is and act according to this information.
 <p>The symbolic <b>SvTYPE</b> names (and associated value) are with <a name="SvTYPE">5.14</a>:
 
 <table>
-  <tr><th>svtype</th>   <th>5.14 - 5.18</th>     <th>5.10</th>     <th>5.6 + 5.8</th></tr>
-  <tr><td><b>0</b></td> <td><b>SVt_NULL</b></td> <td>SVt_NULL</td> <td>SVt_NULL</td></tr>
-  <tr><td><b>1</b></td> <td><b>SVt_BIND</b></td> <td>SVt_BIND</td> <td>SVt_IV</td>  </tr>
-  <tr><td><b>2</b></td> <td><b>SVt_IV</b></td>   <td>SVt_IV</td>   <td>SVt_NV</td>  </tr>
-  <tr><td><b>3</b></td> <td><b>SVt_NV</b></td>   <td>SVt_NV</td>   <td>SVt_RV</td>  </tr>
-  <tr><td><b>4</b></td> <td><b>SVt_PV</b></td>   <td>SVt_RV</td>   <td>SVt_PV</td>  </tr>
-  <tr><td><b>5</b></td> <td><b>SVt_PVIV</b></td> <td>SVt_PV</td>   <td>SVt_PVIV</td> </tr>
-  <tr><td><b>6</b></td> <td><b>SVt_PVNV</b></td> <td>SVt_PVIV</td> <td>SVt_PVNV</td> </tr>
-  <tr><td><b>7</b></td> <td><b>SVt_PVMG</b></td> <td>SVt_PVNV</td> <td>SVt_PVMG</td> </tr>
-  <tr><td><b>8</b></td> <td><b>SVt_REGEXP</b></td><td>SVt_PVMG</td><td>SVt_PVBM</td> </tr>
-  <tr><td><b>9</b></td> <td><b>SVt_PVGV</b></td>  <td>SVt_PVGV</td><td>SVt_PVLV</td> </tr>
-  <tr><td><b>10</b></td><td><b>SVt_PVLV</b></td> <td>SVt_PVLV</td> <td>SVt_PVAV</td> </tr>
-  <tr><td><b>11</b></td><td><b>SVt_PVAV</b></td> <td>SVt_PVAV</td> <td>SVt_PVHV</td> </tr>
-  <tr><td><b>12</b></td><td><b>SVt_PVHV</b></td> <td>SVt_PVHV</td> <td>SVt_PVCV</td> </tr>
-  <tr><td><b>13</b></td><td><b>SVt_PVCV</b></td> <td>SVt_PVCV</td> <td>SVt_PVGV</td> </tr>
-  <tr><td><b>14</b></td><td><b>SVt_PVFM</b></td> <td>SVt_PVFM</td> <td>SVt_PVFM</td> </tr>
-  <tr><td><b>15</b></td><td><b>SVt_PVIO</b></td> <td>SVt_PVIO</td> <td>SVt_PVIO</td> </tr>
+  <tr><th>svtype</th>   <th>5.20</th>              <th>5.14 - 5.18</th>     <th>5.10</th>     <th>5.6 + 5.8</th></tr>
+  <tr><td><b>0</b></td> <td><b>SVt_NULL</b></td>   <td>SVt_NULL</td> <td>SVt_NULL</td> <td>SVt_NULL</td></tr>
+  <tr><td><b>1</b></td> <td><b>SVt_IV</b></td>     <td>SVt_BIND</td> <td>SVt_BIND</td> <td>SVt_IV</td>  </tr>
+  <tr><td><b>2</b></td> <td><b>SVt_NV</b></td>     <td>SVt_IV</td>   <td>SVt_IV</td>   <td>SVt_NV</td>  </tr>
+  <tr><td><b>3</b></td> <td><b>SVt_PV</b></td>     <td>SVt_NV</td>   <td>SVt_NV</td>   <td>SVt_RV</td>  </tr>
+  <tr><td><b>4</b></td> <td><b>SVt_INVLIST</b></td><td>SVt_PV</td> <td>SVt_RV</td>   <td>SVt_PV</td>  </tr>
+  <tr><td><b>5</b></td> <td><b>SVt_PVIV</b></td>   <td>SVt_PVIV</td> <td>SVt_PV</td>   <td>SVt_PVIV</td> </tr>
+  <tr><td><b>6</b></td> <td><b>SVt_PVNV</b></td>   <td>SVt_PVNV</td> <td>SVt_PVIV</td> <td>SVt_PVNV</td> </tr>
+  <tr><td><b>7</b></td> <td><b>SVt_PVMG</b></td>   <td>SVt_PVMG</td> <td>SVt_PVNV</td> <td>SVt_PVMG</td> </tr>
+  <tr><td><b>8</b></td> <td><b>SVt_REGEXP</b></td> <td>SVt_REGEXP</td><td>SVt_PVMG</td><td>SVt_PVBM</td> </tr>
+  <tr><td><b>9</b></td> <td><b>SVt_PVGV</b></td>   <td>SVt_PVGV</td>  <td>SVt_PVGV</td><td>SVt_PVLV</td> </tr>
+  <tr><td><b>10</b></td><td><b>SVt_PVLV</b></td>   <td>SVt_PVLV</td> <td>SVt_PVLV</td> <td>SVt_PVAV</td> </tr>
+  <tr><td><b>11</b></td><td><b>SVt_PVAV</b></td>   <td>SVt_PVAV</td> <td>SVt_PVAV</td> <td>SVt_PVHV</td> </tr>
+  <tr><td><b>12</b></td><td><b>SVt_PVHV</b></td>   <td>SVt_PVHV</td> <td>SVt_PVHV</td> <td>SVt_PVCV</td> </tr>
+  <tr><td><b>13</b></td><td><b>SVt_PVCV</b></td>   <td>SVt_PVCV</td> <td>SVt_PVCV</td> <td>SVt_PVGV</td> </tr>
+  <tr><td><b>14</b></td><td><b>SVt_PVFM</b></td>   <td>SVt_PVFM</td> <td>SVt_PVFM</td> <td>SVt_PVFM</td> </tr>
+  <tr><td><b>15</b></td><td><b>SVt_PVIO</b></td>   <td>SVt_PVIO</td> <td>SVt_PVIO</td> <td>SVt_PVIO</td> </tr>
 </table>
 
 <p>In addition to the simple type names already mentioned, the
@@ -100,8 +100,9 @@ files and directories and various state information about these.  The
 <i>PVFM</i> is used to hold information on forms.
 <i>P5RX</i> was formerly called <i>PVBM</i> for Boyer-Moore 
 (match information), but contains now regex information.
-<i>BIND</i> is a placeholder for read-only aliases or VIEW, 
-and implemented as <i>RV</i> for now. (#29544, #29642)
+<i>BIND</i> was a unused placeholder for read-only aliases or VIEW. (#29544, #29642)
+<i>INVLIST</i> is an CORE internal inversion list object only, used for faster
+utf8 matching, since 5.19.2. Same layout as a PV.
 
 <p>A Perl data object can change type as the value is modified.  The SV is
 said to be upgraded in this case.  Type changes only go down the
@@ -346,7 +347,7 @@ of pointers just to find that the information is not there.
         (anything &lt;= PVLV). See description of <a href="#hv">HV</a>
         below.
   <dt> 0x40000000 <b><a name="SVpbm_VALID">SVpbm_VALID</a></b>
-        <dd> Unused. See description of <a href="#svpvbm">PVBM</a> below.
+        <dd>Clashes with SVpad_NAME. See description of <a href="#svpvbm">PVBM</a> below.
   <dt> 0x40000000 <b><a name="SVrepl_EVAL">SVrepl_EVAL</a></b>
           <dd>Replacement part of s///e
        <p>
@@ -1111,7 +1112,7 @@ opclass:
 / pmop
 $ svop_or_padop
 # padop
-" pvop_or_svop
+" pvop_or_svop <!-- " -->
 { loop
 ; cop
 % baseop_or_unop
@@ -1295,7 +1296,7 @@ JMPENV level with a proper <em>setjmp</em> record.
 <i>&copy; 1998-1999 Gisle Aas. 2009,2010,2012,2013 Reini Urban</i><br>
 <a href="mailto:gisle@aas.no">&lt;gisle@aas.no&gt;</a><br>
 <a href="mailto:rurban@x-ray.at">&lt;rurban@x-ray.at&gt;</a><br>
-$Date: 2013-08-23 11:47:48 rurban $
+$Date: 2013-08-27 12:24:38 rurban $
 </small>
 </div>
 

@@ -1,4 +1,4 @@
-# sed -i -e's,0.37,0.38,' META.yml VERSION illguts.hhp index-work.html
+# sed -i -e's,0.43,0.44,' META.yml VERSION illguts.hhp index-work.html
 .PHONY: test clean dist watch
 
 SRC=$(wildcard *.epsx *.ps) index-work.html
@@ -79,7 +79,8 @@ png-14=av-14.png \
   svpviv-14.png \
   svpvlv-14.png \
   svpvmg-14.png \
-  svpvnv-14.png
+  svpvnv-14.png \
+  svtypes-14.png
 
 png: $(png) $(png-8) $(png-10) $(png-14) index.html
 
@@ -124,7 +125,7 @@ slides: slides/index.html
 
 # Help Compiler: windows or cygwin only
 illguts.chm: index.html illguts.hhp illguts.hhk $(png)
-	-hhc illguts.hhp
+	-PATH=/cygdrive/c/Program\ Files/HTML\ Help\ Workshop:$PATH hhc illguts.hhp
 
 slides/index.html: slides.pds index.html
 	./mk-slides slides.pds
@@ -236,4 +237,5 @@ svpvnv-14.png: svpvnv-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps str-14.ps br
 svrv-8.png: svrv-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps
 svrv.png: svrv.epsx sv.ps common.ps rect.ps ptr.ps box.ps
 svtypes-8.png: svtypes-8.epsx common.ps arrow.ps
+svtypes-14.png: svtypes-14.epsx common.ps arrow.ps
 svtypes.png: svtypes.epsx common.ps arrow.ps

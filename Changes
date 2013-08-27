@@ -1,3 +1,8 @@
+0.44 2013-08-23 rurban
+        * index: update to 5.20 (SVt_INVLIST)
+        * svtypes-14.epsx: added
+        * svtypes.epsx: fixed wrong NV, PV arrows, removed BIND
+
 0.43 2013-08-23 rurban
         * index: update to 5.18 (no structural changes done, refcounted PADLIST ignored so far)
         * pad.ps: fix @_ and NAMES confusion, thanks to LeoNerd
