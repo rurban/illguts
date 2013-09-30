@@ -464,7 +464,7 @@ turned off represents <i>undef</i>.  The PVX pointer can
 also be NULL when POK is off and no string storage has been
 allocated.
 
-<p>With 5.20 there will be a new <b>IsCOW</b> flag indicating that
+<p>Since 5.18 there is now a seperate <b>IsCOW</b> flag indicating that
 the PVX is shared as long as nobody is changing the value. The current
 implementation adds a <b>COW_REFCNT</b> byte at the aligned end of the
 PVX, which makes it unusable for COW in the static compiler and threads,
