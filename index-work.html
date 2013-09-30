@@ -22,7 +22,7 @@ function Toggle(id) {
 <body bgcolor="#FFFFFF" text="#000000" link="#000055" vlink="#550000" alink="#000000" topmargin="0">
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.44, for perl 5.20 and older</small></h1>
+<small>Version 0.45, for perl 5.20 and older</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl. It contains commented illustrations of all major internal Perl data structures.  
@@ -176,11 +176,13 @@ of pointers just to find that the information is not there.
   <dt> 0x00000100 <b><a name="SVf_IOK">SVf_IOK</a></b> (public integer)
   <dd> This flag indicates that the object has a valid public IVX field value.
        It can only be set for value type SvIV or subtypes of it.
+          <br><i>(SVf_IOK was 0x00010000 until 5.10)</i>
        <p>
 
   <dt> 0x00000200 <b><a name="SVf_NOK">SVf_NOK</a></b> (public number)
         <dd> This flag indicates that the object has a valid public NVX field value.
        It can only be set for value type SvNV or subtypes of it.
+          <br><i>(SVf_NOK was 0x00020000 until 5.10)</i>
        <p>
 
 
@@ -188,17 +190,20 @@ of pointers just to find that the information is not there.
         <dd> This flag indicates that the object has a valid public PVX, CUR and LEN
        field values (i.e. a valid string value).
        It can only be set for value type SvPV or subtypes of it.
+          <br><i>(SVf_POK was 0x00040000 until 5.10)</i>
        <p>
 
   <dt> 0x00000800 <b><a name="SVf_ROK">SVf_ROK</a></b> (valid reference pointer)
         <dd> This flag indicates that the type should be treated as an SvRV
           and that the RV field contains a valid reference pointer.
+          <br><i>(SVf_ROK was 0x00080000 until 5.10)</i>
           <p>
 
   <dt> 0x00001000 <b><a name="SVp_IOK">SVp_IOK</a></b> (private integer)
         <dd> This flag indicates that the object has a valid non-public
           IVX field value. It can only be set for value type SvIV or
           subtypes of it.
+          <br><i>(SVp_IOK was 0x01000000 until 5.10)</i>
 
           <p>The private OK flags (SVp_IOK, SVp_NOK, SVp_POK) are used
           by the magic system.  During execution of a magic callback,
@@ -212,47 +217,60 @@ of pointers just to find that the information is not there.
         <dd> This flag indicates that the object has a valid non-public NVX
           field value, a double float. It can only be set for value type SvNV
           or subtypes of it.
+          <br><i>(SVp_NOK was 0x02000000 until 5.10)</i>
           <p>
 
   <dt> 0x00004000 <b><a name="SVp_POK">SVp_POK</a></b> (private string)
         <dd> This flag indicates that the object has a valid non-public PVX, CUR and LEN
           field values (i.e. a valid string value).
           It can only be set for value type SvPV or subtypes of it.
+          <br><i>(SVp_POK was 0x04000000 until 5.10)</i>
           <p>
 
   <dt> 0x00008000 <b><a name="SVp_SCREAM">SVp_SCREAM</a></b>
         <dd> A string SvPV* type has been studied.
+          <br><i>(SVp_SCREAM was 0x08000000 until 5.10)</i>
   <dt> 0x00008000 <b><a name="SVphv_CLONEABLE">SVphv_CLONEABLE</a></b>
-        <dd> PVHV <a href="#stash">(stashes)</a> clone its objects.
+        <dd> For PVHV (<a href="#stash">stashes</a> only) to clone its objects.
+          <br><i>(Introduced with 5.8.7)</i>
   <dt> 0x00008000 <b><a name="SVpgv_GP">SVpgv_GP</a></b>
         <dd> GV has a valid GP.
+          <br><i>(Introduced with 5.10)</i>
   <dt> 0x00008000 <b><a name="SVprv_PCS_IMPORTED">SVprv_PCS_IMPORTED</a></b>
         <dd> RV is a proxy for a constant
           subroutine in another package. Set the
           CvIMPORTED_CV_ON() if it needs to be
           expanded to a real GV.
+          <br><i>(Introduced with 5.8.9)</i>
           <p>
 
-  <dt> 0x00010000 <b><a name="SVs_PADSTALE">SVs_PADSTALE</a></b>
-        <dd> lexical has gone out of scope
-  <dt> 0x00010000 <b><a name="SVpad_STATE">SVpad_STATE</a></b>
-        <dd> pad name is a "state" var
+  <dt> 0x00010000 <b><a name="SVf_IsCOW">SVf_IsCOW</a></b>
+        <dd> copy on write or shared hash key if SvLEN == 0.
+          <br><i>(Introduced with 5.18. This bit was used for SVs_PADSTALE, SVpad_STATE before)</i>
        <p>
 
   <dt> 0x00020000 <b><a name="SVs_PADTMP">SVs_PADTMP</a></b>
         <dd> in use as tmp
+          <br><i>(SVs_PADTMP was 0x00000200 from 5.6-5.8)</i>
+  <dt> 0x00020000 <b><a name="SVs_PADSTALE">SVs_PADSTALE</a></b>
+        <dd> lexical has gone out of scope
+          <br><i>(SVs_PADSTALE was 0x00010000 from 5.10-5.14)</i>
   <dt> 0x00020000 <b><a name="SVpad_TYPED">SVpad_TYPED</a></b>
         <dd> pad name is a typed Lexical
+          <br><i>(SVpad_TYPED was 0x40000000 in 5.8)</i>
        <p>
 
   <dt> 0x00040000 <b><a name="SVs_PADMY">SVs_PADMY</a></b>
         <dd> in use a "my" variable
+          <br><i>(SVs_PADMY was 0x00000400 in 5.6-5.8)</i>
   <dt> 0x00040000 <b><a name="SVpad_OUR">SVpad_OUR</a></b>
         <dd> pad name is "our" instead of "my"
+          <br><i>(SVpad_OUR was 0x80000000 in 5.6-5.8)</i>
        <p>
 
   <dt> 0x00080000 <b><a name="SVs_TEMP">SVs_TEMP</a></b>
         <dd> string is stealable
+          <br><i>(SVs_TEMP was 0x00000800 in 5.6-5.8)</i>
        <p>
 
   <dt> 0x00100000 <b><a name="SVs_OBJECT">SVs_OBJECT</a></b>
@@ -260,6 +278,7 @@ of pointers just to find that the information is not there.
        set for value type SvPVMG or subtypes of it.  This flag also
        indicates that the STASH pointer is valid and 
        points to a namespace HV.
+          <br><i>(SVs_OBJECT was 0x00001000 in 5.6-5.8)</i>
        <p>
 
   <dt> 0x00200000 <b><a name="SVs_GMG">SVs_GMG</a></b> (Get Magic)
@@ -268,16 +287,19 @@ of pointers just to find that the information is not there.
           It can only be set for value type SvPVMG or subtypes
           of it.  This flag also indicate that the MAGIC pointer is valid.
           Formerly called GMAGICAL.
+          <br><i>(SVs_GMG was 0x00002000 in 5.6-5.8)</i>
        <p>
 
   <dt> 0x00400000 <b><a name="SVs_SMG">SVs_SMG</a></b> (Set Magic)
         <dd> This flag indicates that the object has a magic <i>set</i> method to
        be invoked. Formerly called SMAGICAL.
+          <br><i>(SVs_SMG was 0x00004000 in 5.6-5.8)</i>
        <p>
 
   <dt> 0x00800000 <b><a name="SVs_RMG">SVs_RMG</a></b> (Random Magic)
         <dd> This flag indicates that the object has any other magical methods
        (besides get/len/set magic method) or even methodless magic attached.
+          <br><i>(SVs_RMG was 0x00008000 in 5.6-5.8)</i>
 
         <p>The SVs_RMG flag (formerly called RMAGICAL) is used mainly
         for tied HV and AV (having 'P' magic) and SVs which have magic
@@ -285,25 +307,27 @@ of pointers just to find that the information is not there.
         setting SVs_GMG and SVs_SMG flags for SVs which need to be
         marked as MAGICAL otherwise.
        <p>
-       Any of SVs_GMG, SVs_SMG and SVs_RMG is called MAGICAL
+       Any of SVs_GMG, SVs_SMG and SVs_RMG is called MAGICAL.
        <p>
 
   <dt> 0x01000000 <b><a name="SVf_FAKE">SVf_FAKE</a></b>
         <dd>0: glob or lexical is just a copy<br>
           1: SV head arena wasn't malloc()ed<br>
           2: in conjunction with <a href="#SVf_READONLY">SVf_READONLY</a>
-          marks a shared hash key scalar
+          marked a shared hash key scalar
           (SvLEN == 0) or a copy on write
-          string (SvLEN != 0) [SvIsCOW(sv)]<br>
+          string (SvLEN != 0) until 5.18 which came with a seperate SvIsCOW(sv)<br>
           3: For <a href="#cv">PVCV</a>, whether CvUNIQUE(cv)
           refers to an eval or once only
           [CvEVAL(cv), CvSPECIAL(cv)]<br>
           4: On a pad name SV, that slot in the
           frame AV is a REFCNT'ed reference
           to a lexical from "outside"
+          <br><i>(SVf_FAKE was 0x00100000 in 5.6-5.8)</i>
   <dt> 0x01000000 <b><a name="SVphv_REHASH">SVphv_REHASH</a></b>
           <dd>5: On a PVHV, hash values are being
           recalculated
+          <br><i>(SVphv_REHASH was 0x10000000 in 5.8)</i>
           <p>
 
   <dt> 0x02000000 <b><a name="SVf_OOK">SVf_OOK</a></b>  (Offset OK)
@@ -313,17 +337,21 @@ of pointers just to find that the information is not there.
           or subtypes of it. It also follows that the IOK (and IOKp) flag must
           be off when OOK is on. Take a look at the <a href="#SvOOK"><i>SvOOK</i></a> figure
           below.
+          <br><i>(SVf_OOK was 0x00200000 in 5.6-5.8)</i>
           <p>
 
   <dt> 0x04000000 <b><a name="SVf_BREAK">SVf_BREAK</a></b>
         <dd>REFCNT is artificially low. Used by
           SVs in final arena cleanup. Set in S_regtry on PL_reg_curpm, so that
           perl_destruct() will skip it
+          <br><i>(SVf_BREAK was 0x00400000 in 5.6-5.8)</i>
        <p>
 
   <dt> 0x08000000 <b><a name="SVf_READONLY">SVf_READONLY</a></b>
-        <dd> This flag indicate that the value of the object may not be
-          modified.
+        <dd> This flag indicates that the value of the object may not be
+          modified. But it also used together with SVf_FAKE and SVf_ROK
+          for other purposes.
+          <br><i>(SVf_READONLY was 0x00800000 in 5.6-5.8)</i>
           <p>
 
   <dt> 0x10000000 <b><a name="SVf_AMAGIC">SVf_AMAGIC</a></b>
@@ -331,7 +359,8 @@ of pointers just to find that the information is not there.
        <p>
 
   <dt> 0x20000000 <b><a name="SVphv_SHAREKEYS">SVphv_SHAREKEYS</a></b>
-        <dd> Only used by HVs. See description of <a href="hv">HV</a> below.
+        <dd> Only used by HVs when the keys live on a shared string table. See
+          <a href="hv">HV</a> below.
   <dt> 0x20000000 <b><a name="SVf_UTF8">SVf_UTF8</a></b>
           <dd>SvPV is UTF-8 encoded.
           This is also set on RVs whose overloaded
@@ -341,6 +370,7 @@ of pointers just to find that the information is not there.
 
   <dt> 0x40000000 <b><a name="SVpav_REAL">SVpav_REAL</a></b>
         <dd> Free old entries in AVs only. See description of <a href="av">AV</a> below.
+          <br><i>(Introduced with 5.10)</i>
   <dt> 0x40000000 <b><a name="SVphv_LAZYDEL">SVphv_LAZYDEL</a></b>
         <dd> Only used by HVs. This is only set true on a PVGV when
         it's playing "PVBM", but is tested for on any regular scalar
@@ -348,6 +378,7 @@ of pointers just to find that the information is not there.
         below.
   <dt> 0x40000000 <b><a name="SVpbm_VALID">SVpbm_VALID</a></b>
         <dd>Clashes with SVpad_NAME. See description of <a href="#svpvbm">PVBM</a> below.
+          <br><i>(SVpbm_VALID was 0x80000000 in 5.6-5.8)</i>
   <dt> 0x40000000 <b><a name="SVrepl_EVAL">SVrepl_EVAL</a></b>
           <dd>Replacement part of s///e
        <p>
@@ -357,16 +388,23 @@ of pointers just to find that the information is not there.
           (IV, PVIV, PVNV, PVMG, PVGV and maybe PVLV).
   <dt> 0x80000000 <b><a name="SVpav_REIFY">SVpav_REIFY</a></b>
         <dd> Can become real. For <a href="#svpvav">PVAV</a> only.
+          <br><i>(Introduced with 5.10)</i>
   <dt> 0x80000000 <b><a name="SVphv_HASKFLAGS">SVphv_HASKFLAGS</a></b>
         <dd> Keys have flag byte after hash. For <a href="#svpvhv">PVHV</a> only.
+          <br><i>(Introduced with 5.8.0)</i>
   <dt> 0x80000000 <b><a name="SVpfm_COMPILED">SVpfm_COMPILED</a></b>
         <dd> FORMLINE is compiled. For <a href="#svpvbm">PVFM</a> only.
   <dt> 0x80000000 <b><a name="SVpbm_TAIL">SVpbm_TAIL</a></b>
         <dd> PVGV when SVpbm_VALID is true.
           Only used by SvPVBMs.  See description of <a href="#svpvbm">PVBM</a> below.
+          <br><i>(SVpbm_TAIL was 0x40000000 in 5.6-5.8)</i>
   <dt> 0x80000000 <b><a name="SVprv_WEAKREF">SVprv_WEAKREF</a></b>
         <dd> RV upwards. However, SVf_ROK and SVp_IOK are exclusive. For <a href="#svrv">RV</a> only.
         <p>
+  <dt> 0x80000000 <b><a name="SVpad_STATE">SVpad_STATE</a></b>
+        <dd> pad name is a "state" var
+          <br><i>(SVpad_STATE was 0x00010000 in 5.10-5.14)</i>
+       <p>
 
 </dl>
 </blockquote>
@@ -425,6 +463,12 @@ the struct xpv is unused.  An SvPV with both the POK and ROK flags
 turned off represents <i>undef</i>.  The PVX pointer can
 also be NULL when POK is off and no string storage has been
 allocated.
+
+<p>With 5.20 there will be a new <b>IsCOW</b> flag indicating that
+the PVX is shared as long as nobody is changing the value. The current
+implementation adds a <b>COW_REFCNT</b> byte at the aligned end of the
+PVX, which makes it unusable for COW in the static compiler and threads,
+so I'm not adding a picture of it.
 
 <h2><a name="svpviv">SvPVIV</a> and <a name="svpvnv">SvPVNV</a></h2>
 
