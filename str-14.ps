@@ -24,10 +24,12 @@ grestore
 120 285 220 300 rect S
 
 /Courier 8 SF
-220 302 M (char[]) rshow
+120 302 M (char[]) show
+208 302 M (REFCNT) show
+208 309 M (>5.18)  show
 
 125 290 M
-[(a) (b) (c) (?) (x) (y) (z) (\\0)] {
+[(a) (b) (c) (?) (x) (y) (z) (\\0) () (C)] {
    gsave
      dup stringwidth pop 2 div neg 0 RM show
    grestore

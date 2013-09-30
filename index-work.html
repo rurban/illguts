@@ -467,8 +467,8 @@ allocated.
 <p>Since 5.18 there is now a seperate <b>IsCOW</b> flag indicating that
 the PVX is shared as long as nobody is changing the value. The current
 implementation adds a <b>COW_REFCNT</b> byte at the aligned end of the
-PVX, which makes it unusable for COW in the static compiler and threads,
-so I'm not adding a picture of it.
+PVX, which makes it unusable for COW in the static compiler and threads.
+It also requires that LEN is always at least 2 larger than CUR to keep the \0 byte.
 
 <h2><a name="svpviv">SvPVIV</a> and <a name="svpvnv">SvPVNV</a></h2>
 

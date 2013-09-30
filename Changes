@@ -1,6 +1,8 @@
 0.45 2013-09-30 rurban
-        * index: COW, COW_REFCNT (now pictures for this mess yet),
+        * index: COW, COW_REFCNT
         added SV flags history
+        * str-14.ps: added COW_REFCNT
+        * svpv-14.epsx: updated bounding box
 
 0.44 2013-08-23 rurban
         * index: update to 5.20 (SVt_INVLIST)
