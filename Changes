@@ -2,6 +2,7 @@
         * magic.ps, magic-10.ps: fix /Helvtica typo which prevented
         svpvbm*.png being updated and cropped.
         * svpvbm-14.epsx: fix bbox and cur and len arrows
+        * *.pdf: removed -12, used darwin to produce the pdfs for better images
 
 0.45 2013-09-30 rurban
         * index: COW, COW_REFCNT

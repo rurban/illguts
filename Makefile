@@ -103,7 +103,7 @@ index-12.html: htmlprep.pl index-work.html $(png-10)
 index-14.html: htmlprep.pl index-work.html  $(png-14)
 	./htmlprep.pl
 
-pdf: index.html illguts-8.pdf illguts-10.pdf illguts-12.pdf illguts-14.pdf illguts.pdf
+pdf: index.html illguts-8.pdf illguts-10.pdf illguts-14.pdf illguts.pdf
 
 # sudo apt-get install htmldoc
 illguts.pdf: index.html $(png)
@@ -115,8 +115,8 @@ illguts-8.pdf: index-8.html $(png)
 illguts-10.pdf: index-10.html $(png)
 	-htmldoc --quiet --webpage --format pdf14 index-10.html -f $@
 
-illguts-12.pdf: index-12.html $(png)
-	-htmldoc --quiet --webpage --format pdf14 index-12.html -f $@
+#illguts-12.pdf: index-12.html $(png)
+#	-htmldoc --quiet --webpage --format pdf14 index-12.html -f $@
 
 illguts-14.pdf: index-14.html $(png)
 	-htmldoc --quiet --webpage --format pdf14 index-14.html -f $@
