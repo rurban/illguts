@@ -142,15 +142,13 @@ eps:
 	for x in *.png; do s=$${x/.png/.eps}; make $s; done
 
 %.eps: %.epsx epsx2eps sv.ps common.ps mws.ps box.ps str.ps ptr.ps magic.ps arrow.ps chararray.ps gp.ps stash.ps glob.ps op.ps dist.ps
-	./epsx2eps $< >$@
+	./epsx2eps $< > $@
+	@test -s $@ || rm $@
 
 # sudo apt-get install ghostscript netpbm 
-%.png: %.epsx
-	./epsx2eps $< >$@.eps
-	./eps2png $@.eps >$@.tmp
-	@test -s $@.tmp || rm $@.tmp
-	@test -s $@.tmp && mv $@.tmp $@
-	rm $@.eps
+%.png: %.eps
+	./eps2png $< > $@
+	@test -s $@ || rm $@
 
 clean:
 	rm -f *.eps *~

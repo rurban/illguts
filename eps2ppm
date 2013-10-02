@@ -3,6 +3,7 @@
 $scale = 4;
 
 my $file = shift || die;
+die "empty file $file" if !-s $file;
 open(FILE, $file) || die;
 
 die "Bad magic" unless <FILE> =~ /^%!PS-Adobe-/;
