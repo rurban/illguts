@@ -1,3 +1,7 @@
+0.47 2013-11-?? rurban
+        * hv-18.epsx: added with 3 new xpvhv_aux fields
+        * index-work.html, Makefile, htmlprep.pl: added index-18.html target
+
 0.46 2013-10-01 rurban
         * magic.ps, magic-10.ps: fix /Helvtica typo which prevented
         svpvbm*.png being updated and cropped.

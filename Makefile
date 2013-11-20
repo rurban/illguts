@@ -82,13 +82,17 @@ png-14=av-14.png \
   svpvnv-14.png \
   svtypes-14.png
 
-png: $(png) $(png-8) $(png-10) $(png-14) index.html
+png-18=hv-18.png \
+
+ALLPNG = $(png) $(png-8) $(png-10) $(png-14) $(png-18)
+
+png: $(ALLPNG) index.html
 
 all: $(png) index.html chm pdf slides
 
 chm: illguts.chm
 
-index.html: htmlprep.pl index-work.html $(png) $(png-8) $(png-10) $(png-14)
+index.html: htmlprep.pl index-work.html $(ALLPNG)
 	./htmlprep.pl
 
 index-8.html: htmlprep.pl index-work.html $(png-8)
@@ -103,7 +107,10 @@ index-12.html: htmlprep.pl index-work.html $(png-10)
 index-14.html: htmlprep.pl index-work.html  $(png-14)
 	./htmlprep.pl
 
-pdf: index.html illguts-8.pdf illguts-10.pdf illguts-14.pdf illguts.pdf
+index-18.html: htmlprep.pl index-work.html  $(png-18)
+	./htmlprep.pl
+
+pdf: index.html illguts-8.pdf illguts-10.pdf illguts-14.pdf illguts-18.pdf illguts.pdf
 
 # sudo apt-get install htmldoc
 illguts.pdf: index.html $(png)
@@ -120,6 +127,9 @@ illguts-10.pdf: index-10.html $(png)
 
 illguts-14.pdf: index-14.html $(png)
 	-htmldoc --quiet --webpage --format pdf14 index-14.html -f $@
+
+illguts-18.pdf: index-18.html $(png)
+	-htmldoc --quiet --webpage --format pdf14 index-18.html -f $@
 
 slides: slides/index.html
 
@@ -176,6 +186,7 @@ gv-14.png: gv-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps gp.ps he.ps
 hv-8.png:  hv-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps mws.ps he-8.ps chararray.ps break.ps
 hv-10.png: hv-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps he.ps chararray.ps break.ps
 hv-14.png: hv-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps he.ps chararray.ps break.ps
+hv-18.png: hv-18.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps he.ps chararray.ps break.ps
 io-8.png: io-8.epsx sv-8.ps common.ps rect.ps ptr.ps box.ps mws.ps magic.ps
 io-10.png: io-10.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps magic-10.ps
 io-14.png: io-14.epsx sv.ps common.ps rect.ps ptr.ps box.ps mws.ps magic-10.ps
