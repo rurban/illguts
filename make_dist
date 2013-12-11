@@ -16,11 +16,11 @@ chmod 0754, @exe, 'up';
 $VNAME = "$NAME-$VERSION";
 mkdir($VNAME, 0755) || die "Can't create $VNAME: $!";
 
-sh("cp index.html index-8.html index-10.html index-12.html index-14.html $VNAME");
+sh("cp index.html index-8.html index-10.html index-12.html index-14.html index-18.html $VNAME");
 sh("cp *.ps *.epsx $VNAME");
 sh("cp *.png mjd*.gif $VNAME");
 sh("cp META.yml $VNAME");
-sh("cp Changes illguts*.pdf illguts.chm illguts.hhp illguts.hhk Makefile README VERSION"
+sh("cp Changes illguts.pdf illguts.chm illguts.hhp illguts.hhk Makefile README VERSION"
    ." slides.pds ".join(" ", @exe)." $VNAME");
 sh("cp -r img $VNAME/");
 sh("mkdir $VNAME/slides");

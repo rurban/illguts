@@ -1191,6 +1191,10 @@ d danger, unknown side effects
 u defaults to $_
 </pre></td></tr></table>
 
+A word on <b>cop.cop_warnings</b>:
+The numeric value of lexical warnings can be special: 0, 1 or 2 and is then stored in 
+pointer pointed to by cop_warnings. cop_warnings may also hold a string buffer of a bitmask of warning categories. Since 5.10 this string buffer is in the second word of cop_warnings, the length is then stored in the first word. (i.e a pascal string) <!-- no picture yet -->
+
 <p><i>For syntax trees and OP codes also see 
 <a href="http://www.perlfoundation.org/perl5/index.cgi?optree_guts">http://www.perlfoundation.org/perl5/index.cgi?optree_guts</a> 
 and 
