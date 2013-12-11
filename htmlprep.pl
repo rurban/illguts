@@ -39,7 +39,7 @@ while (<I>) {
     print O12 $s;
     $s =~ s/for perl 5.12/for perl 5.14 to 5.16/;
     print O14 $s;
-    $s =~ s/for perl 5.14 to 5.16/for perl 5.18/;
+    $s =~ s/for perl 5.14 to 5.16/since perl 5.18/;
     print O18 $s;
     next;
   }
@@ -73,17 +73,18 @@ while (<I>) {
       print O18;
     } else {
       $_ = '<div align="center">';
-      if ($do58 and $do510 and $do514 and $do518) {
+      if ($do58 and $do510 and $do514) {
         print O8 $_."<img class=\"i58\" src=\"$png-8.png\" alt=\"$png 5.8\">"."</div>\n";
         print O10 $_."<img class=\"i510\" src=\"$png-10.png\" alt=\"$png 5.10\">"."</div>\n";
         print O12 $_."<img class=\"i514\" src=\"$png-".($do512?"12":"10").".png\" alt=\"$png 5.12\">"."</div>\n" if $do512 or $do510;
         print O14 $_."<img class=\"i514\" src=\"$png-14.png\" alt=\"$png 5.14\">"."</div>\n";
-        print O18 $_."<img class=\"i518\" src=\"$png-18.png\" alt=\"$png 5.18\">"."</div>\n";
+        print O18 $_."<img class=\"i518\" src=\"$png-18.png\" alt=\"$png 5.18\">"."</div>\n" if $do518;
+        print O18 $_."<img class=\"i518\" src=\"$png-14.png\" alt=\"$png 5.14\">"."</div>\n" unless $do518;
 
         $_ .= "<span class=\"i58\" id=\"$png-8\"><a name=\"$png-8\" onclick=\"javascript:Toggle(\'$png-8\')\" title=\"Click to hide\">Until 5.8:<img class=\"i58\" src=\"$png-8.png\" alt=\"$png 5.8\"><br>".
           "Since 5.10:<img class=\"i510\" src=\"$png-10.png\" alt=\"$png 5.10\"></a></span><br>".
-          "<span class=\"i514\" id=\"$png-14\"><a name=\"$png-14\" href=\"#$png-8\" onclick=\"javascript:Toggle(\'$png-8\')\" title=\"Click to show other\">Since 5.14:<img class=\"i514\" src=\"$png-14.png\" alt=\"$png 5.14\"></a></span>".
-          "<span class=\"i518\" id=\"$png-18\"><a name=\"$png-18\" href=\"#$png-8\" onclick=\"javascript:Toggle(\'$png-8\')\" title=\"Click to show other\">Since 5.18:<img class=\"i518\" src=\"$png-18.png\" alt=\"$png 5.18\"></a></span>";
+          "<span class=\"i514\" id=\"$png-14\"><a name=\"$png-14\" href=\"#$png-8\" onclick=\"javascript:Toggle(\'$png-8\')\" title=\"Click to show other\">Since 5.14:<img class=\"i514\" src=\"$png-14.png\" alt=\"$png 5.14\"></a></span>";
+        $_ .= "<span class=\"i518\" id=\"$png-18\"><a name=\"$png-18\" href=\"#$png-8\" onclick=\"javascript:Toggle(\'$png-8\')\" title=\"Click to show other\">Since 5.18:<img class=\"i518\" src=\"$png-18.png\" alt=\"$png 5.18\"></a></span>" if $do518;
 
       } else {
         print O8 $_."<img class=\"i58\" src=\"$png-8.png\" alt=\"$png 5.8\">"."</div>\n"     if $do58;
@@ -91,6 +92,7 @@ while (<I>) {
         print O12 $_."<img class=\"i514\" src=\"$png-".($do512?"12":"10").".png\" alt=\"$png 5.12\">"."</div>\n" if $do512 or $do510;
         print O14 $_."<img class=\"i514\" src=\"$png-14.png\" alt=\"$png 5.14\">"."</div>\n" if $do514;
         print O18 $_."<img class=\"i518\" src=\"$png-18.png\" alt=\"$png 5.18\">"."</div>\n" if $do518;
+        print O18 $_."<img class=\"i518\" src=\"$png-14.png\" alt=\"$png 5.14\">"."</div>\n" if !$do518 and $do514;
 
         print O8 $_."<img class=\"i58\" src=\"$png.png\" alt=\"$png\">"."</div>\n"   if !$do58 and $png{$png.".png"};
         print O10 $_."<img class=\"i510\" src=\"$png.png\" alt=\"$png\">"."</div>\n" if !$do510 and $png{$png.".png"};

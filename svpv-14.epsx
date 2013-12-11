@@ -1,11 +1,12 @@
 %!PS-Adobe-2.0 EPSF-1.2
-%%BoundingBox: -5 235 236 315
+%%BoundingBox: -5 215 236 315
 %%Creator: Gisle Aas (Copyright 1998), Reini Urban (Copyright 2009, 2010)
 
 %require "common.ps"
 %require "sv.ps"
 %require "box.ps"
 %require "rect.ps"
+%require "he.ps"
 
 0 300 sv
 % arrow from sv_u.pvx
@@ -29,6 +30,11 @@
     grestore
     0 -15 rmoveto
 } forall
+
+72 230 (shared) hek
+gsave 0.3 setgray [4 3] 2 setdash % dotted ptr
+  112 292.5 112 230 ptrn
+grestore
 
 0 -45 rmoveto
 %include "str-14.ps"

@@ -1,6 +1,9 @@
-0.47 2013-11-?? rurban
+0.47 2013-12-11 rurban
+        * svpv-8.epsx: add PVX ptr
+        * svpv-{10,14}.epsx: add shared_hek pv
         * hv-18.epsx: added with 3 new xpvhv_aux fields
-        * index-work.html, Makefile, htmlprep.pl: added index-18.html target
+        * index-work.html, Makefile, htmlprep.pl: added index-18.html target.
+        * index-work.html: explain shared strings via heks and COW
 
 0.46 2013-10-01 rurban
         * magic.ps, magic-10.ps: fix /Helvtica typo which prevented

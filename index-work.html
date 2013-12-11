@@ -465,11 +465,15 @@ turned off represents <i>undef</i>.  The PVX pointer can
 also be NULL when POK is off and no string storage has been
 allocated.
 
+<p>If the string is shared, created by <b>sharepvn</b>, the PVX
+is part of a <a href="#hek"><b>HEK</b></a>, i.e. the PVX points to the hek_key of the <tt>struct hek</tt>.
+
 <p>Since 5.18 there is now a seperate <b>IsCOW</b> flag indicating that
 the PVX is shared as long as nobody is changing the value. The current
 implementation adds a <b>COW_REFCNT</b> byte at the aligned end of the
 PVX, which makes it unusable for COW in the static compiler and threads.
-It also requires that LEN is always at least 2 larger than CUR to keep the \0 byte.
+It also requires that LEN is always at least 2 larger than CUR to keep
+the \0 byte. But beware: shared COWs use SvLEN=0 and set hek_len.
 
 <h2><a name="svpviv">SvPVIV</a> and <a name="svpvnv">SvPVNV</a></h2>
 
@@ -1341,7 +1345,7 @@ JMPENV level with a proper <em>setjmp</em> record.
 <i>&copy; 1998-1999 Gisle Aas. 2009,2010,2012,2013 Reini Urban</i><br>
 <a href="mailto:gisle@aas.no">&lt;gisle@aas.no&gt;</a><br>
 <a href="mailto:rurban@x-ray.at">&lt;rurban@x-ray.at&gt;</a><br>
-$Date: 2013-08-27 12:24:38 rurban $
+$Date: 2013-12-11 14:13:19 rurban $
 </small>
 </div>
 

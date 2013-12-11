@@ -28,5 +28,7 @@
     0 -15 rmoveto
 } forall
 
+102 292.5 120 292.5 ptrn
+
 %include "str.ps"
 
