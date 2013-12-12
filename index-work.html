@@ -651,6 +651,11 @@ some meta-information about the regex,
 such as the used engine, the precomp and the number of pairs of backreference parentheses.
 <i>reg_data</i> contains code and pad pointers for EXEC items in the bytecode.</p>
 
+<p>Since 5.11 the REGEXP is seperate from a PVMG, blessed into the "Regexp" package, with the
+SvANY pointing to the struct regexp, and SvPVX pointing to the string representation of the qr//.<br/>
+Since 5.17.6 the SvANY ptr is the same as the SvPVX pointer, and the SvPVX pointer (i.e. <tt>sv_u.svu_rx</tt>)
+is now used to access the regexp via ReANY().</p>
+
 <p align="center"><img src="mjd-regexp.gif"><br>
 <i>Marc Jason Dominus - http://perl.plover.com/Rx/paper/</i></p>
 
@@ -662,8 +667,8 @@ and we can simply recompile along
   RX_EXTFLAGS(PM_GETRE(&pm)) = $op->reflags;
 </pre>
 <br>
-Marc-Jason Dominus implemented a debugger for the 
-compiled Rx bytecode <a href="http://perl.plover.com/Rx/paper/">http://perl.plover.com/Rx/paper/</a>.<p>
+BTW: Marc-Jason Dominus implemented a debugger for the compiled Rx bytecode
+<a href="http://perl.plover.com/Rx/paper/">http://perl.plover.com/Rx/paper/</a>.<p>
 
 See <b>perlreguts</b> for some details.
 
