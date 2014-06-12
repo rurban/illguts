@@ -22,7 +22,7 @@ function Toggle(id) {
 <body bgcolor="#FFFFFF" text="#000000" link="#000055" vlink="#550000" alink="#000000" topmargin="0">
 
 <h1 align="center" name="top">PerlGuts Illustrated<br><br>
-<small>Version 0.48, for perl 5.20 and older</small></h1>
+<small>Version 0.49, for perl 5.20 and older</small></h1>
 
 <p>This document is meant to supplement the <i><a href="http://perldoc.perl.org/perlguts.html">perlguts(1)</a></i> manual
 page that comes with Perl. It contains commented illustrations of all major internal Perl data structures.  
@@ -536,7 +536,7 @@ MAGIC pointer is non-NULL, then one or more of the MAGICAL flags will
 be set.
 
 <p>STASH (<b>s</b>ymbol <b>t</b>able h<b>ash</b>) is a pointer to a HV
-that represents some namespace/class.  (That the HV represents some
+that represents some namespace/class/package. (That the HV represents a
 namespace means that the NAME field of the HV must be non-NULL. See
 description of <a href="hv">HVs</a> and <a href="#stash">stashes</a>
 below).
@@ -800,11 +800,12 @@ NULL, RITER is incremented until ARRAY[RITER] is non-NULL.  The
 iterator starts out with RITER = -1 and EITER = NULL.<p>
 
 <dt><b>NAME</b>:
-<dd>Until 5.14 NAME was a NUL-terminated string which denotes the fully qualified name of the
+<dd>Until 5.8 NAME was a NUL-terminated string which denotes the fully qualified name of the
 name space (aka <i>package</i>). This was one of the few places where
-Perl does not allow strings with embedded NULs.
-Since 5.14 the value of NAME points to a HEK if name_count == 0,
-or to two HEKs, where HEK[0] is the effective stash name (HvENAME_HEK_NN)
+Perl did not allow strings with embedded NULs.<br>
+Since 5.10 the value of NAME points to a HEK,
+and since 5.14 to one HEK if name_count == 0, or to two HEKs,
+where HEK[0] is the effective stash name (HvENAME_HEK_NN)
 if name_count > 0 or HEK[1] if name_count < 0.
 <p>
 
@@ -1351,10 +1352,10 @@ JMPENV level with a proper <em>setjmp</em> record.
 <hr>
 <div align="right">
 <small>
-<i>&copy; 1998-1999 Gisle Aas. 2009,2010,2012,2013 Reini Urban</i><br>
+<i>&copy; 1998-1999 Gisle Aas. 2009,2010,2012,2013,2014 Reini Urban</i><br>
 <a href="mailto:gisle@aas.no">&lt;gisle@aas.no&gt;</a><br>
 <a href="mailto:rurban@x-ray.at">&lt;rurban@x-ray.at&gt;</a><br>
-$Date: 2013-12-11 14:13:19 rurban $
+$Date: 2014-06-12 10:39:18 rurban$
 </small>
 </div>
 
