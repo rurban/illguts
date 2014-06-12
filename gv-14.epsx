@@ -46,9 +46,9 @@ gvx 5 add 303 15 sub M
 210 300 gp
 
 % NAME
-/ny 172.5 75 add def
-gvx 50 add ny 120 ny ptrn
-120 ny 5 add (pv) hek
+/ny 172.5 60 add def
+gvx 50 add ny 120 ny 10 add ptrn
+120 ny 15 add (pv) hek
 
 % GvSTASH
 /Courier 8 SF

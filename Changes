@@ -1,3 +1,6 @@
+0.48 2014-06-12 rurban
+        * gv-14.epsx: fix wrong ASSIGN_GEN hek
+
 0.47 2013-12-11 rurban
         * svpv-8.epsx: add PVX ptr
         * svpv-{10,14}.epsx: add shared_hek pv
