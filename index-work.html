@@ -73,7 +73,7 @@ what its type is and act according to this information.
   <tr><td><b>1</b></td> <td><b>SVt_IV</b></td>     <td>SVt_BIND</td> <td>SVt_BIND</td> <td>SVt_IV</td>  </tr>
   <tr><td><b>2</b></td> <td><b>SVt_NV</b></td>     <td>SVt_IV</td>   <td>SVt_IV</td>   <td>SVt_NV</td>  </tr>
   <tr><td><b>3</b></td> <td><b>SVt_PV</b></td>     <td>SVt_NV</td>   <td>SVt_NV</td>   <td>SVt_RV</td>  </tr>
-  <tr><td><b>4</b></td> <td><b>SVt_INVLIST</b></td><td>SVt_PV</td> <td>SVt_RV</td>   <td>SVt_PV</td>  </tr>
+  <tr><td><b>4</b></td> <td><b>SVt_INVLIST</b></td><td>SVt_PV</td>   <td>SVt_RV</td>   <td>SVt_PV</td>  </tr>
   <tr><td><b>5</b></td> <td><b>SVt_PVIV</b></td>   <td>SVt_PVIV</td> <td>SVt_PV</td>   <td>SVt_PVIV</td> </tr>
   <tr><td><b>6</b></td> <td><b>SVt_PVNV</b></td>   <td>SVt_PVNV</td> <td>SVt_PVIV</td> <td>SVt_PVNV</td> </tr>
   <tr><td><b>7</b></td> <td><b>SVt_PVMG</b></td>   <td>SVt_PVMG</td> <td>SVt_PVNV</td> <td>SVt_PVMG</td> </tr>
@@ -521,9 +521,10 @@ only the needed body size.
 
 <h2><a name="svrv">SvRV</a></h2>
 
-<p>The <i>SvRV</i> type uses the fourth HEAD word sv_u.svu_rv as pointer to an SV
-(which can be any of the SvNULL subtypes), AV or HV.
-A SvRV object with ROK flag off represents an undefined value.
+The <i>SvRV</i> type uses the fourth HEAD word sv_u.svu_rv as pointer to an SV
+(which can be any of the SvNULL subtypes), AV or HV.<br>
+A SvRV object with ROK flag off represents an undefined value.<br>
+The seperate SVt_RV was replaced in 5.12 with <a href="#sviv">SVt_IV</a> and a SVf_ROK flag.
 
 <p><center><img src="svrv.png"></center>
 
